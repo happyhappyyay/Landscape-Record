@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SnowServices">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/snow_services_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/lawn_services_other"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/snow_services_salt"
+            app:layout_constraintTop_toBottomOf="@+id/snow_services_salt" />
+
+        <CheckBox
+            android:id="@+id/snow_services_salt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/snow_services_salt"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/gridLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/gridLayout2" />
+
+        <EditText
+            android:id="@+id/editText9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:inputType="textLongMessage"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/snow_services_other"
+            app:layout_constraintTop_toBottomOf="@+id/editText12" />
+
+        <EditText
+            android:id="@+id/editText12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:hint="@string/snow_services_salt_bags"
+            android:inputType="numberDecimal"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/snow_services_salt"
+            app:layout_constraintTop_toBottomOf="@+id/gridLayout2" />
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/gridLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <CheckBox
+                android:id="@+id/snow_services_snow_blow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/snow_services_snow_blow"
+                android:textSize="18sp"
+                app:layout_column="2"
+                app:layout_row="0" />
+
+            <CheckBox
+                android:id="@+id/snow_services_plow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/snow_services_plow"
+                android:textSize="18sp"
+                app:layout_column="0"
+                app:layout_row="0" />
+
+            <CheckBox
+                android:id="@+id/snow_services_shovel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/snow_services_shovel"
+                android:textSize="18sp" />
+        </android.support.v7.widget.GridLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

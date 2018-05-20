@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="US_states_list">
+    <item>Alabama</item>
+    <item>Alaska</item>
+    <item>American Samoa</item>
+    <item>Arizona</item>
+    <item>Arkansas</item>
+    <item>California</item>
+    <item>Colorado</item>
+    <item>Connecticut</item>
+    <item>Delaware</item>
+    <item>District of Columbia</item>
+    <item>Florida</item>
+    <item>Georgia</item>
+    <item>Guam</item>
+    <item>Hawaii</item>
+    <item>Idaho</item>
+    <item>Illinois</item>
+    <item>Indiana</item>
+    <item>Iowa</item>
+    <item>Kansas</item>
+    <item>Kentucky</item>
+    <item>Louisiana</item>
+    <item>Maine</item>
+    <item>Maryland</item>
+    <item>Massachusetts</item>
+    <item>Michigan</item>
+    <item>Minnesota</item>
+    <item>Mississippi</item>
+    <item>Missouri</item>
+    <item>Montana</item>
+    <item>Nebraska</item>
+    <item>Nevada</item>
+    <item>New Hampshire</item>
+    <item>New Jersey</item>
+    <item>New Mexico</item>
+    <item>New York</item>
+    <item>North Carolina</item>
+    <item>North Dakota</item>
+    <item>Northern Marianas Islands</item>
+    <item>Ohio</item>
+    <item>Oklahoma</item>
+    <item>Oregon</item>
+    <item>Pennsylvania</item>
+    <item>Puerto Rico</item>
+    <item>Rhode Island</item>
+    <item>South Carolina</item>
+    <item>South Dakota</item>
+    <item>Tennessee</item>
+    <item>Texas</item>
+    <item>Utah</item>
+    <item>Vermont</item>
+    <item>Virginia</item>
+    <item>Virgin Islands</item>
+    <item>Washington</item>
+    <item>West Virginia</item>
+    <item>Wisconsin</item>
+    <item>Wyoming</item>
+    </string-array>
+
+    <string-array name="days_of_the_week">
+        <item>Any Day</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
+    <string-array name="types_of_materials">
+        <item>Other</item>
+        <item>Dirt</item>
+        <item>Mulch</item>
+        <item>Stone</item>
+        <item>Sod</item>
+        <item>Seed</item>
+        <item>Bush</item>
+        <item>Flower</item>
+        <item>Tree</item>
+        <item>Chemical</item>
+        <item>Gas</item>
+        <item>Edging</item>
+        <item>Drain Tile</item>
+
+    </string-array>
+
+    <string-array name="measurements_for_materials">
+        <item>cnt</item>
+        <item>yd</item>
+        <item>t</item>
+        <item>truck</item>
+        <item>ft</item>
+        <item>gal</item>
+        <item>l</item>
+        <item>oz</item>
+        <item>bag</item>
+        <item>lb</item>
+    </string-array>
+
+</resources>

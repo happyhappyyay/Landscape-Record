@@ -1,0 +1,60 @@
+package com.example.kingdenis.landscaperecord;
+
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import java.util.List;
+
+public class MainMenu extends AppCompatActivity {
+
+    static AppDatabase db;
+    private Button adminToolsButton;
+    private boolean admin;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_menu);
+        db = AppDatabase.getAppDatabase(this);
+        admin = true;
+        adminToolsButton = findViewById(R.id.admin_tools_button);
+        adminToolsButton.setVisibility(!admin? View.GONE : View.VISIBLE);
+    }
+
+    public void startTimeReporting(View view) {
+        Intent intent = new Intent(this, TimeReporting.class);
+        startActivity(intent);
+//        TODO: Delete
+//          loadUsers();
+//        users = db.userDao().getAllUsers();
+//        recreate();
+//        for(User user: users) {
+//            Log.d(TAG, user.toString());
+//        }
+    }
+
+    public void startPaymentReporting(View view) {
+        Intent intent = new Intent (this, Payment.class);
+        startActivity(intent);
+    }
+
+    public void startJobReporting(View view) {
+        Intent intent = new Intent (this, JobServices.class);
+        startActivity(intent);
+    }
+
+    public void startAdminTools(View view) {
+        Intent intent = new Intent (this, AdminTools.class);
+        startActivity(intent);
+    }
+
+    public void startNewContact(View view) {
+        Intent intent = new Intent (this, NewContact.class);
+        startActivity(intent);
+    }
+}
