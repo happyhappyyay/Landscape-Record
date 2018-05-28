@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import static com.example.kingdenis.landscaperecord.TimeReporting.ADAPTER_POSITION;
+
 public class ViewUsers extends AppCompatActivity implements PopulateSpinner,
         AdapterView.OnItemSelectedListener {
     private EditText textField;
@@ -20,6 +22,7 @@ public class ViewUsers extends AppCompatActivity implements PopulateSpinner,
     private Authentication authentication;
     private List<User> users;
     private User user;
+    private int adapterPosition;
     private final int VIEW_ID = R.id.view_user_spinner;
 
     @Override
@@ -31,6 +34,12 @@ public class ViewUsers extends AppCompatActivity implements PopulateSpinner,
         password = findViewById(R.id.view_user_password);
         hours = findViewById(R.id.view_user_hours);
         authentication = Authentication.getAuthentication(this);
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
+        }
+
         Util.UserAccountsSpinner task = new Util.UserAccountsSpinner() {
             @Override
             protected void onPostExecute(List<User> dbUsers) {
@@ -66,11 +75,25 @@ public class ViewUsers extends AppCompatActivity implements PopulateSpinner,
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ADAPTER_POSITION, adapterPosition);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        user = users.get(position);
-        name.setText(user.getName());
-        password.setText(user.getPassword());
-        hours.setText(Double.toString(user.getHours()));
+        if (users != null) {
+            user = users.get(position);
+            name.setText(user.getName());
+            password.setText(user.getPassword());
+            hours.setText(Double.toString(user.getHours()));
+            adapterPosition = position;
+        }
+        else {
+            parent.setSelection(adapterPosition);
+        }
     }
 
     @Override
