@@ -123,4 +123,5 @@
     <string name="hours_operations_pay">Pay</string>
     <string name="hours_operations_add">Add</string>
     <string name="hour_operations_remove">Remove</string>
+    <string name="admin_tools_view_logs">View Logged Activity</string>
 </resources>

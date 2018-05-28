@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter {
-    private AppDatabase db;
+    private static final String TAG = "selected";
     protected List<Material> materials;
     protected List<Material> selectedMaterials;
+    private AppDatabase db;
     private int selectedPos = RecyclerView.NO_POSITION;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
-
-    private static final String TAG = "selected";
 
     public RecyclerAdapter() {
         selectedMaterials = new ArrayList<>();
@@ -34,6 +33,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
     public void addMaterial(Material material, int position) {
         materials.add(material);
         notifyItemInserted(position);
+    }
+
+    public void removeAt(int position) {
+        selectedItems.clear();
+        materials.remove(position);
+        notifyItemRemoved(position);
+        notifyDataSetChanged();
+        Log.d(TAG, "onBindViewHolder: " + materials.size());
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.material_item, parent, false);
+        return new ListViewHolder(view);
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        holder.itemView.setSelected(selectedItems.get(position, false));
+        ((ListViewHolder) holder).bindView(position);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return materials.size();
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -63,7 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
             type.setText(material.getMaterialType().toString());
             price.setText(Double.toString(material.getMaterialPrice()));
             quantity.setText(Double.toString(material.getQuantity()) + material.getMeasurement());
-            addition.setText(material.isAddMaterial()? "Add" : "Remove");
+            addition.setText(material.isAddMaterial() ? "Add" : "Remove");
         }
 
         @Override
@@ -73,8 +100,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
                 selectedItems.delete(getAdapterPosition());
                 linearLayout.setSelected(false);
                 selectedMaterials.remove(materials.get(getAdapterPosition()));
-            }
-            else {
+            } else {
                 selectedItems.put(getAdapterPosition(), true);
                 linearLayout.setSelected(true);
                 selectedPos = getLayoutPosition();
@@ -82,33 +108,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
                 selectedMaterials.add(materials.get(getAdapterPosition()));
             }
         }
-    }
-
-    public void removeAt(int position) {
-        selectedItems.clear();
-        materials.remove(position);
-        notifyItemRemoved(position);
-        notifyDataSetChanged();
-        Log.d(TAG, "onBindViewHolder: " + materials.size());
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.material_item, parent, false);
-        return new ListViewHolder(view);
-
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        holder.itemView.setSelected(selectedItems.get(position, false));
-        ((ListViewHolder) holder).bindView(position);
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return materials.size();
     }
 }

@@ -1,14 +1,10 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
-import java.util.List;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -23,7 +19,7 @@ public class MainMenu extends AppCompatActivity {
         db = AppDatabase.getAppDatabase(this);
         admin = true;
         adminToolsButton = findViewById(R.id.admin_tools_button);
-        adminToolsButton.setVisibility(!admin? View.GONE : View.VISIBLE);
+        adminToolsButton.setVisibility(!admin ? View.GONE : View.VISIBLE);
     }
 
     public void startTimeReporting(View view) {
@@ -39,22 +35,22 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void startPaymentReporting(View view) {
-        Intent intent = new Intent (this, Payment.class);
+        Intent intent = new Intent(this, Payment.class);
         startActivity(intent);
     }
 
     public void startJobReporting(View view) {
-        Intent intent = new Intent (this, JobServices.class);
+        Intent intent = new Intent(this, JobServices.class);
         startActivity(intent);
     }
 
     public void startAdminTools(View view) {
-        Intent intent = new Intent (this, AdminTools.class);
+        Intent intent = new Intent(this, AdminTools.class);
         startActivity(intent);
     }
 
     public void startNewContact(View view) {
-        Intent intent = new Intent (this, NewContact.class);
+        Intent intent = new Intent(this, NewContact.class);
         startActivity(intent);
     }
 }

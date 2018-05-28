@@ -18,6 +18,7 @@ import java.util.List;
 
 
 public class LandscapeServices extends Fragment implements FragmentListener {
+    private final ServiceType SERVICE_TYPE = ServiceType.LANDSCAPING_SERVICES;
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -30,8 +31,6 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     private Spinner materialTypeSpinner, materialMeasurementSpinner;
     private boolean pause;
     private int recyclerPosition = 0;
-
-    private final ServiceType SERVICE_TYPE = ServiceType.LANDSCAPING_SERVICES;
 
     public LandscapeServices() {
     }
@@ -82,7 +81,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                     @Override
                     public void onClick(View v) {
                         Material material = createMaterial(true);
-                        if(checkMaterialAddition()) {
+                        if (checkMaterialAddition()) {
                             adapter.addMaterial(material, recyclerPosition);
                             recyclerPosition += 1;
                             materials.add(material);
@@ -97,9 +96,9 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                     @Override
                     public void onClick(View v) {
                         Material material = createMaterial(false);
-                        if(checkMaterialAddition()) {
+                        if (checkMaterialAddition()) {
                             adapter.addMaterial(material, recyclerPosition);
-                            recyclerPosition  += 1;
+                            recyclerPosition += 1;
                             materials.add(material);
                         }
                     }
@@ -112,10 +111,10 @@ public class LandscapeServices extends Fragment implements FragmentListener {
 
     public void deleteMaterial() {
         List<Material> materialsToRemove = new ArrayList<>();
-        if(materials != null) {
+        if (materials != null) {
             materialsToRemove = adapter.getSelectedMaterials();
             for (int i = 0; i < materialsToRemove.size(); i++) {
-                for (int j = 0; j < materials.size(); j++){
+                for (int j = 0; j < materials.size(); j++) {
                     if (materialsToRemove.get(i).equals(materials.get(j))) {
                         materials.remove(j);
                         adapter.removeAt(j);
@@ -125,14 +124,14 @@ public class LandscapeServices extends Fragment implements FragmentListener {
             }
         }
     }
+
     private boolean checkMaterialAddition() {
         String materialSpinnerText = materialTypeSpinner.getSelectedItem().toString().toLowerCase();
         String other = MaterialType.OTHER.toString().toLowerCase();
         if ((materialName.toString().isEmpty() &
                 materialSpinnerText.equals(other)) || materialQuantity.toString().isEmpty()) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
 
@@ -145,8 +144,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
         String type = materialTypeSpinner.getSelectedItem().toString();
         if (!type.toLowerCase().equals("Drain Tile")) {
             type = type.toUpperCase();
-        }
-        else {
+        } else {
             type = "DRAIN_TILE";
         }
 
@@ -160,7 +158,6 @@ public class LandscapeServices extends Fragment implements FragmentListener {
         }
 
 
-
         return material;
     }
 
@@ -170,8 +167,8 @@ public class LandscapeServices extends Fragment implements FragmentListener {
 
     public String markedCheckBoxes() {
         String services = "";
-        for(CheckBox c: checkBoxes) {
-            if(c.isChecked()) {
+        for (CheckBox c : checkBoxes) {
+            if (c.isChecked()) {
                 services += c.getText().toString() + " ";
             }
         }

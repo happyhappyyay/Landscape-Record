@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class Util{
+public class Util {
 
     public static boolean toolbarItemSelection(Context context, MenuItem item) {
         switch (item.getItemId()) {
@@ -34,52 +34,53 @@ public class Util{
     }
 
     private static void goToDashboard(Context context) {
-        Intent intent = new Intent (context, Dashboard.class);
+        Intent intent = new Intent(context, Dashboard.class);
         context.startActivity(intent);
     }
 
     private static void goToSettings(Context context) {
-        Intent intent = new Intent (context, Settings.class);
+        Intent intent = new Intent(context, Settings.class);
         context.startActivity(intent);
     }
 
     private static void goToLogout(Context context) {
-        Intent intent = new Intent (context, LoginPage.class);
+        Intent intent = new Intent(context, LoginPage.class);
         context.startActivity(intent);
         Toast.makeText(context.getApplicationContext(), "Logged out! ", Toast.LENGTH_LONG).show();
     }
 
     private static void goToNewContact(Context context) {
-        Intent intent = new Intent (context, NewContact.class);
+        Intent intent = new Intent(context, NewContact.class);
         context.startActivity(intent);
     }
 
-/* Loads spinner with list items and sets initial item of list */
+    /* Loads spinner with list items and sets initial item of list */
     private static <T extends SpinnerObjects> void populateSpinner(PopulateSpinner populateSpinner, List<T> objects) {
-            Authentication authentication = populateSpinner.getAuthentication();
-            Activity activity = populateSpinner.getActivity();
-            int viewID = populateSpinner.getViewID();
-            AdapterView.OnItemSelectedListener listener = populateSpinner.getItemSelectedListener();
+        Authentication authentication = populateSpinner.getAuthentication();
+        Activity activity = populateSpinner.getActivity();
+        int viewID = populateSpinner.getViewID();
+        AdapterView.OnItemSelectedListener listener = populateSpinner.getItemSelectedListener();
 
-            String[] arraySpinner = new String[objects.size()];
-            int pos = 0;
-            for (int i = 0; i < objects.size(); i++) {
-                arraySpinner[i] = objects.get(i).getName();
+        String[] arraySpinner = new String[objects.size()];
+        int pos = 0;
+        for (int i = 0; i < objects.size(); i++) {
+            arraySpinner[i] = objects.get(i).getName();
 //                TODO: Change this?
-                if(objects.get(i).getName().equals(authentication.getUser().getName())) {
-                    pos = i;
-                }
+            if (objects.get(i).getName().equals(authentication.getUser().getName())) {
+                pos = i;
             }
-
-            Spinner s = (Spinner) activity.findViewById(viewID);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
-                    R.layout.spinner_item, arraySpinner);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            s.setAdapter(adapter);
-            s.setOnItemSelectedListener(listener);
-            s.setSelection(pos);
         }
-//Asynchronous task for Users
+
+        Spinner s = (Spinner) activity.findViewById(viewID);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
+                R.layout.spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        s.setAdapter(adapter);
+        s.setOnItemSelectedListener(listener);
+        s.setSelection(pos);
+    }
+
+    //Asynchronous task for Users
     public static class UserAccountsSpinner extends AsyncTask<PopulateSpinner, Void, List<User>> {
 
         @Override

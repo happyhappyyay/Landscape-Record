@@ -1,8 +1,8 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 public class AdminTools extends AppCompatActivity {
@@ -14,12 +14,12 @@ public class AdminTools extends AppCompatActivity {
     }
 
     public void startUserOptions(View view) {
-        Intent intent = new Intent (this, UserOptions.class);
+        Intent intent = new Intent(this, UserOptions.class);
         startActivity(intent);
     }
 
     public void startHourOperations(View view) {
-        Intent intent = new Intent (this, HourOperations.class);
+        Intent intent = new Intent(this, HourOperations.class);
         startActivity(intent);
 
     }

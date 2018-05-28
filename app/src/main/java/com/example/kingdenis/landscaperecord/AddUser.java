@@ -1,8 +1,8 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,8 +36,7 @@ public class AddUser extends AppCompatActivity {
             user.setName(firstName.getText().toString() + " " + lastName.getText().toString());
             if (password.getText().toString().length() > 5) {
                 user.setPassword(password.getText().toString());
-            }
-            else {
+            } else {
                 if (!error) {
                     Toast.makeText(getApplicationContext(), "Password must be at least 6 characters" +
                             " long", Toast.LENGTH_LONG).show();
@@ -47,11 +46,9 @@ public class AddUser extends AppCompatActivity {
             }
             if (hours.getText().toString().isEmpty()) {
                 user.setHours(0);
-            }
-            else {
-                if(!error) {
-                    try
-                    {
+            } else {
+                if (!error) {
+                    try {
                         user.setHours(Double.parseDouble(hours.getText().toString()));
 
                     } catch (Exception e) {
@@ -63,13 +60,12 @@ public class AddUser extends AppCompatActivity {
                 }
 
             }
-            if(admin.isChecked()) {
+            if (admin.isChecked()) {
                 user.setAdmin(true);
-            }
-            else {
+            } else {
                 user.setAdmin(false);
             }
-            if(!error) {
+            if (!error) {
                 insertUser();
             }
 

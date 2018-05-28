@@ -1,8 +1,8 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 public class UserOptions extends AppCompatActivity {
@@ -16,17 +16,17 @@ public class UserOptions extends AppCompatActivity {
     }
 
     public void startAddUser(View view) {
-        Intent intent = new Intent (this, AddUser.class);
+        Intent intent = new Intent(this, AddUser.class);
         startActivity(intent);
     }
 
     public void startViewUser(View view) {
-        Intent intent = new Intent (this, ViewUsers.class);
+        Intent intent = new Intent(this, ViewUsers.class);
         startActivity(intent);
     }
 
     public void startDeleteUser(View view) {
-        Intent intent = new Intent (this, DeleteUser.class);
+        Intent intent = new Intent(this, DeleteUser.class);
         startActivity(intent);
     }
 }

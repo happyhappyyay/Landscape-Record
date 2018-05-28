@@ -7,6 +7,7 @@ import java.util.List;
 
 public class MyViewModel extends ViewModel {
     private List<User> users;
+
     public List<User> getUsers() {
         if (users == null) {
             users = new ArrayList<>();

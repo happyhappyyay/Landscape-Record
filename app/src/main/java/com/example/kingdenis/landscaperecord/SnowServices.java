@@ -12,11 +12,10 @@ import java.util.List;
 
 
 public class SnowServices extends Fragment implements FragmentListener {
+    private final ServiceType SERVICE_TYPE = ServiceType.SNOW_SERVICES;
     private FragmentListener callBack;
     private CheckBox plow, shovel, snowBlow, salt, other;
     private List<CheckBox> checkBoxes;
-
-    private final ServiceType SERVICE_TYPE = ServiceType.SNOW_SERVICES;
 
     public SnowServices() {
     }

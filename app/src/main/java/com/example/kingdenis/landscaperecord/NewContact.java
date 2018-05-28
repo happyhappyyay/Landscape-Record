@@ -1,23 +1,20 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class NewContact extends AppCompatActivity {
+    private static final String TAG = "Customer List";
     private EditText firstNameText, lastNameText, emailText, businessText, addressText, cityText,
             phoneText, weekDay;
     private Customer customer;
     private AppDatabase db;
-    private static final String TAG = "Customer List";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,23 +37,23 @@ public class NewContact extends AppCompatActivity {
             customer = new Customer(firstNameText.getText().toString(), lastNameText.getText().
                     toString(), addressText.getText().toString());
 
-            if(!emailText.getText().toString().isEmpty()) {
+            if (!emailText.getText().toString().isEmpty()) {
                 customer.setCustomerEmail(emailText.getText().toString());
             }
 
-            if(!businessText.getText().toString().isEmpty()) {
+            if (!businessText.getText().toString().isEmpty()) {
                 customer.setCustomerBusiness(businessText.getText().toString());
             }
 
-            if(!cityText.getText().toString().isEmpty()) {
+            if (!cityText.getText().toString().isEmpty()) {
                 customer.setCustomerCity(emailText.getText().toString());
             }
 
-            if(!phoneText.getText().toString().isEmpty()) {
+            if (!phoneText.getText().toString().isEmpty()) {
                 customer.setCustomerPhoneNumber(phoneText.getText().toString());
             }
 
-            if(!weekDay.getText().toString().isEmpty()) {
+            if (!weekDay.getText().toString().isEmpty()) {
                 customer.setCustomerDay(weekDay.getText().toString());
             }
 

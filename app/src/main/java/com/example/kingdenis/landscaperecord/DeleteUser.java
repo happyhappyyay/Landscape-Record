@@ -3,20 +3,18 @@ package com.example.kingdenis.landscaperecord;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import java.util.List;
 
 import static com.example.kingdenis.landscaperecord.TimeReporting.ADAPTER_POSITION;
 
 public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
-PopulateSpinner{
+        PopulateSpinner {
     private AppDatabase db;
     private Authentication authentication;
     private User user;
@@ -42,7 +40,7 @@ PopulateSpinner{
         task.execute(this);
     }
 
-//    private void populateSpinner(List<User> users) {
+    //    private void populateSpinner(List<User> users) {
 //        String[] arraySpinner = new String[users.size()];
 //        int pos = 0;
 //        for (int i = 0; i < users.size(); i++) {
@@ -72,7 +70,8 @@ PopulateSpinner{
             }
         }.execute(user);
     }
-//    private void findAllUsers() {
+
+    //    private void findAllUsers() {
 //        new AsyncTask<Void, Void, List<User>>() {
 //            @Override
 //            protected List<User> doInBackground(Void... voids) {
@@ -91,7 +90,7 @@ PopulateSpinner{
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
+                    switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             deleteUser(user);
                             break;
@@ -114,11 +113,11 @@ PopulateSpinner{
         if (users != null) {
             user = users.get(position);
             adapterPosition = position;
-        }
-        else {
+        } else {
             parent.setSelection(adapterPosition);
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(ADAPTER_POSITION, adapterPosition);

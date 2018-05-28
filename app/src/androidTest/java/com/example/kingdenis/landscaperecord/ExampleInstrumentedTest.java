@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.kingdenis.landscaperecord", appContext.getPackageName());
+        assertEquals("landscaperecord", appContext.getPackageName());
     }
 }

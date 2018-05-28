@@ -1,6 +1,5 @@
 package com.example.kingdenis.landscaperecord;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LawnServices extends Fragment implements FragmentListener{
+public class LawnServices extends Fragment implements FragmentListener {
+    private final ServiceType SERVICE_TYPE = ServiceType.LAWN_SERVICES;
     private CheckBox sprayGrass, sprayLandscape, cut, prune, fertilize, rake, pullWeeds, cleanup;
     private CheckBox aerate, removeLeaves, other;
     private List<CheckBox> checkBoxes;
@@ -22,8 +22,6 @@ public class LawnServices extends Fragment implements FragmentListener{
     private Button submit;
     private String services;
     private boolean pause;
-
-    private final ServiceType SERVICE_TYPE = ServiceType.LAWN_SERVICES;
 
 
     public LawnServices() {
@@ -80,7 +78,7 @@ public class LawnServices extends Fragment implements FragmentListener{
         }
     }
 
-        public void setFragmentListener(FragmentListener listener) {
+    public void setFragmentListener(FragmentListener listener) {
         callBack = listener;
     }
 
@@ -102,12 +100,12 @@ public class LawnServices extends Fragment implements FragmentListener{
     }
 
     public String markedCheckBoxes() {
-            services = "";
-            for (CheckBox c : checkBoxes) {
-                if (c.isChecked()) {
-                    services += c.getText().toString() + " ";
-                }
+        services = "";
+        for (CheckBox c : checkBoxes) {
+            if (c.isChecked()) {
+                services += c.getText().toString() + " ";
             }
+        }
         return services;
     }
 

@@ -1,24 +1,22 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,8 +25,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class JobServices extends AppCompatActivity implements FragmentListener, AdapterView.OnItemSelectedListener{
+public class JobServices extends AppCompatActivity implements FragmentListener, AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = "job button";
     private ViewPager viewPager;
     private FragmentPageAdapter fragAdapter;
     private TabLayout tabLayout;
@@ -40,8 +39,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     private List<Customer> customers;
     private Customer customer;
     private EditText date, manHours;
-
-    private static final String TAG = "job button";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +62,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 List<Customer> customersByDay = new ArrayList<>();
                 if (position != 0) {
-                    for(Customer c: customers) {
+                    for (Customer c : customers) {
                         if (c.getCustomerDay() != null) {
                             if (c.getCustomerDay().equals(daySpinner.getSelectedItem().toString())) {
                                 customersByDay.add(c);
@@ -73,8 +70,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                         }
                     }
                     populateSpinner(customersByDay);
-                }
-                else {
+                } else {
                     populateSpinner(customers);
                 }
 
@@ -120,7 +116,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
 
     @Override
     public void pausedFragment(ServiceType serviceType) {
-    pausedFragmentTitle = serviceType.toString();
+        pausedFragmentTitle = serviceType.toString();
     }
 
     public void onSubmitButton(View view) {
@@ -136,14 +132,13 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                 fragAdapter.getItem(fragAdapter.getPosition(ServiceType.SNOW_SERVICES.toString()));
         List<Material> materials = landscapeServices.getMaterials();
 
-        if(!date.getText().toString().isEmpty()) {
+        if (!date.getText().toString().isEmpty()) {
             String dateString = date.getText().toString();
             try {
                 convertedDate = dateFormat.parse(dateString);
-                if(service.getStartDateTime() == null) {
+                if (service.getStartDateTime() == null) {
                     service.setStartDateTime(convertedDate);
-                }
-                else {
+                } else {
                     service.setEndDateTime(convertedDate);
                 }
             } catch (ParseException e) {
@@ -151,13 +146,11 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             Date currentDate = Calendar.getInstance().getTime();
-            if(service.getStartDateTime() == null) {
+            if (service.getStartDateTime() == null) {
                 service.setStartDateTime(currentDate);
-            }
-            else{
+            } else {
                 service.setEndDateTime(currentDate);
             }
 
@@ -165,14 +158,14 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         }
 
 
-        if(lawnServices.getView() != null) {
+        if (lawnServices.getView() != null) {
             services += lawnServices.markedCheckBoxes();
         }
 
 
-        if(landscapeServices.getView() != null) {
+        if (landscapeServices.getView() != null) {
             services += landscapeServices.markedCheckBoxes();
-            if(materials != null) {
+            if (materials != null) {
                 for (Material m : landscapeServices.getMaterials()) {
                     service.addMaterial(m);
                 }
@@ -180,8 +173,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         }
 
 
-
-        if(snowServices.getView() != null) {
+        if (snowServices.getView() != null) {
             services += snowServices.markedCheckBoxes();
         }
 
@@ -204,8 +196,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         accountSpinner.setSelection(Adapter.NO_SELECTION);
         if (!customers.isEmpty()) {
             customer = customers.get(0);
-        }
-        else {
+        } else {
             customer = new Customer("bob", "barker", "extrodinare");
             customers.add(customer);
         }
@@ -239,6 +230,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     private class FragmentPageAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragmentList = new ArrayList<>();
         private final List<String> fragmentTitle = new ArrayList<>();
+
         public FragmentPageAdapter(FragmentManager fm) {
             super(fm);
         }

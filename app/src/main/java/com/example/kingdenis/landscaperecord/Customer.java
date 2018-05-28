@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.ArrayList;
 
 @Entity
-public class Customer implements SpinnerObjects{
+public class Customer implements SpinnerObjects {
     @PrimaryKey(autoGenerate = true)
     private int customerId;
     private String customerFirstName;
@@ -54,52 +54,52 @@ public class Customer implements SpinnerObjects{
         return customerPhoneNumber;
     }
 
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public String getCustomerBusiness() {
-        return customerBusiness;
-    }
-
-    public String getCustomerCity() {
-        return customerCity;
-    }
-
-    public ArrayList<Service> getCustomerServices() {
-        return customerServices;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public String getCustomerDay() {
-        return customerDay;
-    }
-
     public void setCustomerPhoneNumber(String customerPhoneNumber) {
         this.customerPhoneNumber = customerPhoneNumber;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
     }
 
+    public String getCustomerBusiness() {
+        return customerBusiness;
+    }
+
     public void setCustomerBusiness(String customerBusiness) {
         this.customerBusiness = customerBusiness;
+    }
+
+    public String getCustomerCity() {
+        return customerCity;
+    }
+
+    public void setCustomerCity(String customerCity) {
+        this.customerCity = customerCity;
+    }
+
+    public ArrayList<Service> getCustomerServices() {
+        return customerServices;
     }
 
     public void setCustomerServices(ArrayList<Service> customerServices) {
         this.customerServices = customerServices;
     }
 
+    public int getCustomerId() {
+        return customerId;
+    }
+
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 
-    public void setCustomerCity(String customerCity) {
-        this.customerCity = customerCity;
+    public String getCustomerDay() {
+        return customerDay;
     }
 
     public void setCustomerDay(String customerDay) {
@@ -110,12 +110,11 @@ public class Customer implements SpinnerObjects{
     public String toString() {
         if (customerBusiness == null) {
             return customerFirstName + " " + customerLastName;
+        } else {
+            return customerBusiness;
         }
-        else{
-                return customerBusiness;
-            }
 
-        }
+    }
 
     @Override
     public String getName() {

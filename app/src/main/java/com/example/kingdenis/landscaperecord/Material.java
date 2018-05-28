@@ -23,6 +23,10 @@ public class Material {
         return materialPrice;
     }
 
+    public void setMaterialPrice(double materialPrice) {
+        this.materialPrice = materialPrice;
+    }
+
     public MaterialType getMaterialType() {
         return materialType;
     }
@@ -31,23 +35,19 @@ public class Material {
         return quantity;
     }
 
-    public String getMeasurement() {
-        return measurement;
-    }
-
-    public boolean isAddMaterial() {
-        return addMaterial;
-    }
-
-    public void setMaterialPrice(double materialPrice) {
-        this.materialPrice = materialPrice;
-    }
-
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
+    public String getMeasurement() {
+        return measurement;
+    }
+
     public void setMeasurement(String measurement) {
         this.measurement = measurement;
+    }
+
+    public boolean isAddMaterial() {
+        return addMaterial;
     }
 }

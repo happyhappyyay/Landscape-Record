@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d2d5ba670e96a379f808618a6a04473e",
+    "identityHash": "1619814e217da7376bfd04eaad1d2b5e",
     "entities": [
       {
         "tableName": "User",
@@ -121,11 +121,61 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "LogActivity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`logID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `time` INTEGER NOT NULL, `username` TEXT, `addInfo` TEXT, `logActivityAction` INTEGER NOT NULL, `logActivityType` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "logID",
+            "columnName": "logID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "addInfo",
+            "columnName": "addInfo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "logActivityAction",
+            "columnName": "logActivityAction",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "logActivityType",
+            "columnName": "logActivityType",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "logID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d2d5ba670e96a379f808618a6a04473e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1619814e217da7376bfd04eaad1d2b5e\")"
     ]
   }
 }

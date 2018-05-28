@@ -2,8 +2,8 @@ package com.example.kingdenis.landscaperecord;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -14,13 +14,12 @@ import java.util.List;
 public class HourOperations extends AppCompatActivity implements PopulateSpinner,
         AdapterView.OnItemSelectedListener {
 
+    private final int VIEW_ID = R.id.hour_operations_spinner;
     private EditText hours;
     private Authentication authentication;
     private List<User> users;
     private User user;
     private AppDatabase db;
-
-    private final int VIEW_ID = R.id.hour_operations_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +39,15 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     public void payHours(View view) {
         double payHours = hourCheck();
-        if(payHours > 0) {
-            if(user.getHours() - payHours >= 0) {
+        if (payHours > 0) {
+            if (user.getHours() - payHours >= 0) {
                 user.setHours(user.getHours() - payHours);
                 Toast.makeText(getApplicationContext(), payHours + " hours paid for " +
-                        user.getName() + ". " + user.getHours() + "remaining.",
+                                user.getName() + ". " + user.getHours() + "remaining.",
                         Toast.LENGTH_LONG).show();
                 hours.setText("");
                 updateUser();
-            }
-            else {
+            } else {
                 Toast.makeText(getApplicationContext(), "Hours paid: " + payHours + " exceeds " +
                         "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
             }
@@ -58,7 +56,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     public void addHours(View view) {
         double payHours = hourCheck();
-        if(payHours > 0) {
+        if (payHours > 0) {
             user.setHours(user.getHours() + payHours);
             Toast.makeText(getApplicationContext(), payHours + " hours added for " +
                     user.getName(), Toast.LENGTH_LONG).show();

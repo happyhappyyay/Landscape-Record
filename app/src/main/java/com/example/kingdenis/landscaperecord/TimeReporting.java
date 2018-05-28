@@ -1,39 +1,32 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.List;
 
 public class TimeReporting extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
-PopulateSpinner{
+        PopulateSpinner {
+    final static double MILLISECONDS_TO_HOURS = 3600000;
+    final static int MAX_NUMBER_OF_ATTEMPTED_HOURS = 16;
+    final static String ADAPTER_POSITION = "adapter position";
+    private static final String TAG = "Position of adapter:";
+    private final int VIEW_ID = R.id.time_reporting_spinner;
     private Authentication authentication;
     private AppDatabase db;
     private double startTime;
     private boolean checkedIn, recreated;
-    private static final String TAG = "Position of adapter:";
     private int adapterPosition;
     private List<User> users;
     private User user;
-
-    private final int VIEW_ID = R.id.time_reporting_spinner;
-
-    final static double MILLISECONDS_TO_HOURS = 3600000;
-    final static int MAX_NUMBER_OF_ATTEMPTED_HOURS = 16;
-    final static String ADAPTER_POSITION = "adapter position";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -42,7 +35,7 @@ PopulateSpinner{
         db = AppDatabase.getAppDatabase(this);
         authentication = Authentication.getAuthentication(this);
         user = authentication.getUser();
-        if(user != null) {
+        if (user != null) {
             if (user.getStartTime() > 0) {
                 startTime = user.getStartTime();
                 checkedIn = true;
@@ -73,9 +66,11 @@ PopulateSpinner{
 
 
     }
+
     private void resetStartTime() {
         user.setStartTime(0);
     }
+
     private void addAccumulatedHours() {
         double newHours = (System.currentTimeMillis() - startTime) / MILLISECONDS_TO_HOURS;
         user.setHours(user.getHours() + newHours);
@@ -91,8 +86,7 @@ PopulateSpinner{
             user.setStartTime(startTime);
             Toast.makeText(getApplicationContext(), "Checked in!", Toast.LENGTH_LONG).show();
             startTimeChange = true;
-        }
-        else {
+        } else {
             if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
                 Toast.makeText(getApplicationContext(), "User never checked out. Notify admin" +
                         " account to manually add hours.", Toast.LENGTH_LONG).show();
@@ -117,7 +111,7 @@ PopulateSpinner{
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 addAccumulatedHours();
                                 break;
@@ -134,18 +128,18 @@ PopulateSpinner{
                 builder.setMessage("The number of hours reported exceeds the likely amount. Is " +
                         hours + " hours correct?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
-            }
-            else {
+            } else {
                 addAccumulatedHours();
-                    Toast.makeText(getApplicationContext(), "Checked out! " + (hours) + user.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Checked out! " + (hours) + user.toString(), Toast.LENGTH_LONG).show();
             }
             resetStartTime();
             updateUser();
 
         }
     }
+
     private void updateCheckInStatus() {
-        if(user != null) {
+        if (user != null) {
             if (user.getStartTime() > 0) {
                 startTime = user.getStartTime();
                 checkedIn = true;
@@ -174,15 +168,14 @@ PopulateSpinner{
 //        s.setSelection(pos);
 //    }
 
-    public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (users != null) {
             Toast.makeText(parent.getContext(),
                     "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
                     Toast.LENGTH_SHORT).show();
             user = users.get(pos);
             adapterPosition = pos;
-        }
-        else {
+        } else {
             parent.setSelection(adapterPosition);
         }
     }
@@ -201,6 +194,7 @@ PopulateSpinner{
             }
         }.execute();
     }
+
     private void findAllUsers() {
         new AsyncTask<Void, Void, List<User>>() {
             @Override

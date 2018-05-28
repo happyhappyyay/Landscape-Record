@@ -2,14 +2,11 @@ package com.example.kingdenis.landscaperecord;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 public class LoginPage extends AppCompatActivity {
 
@@ -60,14 +57,14 @@ public class LoginPage extends AppCompatActivity {
             protected void onPostExecute(User user) {
                 boolean authorized = false;
                 if (user != null) {
-                    if(user.getPassword().equals(password.getText().toString())) {
+                    if (user.getPassword().equals(password.getText().toString())) {
                         authorized = true;
                         authentication.setUser(user);
                         Intent intent = new Intent(getApplicationContext(), Dashboard.class);
                         startActivity(intent);
                     }
                 }
-                if(!authorized) {
+                if (!authorized) {
                     username.setText("");
                     password.setText("");
                     Toast.makeText(getApplicationContext(), "Could not login with the provided " +
