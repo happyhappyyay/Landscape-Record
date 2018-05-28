@@ -23,14 +23,20 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="110dp"
-        android:layout_height="77dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="66dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="32dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="73dp"
         android:onClick="addHours"
         android:text="@string/hours_operations_add"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button14"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button13" />
 
     <Button
         android:id="@+id/button13"
@@ -55,9 +61,9 @@
         android:layout_height="0dp"
         android:layout_marginBottom="66dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="132dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginRight="16dp"
-        android:layout_marginStart="132dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="73dp"
         android:onClick="removeHours"
         android:text="@string/hour_operations_remove"

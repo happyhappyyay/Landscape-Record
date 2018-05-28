@@ -202,7 +202,13 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         accountSpinner.setAdapter(adapter);
         accountSpinner.setOnItemSelectedListener(this);
         accountSpinner.setSelection(Adapter.NO_SELECTION);
-        customer = customers.get(0);
+        if (!customers.isEmpty()) {
+            customer = customers.get(0);
+        }
+        else {
+            customer = new Customer("bob", "barker", "extrodinare");
+            customers.add(customer);
+        }
     }
 
     @Override

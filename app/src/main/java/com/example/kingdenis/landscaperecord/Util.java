@@ -54,6 +54,7 @@ public class Util{
         context.startActivity(intent);
     }
 
+/* Loads spinner with list items and sets initial item of list */
     private static <T extends SpinnerObjects> void populateSpinner(PopulateSpinner populateSpinner, List<T> objects) {
             Authentication authentication = populateSpinner.getAuthentication();
             Activity activity = populateSpinner.getActivity();
@@ -64,6 +65,7 @@ public class Util{
             int pos = 0;
             for (int i = 0; i < objects.size(); i++) {
                 arraySpinner[i] = objects.get(i).getName();
+//                TODO: Change this?
                 if(objects.get(i).getName().equals(authentication.getUser().getName())) {
                     pos = i;
                 }
@@ -77,7 +79,7 @@ public class Util{
             s.setOnItemSelectedListener(listener);
             s.setSelection(pos);
         }
-
+//Asynchronous task for Users
     public static class UserAccountsSpinner extends AsyncTask<PopulateSpinner, Void, List<User>> {
 
         @Override

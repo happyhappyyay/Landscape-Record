@@ -1,6 +1,7 @@
 package com.example.kingdenis.landscaperecord;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -22,19 +23,20 @@ PopulateSpinner{
     private Authentication authentication;
     private AppDatabase db;
     private double startTime;
-    private boolean checkedIn;
-    private static final String TAG = "User Hour";
-    Context context;
+    private boolean checkedIn, recreated;
+    private static final String TAG = "Position of adapter:";
+    private int adapterPosition;
     private List<User> users;
     private User user;
 
-    private final int VIEW_ID = R.id.time_reporting_spinner;;
+    private final int VIEW_ID = R.id.time_reporting_spinner;
 
     final static double MILLISECONDS_TO_HOURS = 3600000;
     final static int MAX_NUMBER_OF_ATTEMPTED_HOURS = 16;
+    final static String ADAPTER_POSITION = "adapter position";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_reporting);
         db = AppDatabase.getAppDatabase(this);
@@ -48,7 +50,15 @@ PopulateSpinner{
                 checkedIn = false;
             }
         }
-        context = this;
+
+        // Check whether we're recreating a previously destroyed instance
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
+
+            Log.d(TAG, Integer.toString(adapterPosition));
+        }
+
         //TODO: implement interface to remove on post execute?
         Util.UserAccountsSpinner task = new Util.UserAccountsSpinner() {
             @Override
@@ -57,6 +67,9 @@ PopulateSpinner{
             }
         };
         task.execute(this);
+//        TODO: Minimize processing by saving list of users with view model
+//        MyViewModel model = ViewModelProviders.of(this).get(MyViewModel.class);
+//        users = model.getUsers();
 
 
     }
@@ -162,14 +175,20 @@ PopulateSpinner{
 //    }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
-        Toast.makeText(parent.getContext(),
-                "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
-                Toast.LENGTH_SHORT).show();
-        user = users.get(pos);
+        if (users != null) {
+            Toast.makeText(parent.getContext(),
+                    "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
+                    Toast.LENGTH_SHORT).show();
+            user = users.get(pos);
+            adapterPosition = pos;
+        }
+        else {
+            parent.setSelection(adapterPosition);
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        user = authentication.getUser();
+
     }
 
 
@@ -193,6 +212,15 @@ PopulateSpinner{
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ADAPTER_POSITION, adapterPosition);
+        Log.d(TAG, Integer.toString(adapterPosition));
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public Authentication getAuthentication() {
         return authentication;
     }
@@ -212,3 +240,4 @@ PopulateSpinner{
         return this;
     }
 }
+
