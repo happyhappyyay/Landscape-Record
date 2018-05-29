@@ -10,16 +10,18 @@ public class MainMenu extends AppCompatActivity {
 
     static AppDatabase db;
     private Button adminToolsButton;
-    private boolean admin;
+    private Authentication authentication;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         db = AppDatabase.getAppDatabase(this);
-        admin = true;
+        authentication = Authentication.getAuthentication(this);
+        user = authentication.getUser();
         adminToolsButton = findViewById(R.id.admin_tools_button);
-        adminToolsButton.setVisibility(!admin ? View.GONE : View.VISIBLE);
+        adminToolsButton.setVisibility(!user.isAdmin() ? View.GONE : View.VISIBLE);
     }
 
     public void startTimeReporting(View view) {

@@ -20,7 +20,7 @@ import java.util.List;
 public class LandscapeServices extends Fragment implements FragmentListener {
     private final ServiceType SERVICE_TYPE = ServiceType.LANDSCAPING_SERVICES;
     private RecyclerView recyclerView;
-    private RecyclerAdapter adapter;
+    private RecyclerMaterialAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<Material> materials = new ArrayList<>();
     private FragmentListener callBack;
@@ -47,7 +47,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
         recyclerView = (RecyclerView) view.findViewById(R.id.land_services_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapter();
+        adapter = new RecyclerMaterialAdapter();
         recyclerView.setAdapter(adapter);
         checkBoxes = new ArrayList<>();
         drain = (CheckBox) view.findViewById(R.id.land_services_drainage);

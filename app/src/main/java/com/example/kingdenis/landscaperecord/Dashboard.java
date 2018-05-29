@@ -9,8 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class Dashboard extends AppCompatActivity {
-    private TextView userLoggedIn;
+    private TextView userLoggedIn, checkInTime;
     private Authentication authentication;
 
     @Override
@@ -18,6 +22,10 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         authentication = authentication.getAuthentication(this);
+        checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
+        if (authentication.getUser().getStartTime() != 0) {
+            checkInTime.setText("Checked in at: " + timeToDate(Double.doubleToLongBits(authentication.getUser().getStartTime())));
+        }
         userLoggedIn = findViewById(R.id.dashboard_username);
         userLoggedIn.setText(authentication.getUser().getName());
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -32,6 +40,13 @@ public class Dashboard extends AppCompatActivity {
     public void startMainMenu(View view) {
         Intent intent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(intent);
+    }
+
+    private String timeToDate(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd HH:mm", Locale.US);
+        String dateMessage = formatter.format(date);
+        return dateMessage;
     }
 
     @Override

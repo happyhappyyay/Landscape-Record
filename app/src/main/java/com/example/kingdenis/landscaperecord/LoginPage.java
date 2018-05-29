@@ -42,7 +42,7 @@ public class LoginPage extends AppCompatActivity {
     }
 
     public void skipLogin(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+        Intent intent = new Intent(getApplicationContext(), AddUser.class);
         startActivity(intent);
     }
 

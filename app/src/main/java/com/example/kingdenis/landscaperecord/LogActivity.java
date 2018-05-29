@@ -29,7 +29,7 @@ public class LogActivity {
     @Override
     public String toString() {
         Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
         String dateMessage = formatter.format(date);
         return dateMessage + ": " + username + " " + convertActivityToString();
     }

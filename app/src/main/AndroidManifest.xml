@@ -57,7 +57,8 @@
         <activity android:name=".DeleteUser" />
         <activity android:name=".Dashboard" />
         <activity android:name=".Settings" />
-        <activity android:name=".HourOperations"></activity>
+        <activity android:name=".HourOperations" />
+        <activity android:name=".ViewActivityLogs"></activity>
     </application>
 
 </manifest>

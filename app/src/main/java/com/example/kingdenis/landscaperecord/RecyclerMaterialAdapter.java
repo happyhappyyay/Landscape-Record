@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter {
+public class RecyclerMaterialAdapter extends RecyclerView.Adapter {
     private static final String TAG = "selected";
     protected List<Material> materials;
     protected List<Material> selectedMaterials;
@@ -21,7 +21,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
     private int selectedPos = RecyclerView.NO_POSITION;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
-    public RecyclerAdapter() {
+    public RecyclerMaterialAdapter() {
         selectedMaterials = new ArrayList<>();
         materials = new ArrayList<>();
     }

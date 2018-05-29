@@ -77,7 +77,9 @@ public class AddUser extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                LogActivity log = new LogActivity("User", user.getName(),0, 0);
                 db.userDao().insert(user);
+                db.logDao().insert(log);
                 return null;
             }
 
@@ -85,6 +87,7 @@ public class AddUser extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
                         " created.", Toast.LENGTH_LONG).show();
+
 
                 finish();
             }

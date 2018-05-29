@@ -124,4 +124,5 @@
     <string name="hours_operations_add">Add</string>
     <string name="hour_operations_remove">Remove</string>
     <string name="admin_tools_view_logs">View Logged Activity</string>
+    <string name="log_item_text">Log</string>
 </resources>
