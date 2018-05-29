@@ -31,6 +31,7 @@ public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemS
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
         }
+
         Util.UserAccountsSpinner task = new Util.UserAccountsSpinner() {
             @Override
             protected void onPostExecute(List<User> dbUsers) {
@@ -64,6 +65,8 @@ public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemS
             @Override
             protected Void doInBackground(User... params) {
                 User user = params[0];
+                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName(),0, 1);
+                db.logDao().insert(log);
                 db.userDao().deleteUser(user);
                 finish();
                 return null;

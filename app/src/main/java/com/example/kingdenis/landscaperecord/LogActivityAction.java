@@ -4,5 +4,6 @@ public enum LogActivityAction {
     ADD,
     DELETE,
     UPDATE,
+    PAY
 
 }

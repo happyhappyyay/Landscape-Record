@@ -4,5 +4,7 @@ public enum LogActivityType {
     USER,
     ACCOUNT,
     PAYMENT,
+    HOURS,
+    JOB
 
 }

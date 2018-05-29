@@ -37,9 +37,11 @@ public class LogActivity {
     private String convertActivityToString() {
         String activityAction = "";
         List<String> logActivityList = Arrays.asList(LogActivityAction.ADD.toString(),
-                LogActivityAction.DELETE.toString(), LogActivityAction.UPDATE.toString());
+                LogActivityAction.DELETE.toString(), LogActivityAction.UPDATE.toString(),
+                LogActivityAction.PAY.toString());
         List<String> logTypeList = Arrays.asList(LogActivityType.USER.toString(),
-                LogActivityType.ACCOUNT.toString(), LogActivityType.PAYMENT.toString());
+                LogActivityType.ACCOUNT.toString(), LogActivityType.PAYMENT.toString(),
+                LogActivityType.HOURS.toString(), LogActivityType.JOB.toString());
         activityAction += logActivityList.get(logActivityAction) + " ";
         activityAction += logTypeList.get(logActivityType) + " ";
         activityAction += addInfo;
