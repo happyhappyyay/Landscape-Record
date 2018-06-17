@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,8 @@ public class SnowServices extends Fragment implements FragmentListener {
     private FragmentListener callBack;
     private CheckBox plow, shovel, snowBlow, salt, other;
     private List<CheckBox> checkBoxes;
+    private EditText otherText, saltText;
+    private Spinner saltSpinner;
 
     public SnowServices() {
     }
@@ -42,6 +46,9 @@ public class SnowServices extends Fragment implements FragmentListener {
         checkBoxes.add(salt);
         other = (CheckBox) view.findViewById(R.id.snow_services_other);
         checkBoxes.add(other);
+        otherText = view.findViewById(R.id.snow_services_other_text);
+        saltText = view.findViewById(R.id.snow_services_salt_text);
+        saltSpinner = view.findViewById(R.id.snow_services_salt_spinner);
         setRetainInstance(true);
         return view;
     }
@@ -54,7 +61,24 @@ public class SnowServices extends Fragment implements FragmentListener {
         String services = "";
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
-                services += c.getText().toString() + " ";
+
+                if (c.getText().toString().toLowerCase().equals("other:")) {
+                    String otherString = otherText.getText().toString();
+                    if (!otherString.isEmpty()) {
+                        services += "Other " + otherString + "#*#";
+                    }
+                }
+                else if (c.getText().toString().toLowerCase().equals("salt:")) {
+                        String saltString = saltText.getText().toString();
+                        if (!saltString.isEmpty()) {
+                            services += "Salt " + saltString + saltSpinner.getSelectedItem().toString() + "#*#";
+                        } else {
+                            services += c.getText().toString() + "#*#";
+                        }
+                }
+                else {
+                    services += c.getText().toString() + "#*#";
+                }
             }
         }
         return services;

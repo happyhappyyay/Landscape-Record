@@ -12,6 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Spinner
+            android:id="@+id/land_services_dump_type_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            android:entries="@array/types_of_materials"
+            app:layout_constraintBottom_toTopOf="@+id/land_services_other_text"
+            app:layout_constraintEnd_toStartOf="@+id/land_services_dump_text"
+            app:layout_constraintStart_toEndOf="@+id/land_services_dump"
+            app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
+
         <Button
             android:id="@+id/land_services_delete_button"
             style="@android:style/Widget.DeviceDefault.Button.Small"
@@ -72,7 +83,7 @@
             android:text="@string/lawn_services_other"
             android:textSize="18sp"
             app:layout_column="2"
-            app:layout_constraintEnd_toStartOf="@+id/editText17"
+            app:layout_constraintEnd_toStartOf="@+id/land_services_dump_text"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/land_services_dump"
@@ -113,10 +124,8 @@
 
         <EditText
             android:id="@+id/land_services_material_name_text"
-            android:layout_width="107dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/land_services_material_name"
@@ -143,8 +152,6 @@
             android:id="@+id/land_services_material_price_text"
             android:layout_width="44dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/material_price"
@@ -156,7 +163,7 @@
 
         <Spinner
             android:id="@+id/land_services_type_spinner"
-            android:layout_width="133dp"
+            android:layout_width="0dp"
             android:layout_height="41dp"
             android:layout_marginTop="8dp"
             android:entries="@array/types_of_materials"
@@ -166,7 +173,7 @@
 
         <Spinner
             android:id="@+id/land_services_measure_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="87dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:entries="@array/measurements_for_materials"
@@ -229,52 +236,45 @@
             app:layout_constraintTop_toBottomOf="@+id/land_services_material_quantity_text" />
 
         <EditText
-            android:id="@+id/editText17"
-            android:layout_width="70dp"
+            android:id="@+id/land_services_dump_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:hint="@string/land_services_quantity"
+            android:inputType="numberDecimal"
             android:textSize="12sp"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@+id/land_services_dump"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/land_services_dump_spinner"
+            app:layout_constraintStart_toEndOf="@+id/land_services_dump_type_spinner"
             app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
 
         <EditText
-            android:id="@+id/editText18"
+            android:id="@+id/land_services_other_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="228dp"
-            android:layout_marginRight="228dp"
             android:layout_marginTop="4dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:hint="@string/job_activity_fragment_other"
+            android:inputType="text"
             android:textSize="12sp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/land_services_dump"
-            app:layout_constraintTop_toBottomOf="@+id/editText17" />
+            app:layout_constraintTop_toBottomOf="@+id/land_services_dump_text" />
 
         <Spinner
-            android:id="@+id/spinner6"
-            android:layout_width="211dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:id="@+id/land_services_dump_spinner"
+            android:layout_width="88dp"
+            android:layout_height="0dp"
             android:layout_marginTop="4dp"
+            android:entries="@array/measurements_for_materials"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/land_services_other_text"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/land_services_dump_text"
             app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
-
-        <Spinner
-            android:id="@+id/spinner7"
-            android:layout_width="211dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner6" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -24,7 +24,7 @@ public class Dashboard extends AppCompatActivity {
         authentication = authentication.getAuthentication(this);
         checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
         if (authentication.getUser().getStartTime() != 0) {
-            checkInTime.setText("Checked in at: " + timeToDate(Double.doubleToLongBits(authentication.getUser().getStartTime())));
+            checkInTime.setText("Checked in at: " + timeToDate(authentication.getUser().getStartTime()));
         }
         userLoggedIn = findViewById(R.id.dashboard_username);
         userLoggedIn.setText(authentication.getUser().getName());

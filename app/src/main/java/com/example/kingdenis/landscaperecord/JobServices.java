@@ -12,11 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class JobServices extends AppCompatActivity implements FragmentListener, AdapterView.OnItemSelectedListener {
 
@@ -36,33 +39,36 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     private AppDatabase db;
     private String services;
     private String pausedFragmentTitle;
-    private List<Customer> customers;
+    private List<Customer> allCustomers;
+    private List<Customer> sortedCustomers;
     private Customer customer;
     private EditText date, manHours;
+    private Service service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_services);
-        viewPager = (ViewPager) findViewById(R.id.job_services_view_pager);
+        viewPager = findViewById(R.id.job_services_view_pager);
         viewPager.setOffscreenPageLimit(2);
         setupViewPager(viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.job_services_tab_layout);
+        tabLayout = findViewById(R.id.job_services_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        accountSpinner = (Spinner) findViewById(R.id.job_services_account_spinner);
-        daySpinner = (Spinner) findViewById(R.id.job_services_day_spinner);
-        date = (EditText) findViewById(R.id.job_services_date_text);
-        manHours = (EditText) findViewById(R.id.job_services_man_hours_text);
+        accountSpinner = findViewById(R.id.job_services_account_spinner);
+        daySpinner = findViewById(R.id.job_services_day_spinner);
+        date = findViewById(R.id.job_services_date_text);
+        manHours = findViewById(R.id.job_services_man_hours_text);
         db = AppDatabase.getAppDatabase(this);
         services = "";
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 List<Customer> customersByDay = new ArrayList<>();
                 if (position != 0) {
-                    for (Customer c : customers) {
+                    for (Customer c : allCustomers) {
                         if (c.getCustomerDay() != null) {
                             if (c.getCustomerDay().equals(daySpinner.getSelectedItem().toString())) {
                                 customersByDay.add(c);
@@ -70,8 +76,10 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                         }
                     }
                     populateSpinner(customersByDay);
+                    sortedCustomers = customersByDay;
                 } else {
-                    populateSpinner(customers);
+                    populateSpinner(allCustomers);
+                    sortedCustomers = allCustomers;
                 }
 
             }
@@ -120,65 +128,57 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     }
 
     public void onSubmitButton(View view) {
-        boolean allowServiceCreate = false;
-        Service service = new Service();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        Date convertedDate = new Date();
-        LawnServices lawnServices = (LawnServices)
-                fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LAWN_SERVICES.toString()));
-        LandscapeServices landscapeServices = (LandscapeServices)
-                fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LANDSCAPING_SERVICES.toString()));
-        SnowServices snowServices = (SnowServices)
-                fragAdapter.getItem(fragAdapter.getPosition(ServiceType.SNOW_SERVICES.toString()));
-        List<Material> materials = landscapeServices.getMaterials();
-
-        if (!date.getText().toString().isEmpty()) {
-            String dateString = date.getText().toString();
-            try {
-                convertedDate = dateFormat.parse(dateString);
-                if (service.getStartDateTime() == null) {
-                    service.setStartDateTime(convertedDate);
-                } else {
-                    service.setEndDateTime(convertedDate);
-                }
-            } catch (ParseException e) {
-
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        if (customer != null) {
+            long time = System.currentTimeMillis();
+            if (service == null) {
+                service = new Service();
             }
-        } else {
-            Date currentDate = Calendar.getInstance().getTime();
-            if (service.getStartDateTime() == null) {
-                service.setStartDateTime(currentDate);
+            LawnServices lawnServices = (LawnServices)
+                    fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LAWN_SERVICES.toString()));
+            LandscapeServices landscapeServices = (LandscapeServices)
+                    fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LANDSCAPING_SERVICES.toString()));
+            SnowServices snowServices = (SnowServices)
+                    fragAdapter.getItem(fragAdapter.getPosition(ServiceType.SNOW_SERVICES.toString()));
+            List<Material> materials = landscapeServices.getMaterials();
+
+            if (!date.getText().toString().isEmpty()) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                String dateString = date.getText().toString();
+                try {
+                    Date date = dateFormat.parse(dateString);
+                    time = date.getTime();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (service.getStartTime() == 0) {
+                service.setStartTime(time);
             } else {
-                service.setEndDateTime(currentDate);
+                service.setEndTime(time);
+                service.setPause(false);
+            }
+
+            if (lawnServices.getView() != null) {
+                services += lawnServices.markedCheckBoxes();
             }
 
 
-        }
-
-
-        if (lawnServices.getView() != null) {
-            services += lawnServices.markedCheckBoxes();
-        }
-
-
-        if (landscapeServices.getView() != null) {
-            services += landscapeServices.markedCheckBoxes();
-            if (materials != null) {
-                for (Material m : landscapeServices.getMaterials()) {
-                    service.addMaterial(m);
+            if (landscapeServices.getView() != null) {
+                services += landscapeServices.markedCheckBoxes();
+                if (materials != null) {
+                    for (int i = 0; i < materials.size(); i++) {
+                        service.addMaterial(materials.get(i));
+                    }
                 }
             }
+
+            if (snowServices.getView() != null) {
+                services += snowServices.markedCheckBoxes();
+            }
+            customer.addService(service);
+            updateCustomer();
         }
-
-
-        if (snowServices.getView() != null) {
-            services += snowServices.markedCheckBoxes();
-        }
-
-
-        finish();
     }
 
     private void populateSpinner(List<Customer> customers) {
@@ -196,33 +196,46 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         accountSpinner.setSelection(Adapter.NO_SELECTION);
         if (!customers.isEmpty()) {
             customer = customers.get(0);
-        } else {
-            customer = new Customer("bob", "barker", "extrodinare");
-            customers.add(customer);
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        customer = customers.get(position);
+        customer = allCustomers.get(position);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        if (!allCustomers.isEmpty()) customer = sortedCustomers.get(0);
     }
 
     private void findAllCustomers() {
         new AsyncTask<Void, Void, List<Customer>>() {
             @Override
             protected List<Customer> doInBackground(Void... voids) {
-                customers = db.customerDao().getAllCustomers();
-                return customers;
+                allCustomers = db.customerDao().getAllCustomers();
+                return allCustomers;
             }
 
             @Override
             protected void onPostExecute(List<Customer> customers) {
                 populateSpinner(customers);
+            }
+        }.execute();
+    }
+
+    private void updateCustomer() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.customerDao().updateCustomer(customer);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void AVoid) {
+                Toast.makeText(getApplicationContext(), customer.getName() + " " + services, Toast.LENGTH_LONG).show();
+                finish();
             }
         }.execute();
     }

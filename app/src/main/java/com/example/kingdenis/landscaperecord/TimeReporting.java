@@ -22,7 +22,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     private final int VIEW_ID = R.id.time_reporting_spinner;
     private Authentication authentication;
     private AppDatabase db;
-    private double startTime;
+    private long startTime;
     private boolean checkedIn, recreated;
     private int adapterPosition;
     private List<User> users;

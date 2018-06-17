@@ -11,7 +11,7 @@ public class User implements SpinnerObjects {
     private String name;
     private String password;
     private boolean admin;
-    private double startTime;
+    private long startTime;
 
     public User() {
     }
@@ -57,11 +57,11 @@ public class User implements SpinnerObjects {
         this.password = password;
     }
 
-    public double getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(double startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 

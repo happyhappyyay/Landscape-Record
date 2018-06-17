@@ -26,6 +26,7 @@ public class Customer implements SpinnerObjects {
         this.customerFirstName = customerFirstName;
         this.customerLastName = customerLastName;
         this.customerAddress = customerAddress;
+        customerServices = new ArrayList<>();
     }
 
     public void addService(Service customerService) {
@@ -118,6 +119,6 @@ public class Customer implements SpinnerObjects {
 
     @Override
     public String getName() {
-        return null;
+        return toString();
     }
 }

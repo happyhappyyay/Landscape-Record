@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:windowSoftInputMode="adjustResize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".JobServices">
@@ -13,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="@string/man_hours_hint"
         android:inputType="numberDecimal"
@@ -20,47 +20,31 @@
         app:layout_constraintBottom_toTopOf="@+id/job_services_view_pager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView17"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_day_spinner" />
-
-    <EditText
-        android:id="@+id/job_services_date_text"
-        android:layout_width="122dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="@string/date_time_hint"
-        android:inputType="date"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/job_services_view_pager"
-        app:layout_constraintEnd_toStartOf="@+id/textView17"
-        app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_account_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/job_services_tab_layout" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="8dp"
         android:text="@string/date_time"
         app:layout_constraintBottom_toTopOf="@+id/job_services_view_pager"
         app:layout_constraintEnd_toStartOf="@+id/job_services_date_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_account_spinner" />
+        app:layout_constraintTop_toTopOf="@+id/job_services_date_text" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:layout_constraintBottom_toTopOf="@+id/job_services_tab_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -71,8 +55,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme"
-        app:layout_constraintBottom_toTopOf="@+id/job_services_account_spinner"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
 
@@ -93,23 +77,12 @@
     </android.support.design.widget.TabLayout>
 
     <Spinner
-        android:id="@+id/job_services_account_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/job_services_date_text"
-        app:layout_constraintEnd_toStartOf="@+id/job_services_day_spinner"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_tab_layout" />
-
-    <Spinner
         android:id="@+id/job_services_day_spinner"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:entries="@array/days_of_the_week"
-        app:layout_constraintBottom_toBottomOf="@+id/job_services_account_spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/job_services_account_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_tab_layout" />
+        app:layout_constraintBottom_toTopOf="@+id/textView17"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/job_services_submit_button"
@@ -118,8 +91,7 @@
         android:onClick="onSubmitButton"
         android:text="@string/submit_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_view_pager" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/job_services_view_pager"
@@ -127,20 +99,46 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/job_services_submit_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_account_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/job_services_man_hours_text" />
 
     <TextView
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="8dp"
         android:text="@string/lawn_services_man_hours"
         app:layout_constraintBottom_toTopOf="@+id/job_services_view_pager"
         app:layout_constraintEnd_toStartOf="@+id/job_services_man_hours_text"
         app:layout_constraintStart_toEndOf="@+id/job_services_date_text"
-        app:layout_constraintTop_toBottomOf="@+id/job_services_account_spinner" />
+        app:layout_constraintTop_toTopOf="@+id/job_services_date_text" />
+
+    <EditText
+        android:id="@+id/job_services_date_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/date_time_hint"
+        android:inputType="date"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/textView17"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/job_services_tab_layout" />
+
+    <Spinner
+        android:id="@+id/job_services_account_spinner"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        app:layout_constraintEnd_toStartOf="@+id/job_services_day_spinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/job_services_tab_layout"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

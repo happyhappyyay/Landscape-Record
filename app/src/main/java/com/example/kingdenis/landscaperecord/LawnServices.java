@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class LawnServices extends Fragment implements FragmentListener {
     private Button submit;
     private String services;
     private boolean pause;
+    private EditText otherText;
 
 
     public LawnServices() {
@@ -61,6 +63,7 @@ public class LawnServices extends Fragment implements FragmentListener {
         checkBoxes.add(removeLeaves);
         other = (CheckBox) view.findViewById(R.id.lawn_services_other);
         checkBoxes.add(other);
+        otherText = view.findViewById(R.id.lawn_services_other_text);
         setRetainInstance(true);
         return view;
     }
@@ -103,8 +106,19 @@ public class LawnServices extends Fragment implements FragmentListener {
         services = "";
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
-                services += c.getText().toString() + " ";
+
+                if(c.getText().toString().toLowerCase().equals("other:"))
+                {
+                    String otherString = otherText.getText().toString();
+                    if (!otherString.isEmpty()) {
+                        services += "Other " + otherString + "#*#";
+                    }
+                }
+                else {
+                    services += c.getText().toString() + "#*#";
+                }
             }
+
         }
         return services;
     }

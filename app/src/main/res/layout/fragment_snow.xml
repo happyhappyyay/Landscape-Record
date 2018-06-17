@@ -12,6 +12,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <EditText
+            android:id="@+id/snow_services_other_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:hint="@string/job_activity_fragment_other"
+            android:inputType="textLongMessage"
+            android:textSize="12sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/snow_services_other"
+            app:layout_constraintTop_toBottomOf="@+id/snow_services_salt_text" />
+
+        <Spinner
+            android:id="@+id/snow_services_salt_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/measurements_for_materials"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/snow_services_other_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/snow_services_salt_text"
+            app:layout_constraintTop_toBottomOf="@+id/gridLayout2" />
+
         <CheckBox
             android:id="@+id/snow_services_other"
             android:layout_width="wrap_content"
@@ -33,31 +60,18 @@
             app:layout_constraintTop_toBottomOf="@+id/gridLayout2" />
 
         <EditText
-            android:id="@+id/editText9"
+            android:id="@+id/snow_services_salt_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:ems="10"
-            android:inputType="textLongMessage"
-            android:textSize="12sp"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@+id/snow_services_other"
-            app:layout_constraintTop_toBottomOf="@+id/editText12" />
-
-        <EditText
-            android:id="@+id/editText12"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
             android:ems="10"
             android:hint="@string/snow_services_salt_bags"
             android:inputType="numberDecimal"
             android:textSize="12sp"
-            android:visibility="invisible"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/snow_services_salt_spinner"
             app:layout_constraintStart_toEndOf="@+id/snow_services_salt"
             app:layout_constraintTop_toBottomOf="@+id/gridLayout2" />
 

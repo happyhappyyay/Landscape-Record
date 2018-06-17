@@ -27,8 +27,8 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     private CheckBox drain, till, edging, dump, other;
     private List<CheckBox> checkBoxes;
     private Button deleteButton, addButton, removeButton;
-    private EditText materialName, materialQuantity, materialPrice;
-    private Spinner materialTypeSpinner, materialMeasurementSpinner;
+    private EditText materialName, materialQuantity, materialPrice, dumpText, otherText;
+    private Spinner materialTypeSpinner, materialMeasurementSpinner, dumpSpinner, dumpTypeSpinner;
     private boolean pause;
     private int recyclerPosition = 0;
 
@@ -44,28 +44,32 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landscaping, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.land_services_recycler_view);
+        recyclerView = view.findViewById(R.id.land_services_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerMaterialAdapter();
         recyclerView.setAdapter(adapter);
         checkBoxes = new ArrayList<>();
-        drain = (CheckBox) view.findViewById(R.id.land_services_drainage);
+        drain = view.findViewById(R.id.land_services_drainage);
         checkBoxes.add(drain);
-        till = (CheckBox) view.findViewById(R.id.land_services_till);
+        till = view.findViewById(R.id.land_services_till);
         checkBoxes.add(till);
-        edging = (CheckBox) view.findViewById(R.id.land_services_edging);
+        edging = view.findViewById(R.id.land_services_edging);
         checkBoxes.add(edging);
-        dump = (CheckBox) view.findViewById(R.id.land_services_dump);
+        dump = view.findViewById(R.id.land_services_dump);
         checkBoxes.add(dump);
-        other = (CheckBox) view.findViewById(R.id.land_services_other);
+        other = view.findViewById(R.id.land_services_other);
         checkBoxes.add(other);
-        materialName = (EditText) view.findViewById(R.id.land_services_material_name_text);
-        materialQuantity = (EditText) view.findViewById(R.id.land_services_material_quantity_text);
-        materialPrice = (EditText) view.findViewById(R.id.land_services_material_price_text);
-        materialTypeSpinner = (Spinner) view.findViewById(R.id.land_services_type_spinner);
-        materialMeasurementSpinner = (Spinner) view.findViewById(R.id.land_services_measure_spinner);
-        deleteButton = (Button) view.findViewById(R.id.land_services_delete_button);
+        materialName = view.findViewById(R.id.land_services_material_name_text);
+        materialQuantity = view.findViewById(R.id.land_services_material_quantity_text);
+        materialPrice = view.findViewById(R.id.land_services_material_price_text);
+        materialTypeSpinner = view.findViewById(R.id.land_services_type_spinner);
+        materialMeasurementSpinner = view.findViewById(R.id.land_services_measure_spinner);
+        dumpText = view.findViewById(R.id.land_services_dump_text);
+        dumpSpinner = view.findViewById(R.id.land_services_dump_spinner);
+        otherText = view.findViewById(R.id.land_services_other_text);
+        dumpTypeSpinner = view.findViewById(R.id.land_services_dump_type_spinner);
+        deleteButton = view.findViewById(R.id.land_services_delete_button);
         deleteButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -75,7 +79,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                 }
         );
 
-        addButton = (Button) view.findViewById(R.id.land_services_add_material_button);
+        addButton = view.findViewById(R.id.land_services_add_material_button);
         addButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -85,12 +89,13 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                             adapter.addMaterial(material, recyclerPosition);
                             recyclerPosition += 1;
                             materials.add(material);
+                            resetMaterialInformation();
                         }
                     }
                 }
         );
 
-        removeButton = (Button) view.findViewById(R.id.land_services_remove_material_button);
+        removeButton = view.findViewById(R.id.land_services_remove_material_button);
         removeButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -100,13 +105,21 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                             adapter.addMaterial(material, recyclerPosition);
                             recyclerPosition += 1;
                             materials.add(material);
+                            resetMaterialInformation();
                         }
                     }
                 }
         );
         setRetainInstance(true);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return view;
+    }
+
+    private void resetMaterialInformation() {
+        materialMeasurementSpinner.setSelection(0);
+        materialTypeSpinner.setSelection(0);
+        materialName.setText("");
+        materialQuantity.setText("");
+        materialPrice.setText("");
     }
 
     public void deleteMaterial() {
@@ -139,13 +152,26 @@ public class LandscapeServices extends Fragment implements FragmentListener {
 
     private Material createMaterial(boolean addMaterial) {
         String name = materialName.getText().toString();
-        double quantity = Double.parseDouble(materialQuantity.getText().toString());
+        double quantity;
+        try {
+            quantity = Double.parseDouble(materialQuantity.getText().toString());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            quantity = 1;
+        }
         String measurement = materialMeasurementSpinner.getSelectedItem().toString();
         String type = materialTypeSpinner.getSelectedItem().toString();
         if (!type.toLowerCase().equals("Drain Tile")) {
             type = type.toUpperCase();
         } else {
             type = "DRAIN_TILE";
+        }
+
+        if (name == "") {
+            if (!type.isEmpty()) {
+                name = type;
+            }
         }
 
         Material material = new Material(name, MaterialType.valueOf(type), addMaterial);
@@ -169,7 +195,21 @@ public class LandscapeServices extends Fragment implements FragmentListener {
         String services = "";
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
-                services += c.getText().toString() + " ";
+
+                if (c.getText().toString().toLowerCase().equals("other:")) {
+                    String otherString = otherText.getText().toString();
+                    if (!otherString.isEmpty()) {
+                        services += "Other " + otherString + "#*#";
+                    }
+                } else if (c.getText().toString().toLowerCase().equals("dump")) {
+                    String dumpString = dumpText.getText().toString();
+                    if (!dumpString.isEmpty()) {
+                        services += "Dump " + dumpTypeSpinner.getSelectedItem().toString() + ": " +
+                                dumpString + dumpSpinner.getSelectedItem().toString() + "#*#";
+                    }
+                } else {
+                    services += c.getText().toString() + "#*#";
+                }
             }
         }
         return services;

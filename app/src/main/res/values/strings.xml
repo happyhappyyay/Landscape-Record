@@ -125,4 +125,5 @@
     <string name="hour_operations_remove">Remove</string>
     <string name="admin_tools_view_logs">View Logged Activity</string>
     <string name="log_item_text">Log</string>
+    <string name="job_activity_fragment_other">Enter non-standard activity or notes</string>
 </resources>

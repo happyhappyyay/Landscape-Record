@@ -2,6 +2,7 @@ package com.example.kingdenis.landscaperecord;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Service {
 
@@ -10,17 +11,19 @@ public class Service {
     private String services;
     private double materialCost;
     private double manHours;
-    private ArrayList<Material> materials;
+    private List<Material> materials;
     private Date startDateTime;
     //    TODO: get pause time, then pass time difference of pause and restart to accumulated time subtract from man hours
     private Date pausedDateTime;
     private Date endDateTime;
-    private int startTime;
-    private int endTime;
+    private long startTime;
+    private long endTime;
     private int accumulatedTime;
     private boolean pause;
 
     public Service() {
+        materials = new ArrayList<>();
+        pause = true;
     }
 
     public void addMaterial(Material material) {
@@ -75,11 +78,11 @@ public class Service {
         this.manHours = manHours;
     }
 
-    public ArrayList<Material> getMaterials() {
+    public List<Material> getMaterials() {
         return materials;
     }
 
-    public void setMaterials(ArrayList<Material> materials) {
+    public void setMaterials(List<Material> materials) {
         this.materials = materials;
     }
 
@@ -99,19 +102,19 @@ public class Service {
         this.endDateTime = endDateTime;
     }
 
-    public int getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 
@@ -129,5 +132,9 @@ public class Service {
 
     public void setPause(boolean pause) {
         this.pause = pause;
+    }
+
+    public boolean isValid() {
+        return startTime > 0;
     }
 }

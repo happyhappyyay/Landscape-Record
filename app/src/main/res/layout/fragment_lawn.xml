@@ -24,17 +24,16 @@
             app:layout_row="3" />
 
         <EditText
-            android:id="@+id/editText9"
-            android:layout_width="248dp"
+            android:id="@+id/lawn_services_other_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginLeft="35dp"
             android:layout_marginRight="8dp"
-            android:layout_marginStart="35dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:hint="@string/job_activity_fragment_other"
+            android:inputType="textLongMessage"
             android:textSize="12sp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/lawn_services_other"
             app:layout_constraintTop_toBottomOf="@+id/gridLayout4" />
