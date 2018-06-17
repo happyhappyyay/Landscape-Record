@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kingdenis.landscaperecord">
+    package="com.happyhappyyay.landscaperecord">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".LoginPage"
+            android:name="com.happyhappyyay.landscaperecord.LoginPage"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
 
@@ -26,39 +26,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainMenu"
+            android:name="com.happyhappyyay.landscaperecord.MainMenu"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".TimeReporting"
+            android:name="com.happyhappyyay.landscaperecord.TimeReporting"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Payment"
+            android:name="com.happyhappyyay.landscaperecord.Payment"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".NewContact"
+            android:name="com.happyhappyyay.landscaperecord.NewContact"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Job"
+            android:name="com.happyhappyyay.landscaperecord.Job"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".JobServices"
+            android:name="com.happyhappyyay.landscaperecord.JobServices"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".AdminTools"
+            android:name="com.happyhappyyay.landscaperecord.AdminTools"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".UserOptions"
+            android:name="com.happyhappyyay.landscaperecord.UserOptions"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".AddUser"
+            android:name="com.happyhappyyay.landscaperecord.AddUser"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ViewUsers" />
-        <activity android:name=".DeleteUser" />
-        <activity android:name=".Dashboard" />
-        <activity android:name=".Settings" />
-        <activity android:name=".HourOperations" />
-        <activity android:name=".ViewActivityLogs"></activity>
+        <activity android:name="com.happyhappyyay.landscaperecord.ViewUsers" />
+        <activity android:name="com.happyhappyyay.landscaperecord.DeleteUser" />
+        <activity android:name="com.happyhappyyay.landscaperecord.Dashboard" />
+        <activity android:name="com.happyhappyyay.landscaperecord.Settings" />
+        <activity android:name="com.happyhappyyay.landscaperecord.HourOperations" />
+        <activity android:name="com.happyhappyyay.landscaperecord.ViewActivityLogs"></activity>
     </application>
 
 </manifest>

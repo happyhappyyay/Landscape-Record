@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1619814e217da7376bfd04eaad1d2b5e",
+    "identityHash": "dc50fb9a4503ad63eaac6ef9fcc03b62",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hours` REAL NOT NULL, `name` TEXT, `password` TEXT, `admin` INTEGER NOT NULL, `startTime` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hours` REAL NOT NULL, `name` TEXT, `password` TEXT, `admin` INTEGER NOT NULL, `startTime` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "userId",
@@ -41,7 +41,7 @@
           {
             "fieldPath": "startTime",
             "columnName": "startTime",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -175,7 +175,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1619814e217da7376bfd04eaad1d2b5e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"dc50fb9a4503ad63eaac6ef9fcc03b62\")"
     ]
   }
 }
