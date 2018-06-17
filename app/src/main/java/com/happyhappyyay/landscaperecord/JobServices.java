@@ -177,6 +177,9 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             customer.addService(service);
             updateCustomer();
         }
+        else {
+            Toast.makeText(getApplicationContext(), "No customer selected. Please select or create a customer.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void populateSpinner(List<Customer> customers) {

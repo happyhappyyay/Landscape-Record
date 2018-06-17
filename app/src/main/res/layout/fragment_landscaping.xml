@@ -14,7 +14,7 @@
 
         <Spinner
             android:id="@+id/land_services_dump_type_spinner"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:entries="@array/types_of_materials"
@@ -266,7 +266,7 @@
 
         <Spinner
             android:id="@+id/land_services_dump_spinner"
-            android:layout_width="88dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:entries="@array/measurements_for_materials"

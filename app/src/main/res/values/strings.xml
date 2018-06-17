@@ -82,13 +82,13 @@
     <string name="lawn_services_spray_grass">Spray Grass</string>
     <string name="lawn_services_clean_up">Clean Up</string>
     <string name="lawn_services_rake">Rake</string>
-    <string name="lawn_services_other">Other:</string>
+    <string name="lawn_services_other">Other</string>
     <string name="lawn_services_employees">Number of Employees:</string>
     <string name="lawn_services_optional">Leave blank to autogenerate</string>
     <string name="snow_services_shovel">Shovel</string>
     <string name="snow_services_plow">Plow</string>
     <string name="snow_services_snow_blow">Snow Blow</string>
-    <string name="snow_services_salt">Salt:</string>
+    <string name="snow_services_salt">Salt</string>
     <string name="snow_services_salt_bags">(Optional) bags of salt</string>
     <string name="land_services_mulch">Mulch</string>
     <string name="land_services_dirt">Dirt</string>

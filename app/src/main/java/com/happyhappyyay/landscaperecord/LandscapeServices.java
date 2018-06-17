@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,7 +196,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
 
-                if (c.getText().toString().toLowerCase().equals("other:")) {
+                if (c.getText().toString().toLowerCase().equals("other")) {
                     String otherString = otherText.getText().toString();
                     if (!otherString.isEmpty()) {
                         services += "Other " + otherString + "#*#";

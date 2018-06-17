@@ -62,13 +62,13 @@ public class SnowServices extends Fragment implements FragmentListener {
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
 
-                if (c.getText().toString().toLowerCase().equals("other:")) {
+                if (c.getText().toString().toLowerCase().equals("other")) {
                     String otherString = otherText.getText().toString();
                     if (!otherString.isEmpty()) {
                         services += "Other " + otherString + "#*#";
                     }
                 }
-                else if (c.getText().toString().toLowerCase().equals("salt:")) {
+                else if (c.getText().toString().toLowerCase().equals("salt")) {
                         String saltString = saltText.getText().toString();
                         if (!saltString.isEmpty()) {
                             services += "Salt " + saltString + saltSpinner.getSelectedItem().toString() + "#*#";

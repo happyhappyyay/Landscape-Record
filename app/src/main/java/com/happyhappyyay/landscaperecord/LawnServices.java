@@ -107,7 +107,7 @@ public class LawnServices extends Fragment implements FragmentListener {
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
 
-                if(c.getText().toString().toLowerCase().equals("other:"))
+                if(c.getText().toString().toLowerCase().equals("other"))
                 {
                     String otherString = otherText.getText().toString();
                     if (!otherString.isEmpty()) {
