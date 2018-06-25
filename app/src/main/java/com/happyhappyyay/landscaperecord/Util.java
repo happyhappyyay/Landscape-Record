@@ -4,20 +4,27 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Util {
+    private static final String TAG = "selected";
 
     public static boolean toolbarItemSelection(Context context, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_contact:
                 goToNewContact(context);
+                return true;
+            case R.id.menu_add_service:
+                goToQuickSheet(context);
                 return true;
             case R.id.menu_dashboard:
                 goToDashboard(context);
@@ -54,6 +61,29 @@ public class Util {
         context.startActivity(intent);
     }
 
+    private static void goToQuickSheet(Context context) {
+        Intent intent = new Intent(context, QuickSheet.class);
+        context.startActivity(intent);
+    }
+
+    public static boolean checkDateFormat(String date) {
+        try {
+            int month = Integer.parseInt(date.substring(0, 2));
+            int day = Integer.parseInt(date.substring(3, 5));
+            int year = Integer.parseInt(date.substring(6, 10));
+            if (month > 0 & month < 13 & day > 0 & day < 31 & year > 2000 & year < 2100) {
+                Calendar calendar = new GregorianCalendar(year, month, day);
+                 if (day <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                     return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
     /* Loads spinner with list items and sets initial item of list */
     private static <T extends SpinnerObjects> void populateSpinner(PopulateSpinner populateSpinner, List<T> objects) {
         Authentication authentication = populateSpinner.getAuthentication();
@@ -71,7 +101,7 @@ public class Util {
             }
         }
 
-        Spinner s = (Spinner) activity.findViewById(viewID);
+        Spinner s = activity.findViewById(viewID);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
                 R.layout.spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

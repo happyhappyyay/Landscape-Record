@@ -3,8 +3,11 @@ package com.happyhappyyay.landscaperecord;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Customer implements SpinnerObjects {
@@ -18,9 +21,10 @@ public class Customer implements SpinnerObjects {
     private String customerEmail;
     private String customerBusiness;
     private String customerDay;
+    private String customerState;
 
-    @Embedded
-    private ArrayList<Service> customerServices;
+    @TypeConverters(DataTypeConverter.class)
+    private List<Service> customerServices;
 
     public Customer(String customerFirstName, String customerLastName, String customerAddress) {
         this.customerFirstName = customerFirstName;
@@ -31,6 +35,10 @@ public class Customer implements SpinnerObjects {
 
     public void addService(Service customerService) {
         customerServices.add(customerService);
+    }
+
+    public void updateService(Service customerService, int indexPosition) {
+        customerServices.set(indexPosition, customerService);
     }
 
     public void removeService(Service customerService) {
@@ -83,11 +91,11 @@ public class Customer implements SpinnerObjects {
         this.customerCity = customerCity;
     }
 
-    public ArrayList<Service> getCustomerServices() {
+    public List<Service> getCustomerServices() {
         return customerServices;
     }
 
-    public void setCustomerServices(ArrayList<Service> customerServices) {
+    public void setCustomerServices(List<Service> customerServices) {
         this.customerServices = customerServices;
     }
 
@@ -105,6 +113,14 @@ public class Customer implements SpinnerObjects {
 
     public void setCustomerDay(String customerDay) {
         this.customerDay = customerDay;
+    }
+
+    public String getCustomerState() {
+        return customerState;
+    }
+
+    public void setCustomerState(String customerState) {
+        this.customerState = customerState;
     }
 
     @Override

@@ -5,14 +5,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class NewContact extends AppCompatActivity {
     private static final String TAG = "Customer List";
     private EditText firstNameText, lastNameText, emailText, businessText, addressText, cityText,
             phoneText, weekDay;
+    private Spinner stateSpinner, daySpinner;
     private Customer customer;
     private AppDatabase db;
 
@@ -27,7 +33,8 @@ public class NewContact extends AppCompatActivity {
         addressText = findViewById(R.id.contact_address_text);
         cityText = findViewById(R.id.contact_city_text);
         phoneText = findViewById(R.id.contact_phone_number_text);
-        weekDay = findViewById(R.id.day_of_week);
+        stateSpinner = findViewById(R.id.contact_state_spinner);
+        daySpinner = findViewById(R.id.contact_day_spinner);
         db = AppDatabase.getAppDatabase(this);
     }
 
@@ -53,13 +60,15 @@ public class NewContact extends AppCompatActivity {
                 customer.setCustomerPhoneNumber(phoneText.getText().toString());
             }
 
-            if (!weekDay.getText().toString().isEmpty()) {
-                customer.setCustomerDay(weekDay.getText().toString());
+            if(daySpinner.getSelectedItem() != null) {
+                customer.setCustomerDay(daySpinner.getSelectedItem().toString());
             }
 
+            if(stateSpinner.getSelectedItem() != null) {
+                customer.setCustomerState(stateSpinner.getSelectedItem().toString());
+            }
 
             insertCustomer();
-            Log.d(TAG, customer.toString());
         }
 
     }

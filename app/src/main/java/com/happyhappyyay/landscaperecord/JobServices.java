@@ -46,6 +46,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        service = new Service();
         setContentView(R.layout.activity_job_services);
         viewPager = findViewById(R.id.job_services_view_pager);
         viewPager.setOffscreenPageLimit(2);
@@ -128,9 +129,9 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     public void onSubmitButton(View view) {
         if (customer != null) {
             long time = System.currentTimeMillis();
-            if (service == null) {
-                service = new Service();
-            }
+//            if (service == null) {
+//                service = new Service();
+//            }
             LawnServices lawnServices = (LawnServices)
                     fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LAWN_SERVICES.toString()));
             LandscapeServices landscapeServices = (LandscapeServices)
@@ -174,6 +175,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             if (snowServices.getView() != null) {
                 services += snowServices.markedCheckBoxes();
             }
+            service.setServices(services);
             customer.addService(service);
             updateCustomer();
         }
@@ -235,7 +237,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
 
             @Override
             protected void onPostExecute(Void AVoid) {
-                Toast.makeText(getApplicationContext(), customer.getName() + " " + services, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), customer.getName() + " " + service.getServices(), Toast.LENGTH_LONG).show();
                 finish();
             }
         }.execute();

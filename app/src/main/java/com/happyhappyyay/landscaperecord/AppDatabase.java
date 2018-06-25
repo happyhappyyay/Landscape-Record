@@ -3,9 +3,12 @@ package com.happyhappyyay.landscaperecord;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 @Database(entities = {User.class, Customer.class, LogActivity.class}, version = 1)
+@TypeConverters(DataTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
@@ -22,6 +25,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CustomerDao customerDao();
 
     public abstract LogDao logDao();
+
+//    public abstract ServiceDao serviceDao();
 
 
 }

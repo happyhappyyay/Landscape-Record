@@ -126,4 +126,10 @@
     <string name="admin_tools_view_logs">View Logged Activity</string>
     <string name="log_item_text">Log</string>
     <string name="job_activity_fragment_other">Enter non-standard activity or notes</string>
+    <string name="contact_day_of_the_week">Day of the Week:</string>
+    <string name="quick_sheet_item_start">Start</string>
+    <string name="quick_sheet_item_finish">Finish</string>
+    <string name="quick_sheet_title">Quick Sheet</string>
+    <string name="quick_sheet_date">Date:</string>
+    <string name="quick_sheet_dash">-</string>
 </resources>

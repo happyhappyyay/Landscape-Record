@@ -19,7 +19,7 @@ public class ViewActivityLogs extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_logs);
-        recyclerView = (RecyclerView) findViewById(R.id.view_logs_recycler);
+        recyclerView = findViewById(R.id.view_logs_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         db = AppDatabase.getAppDatabase(this);

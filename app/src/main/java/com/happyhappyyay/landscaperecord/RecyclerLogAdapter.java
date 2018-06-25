@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerLogAdapter extends RecyclerView.Adapter {
@@ -41,7 +42,7 @@ public class RecyclerLogAdapter extends RecyclerView.Adapter {
 
         public ListViewHolder(View view) {
             super(view);
-            log = (TextView) view.findViewById(R.id.log_item_text);
+            log = view.findViewById(R.id.log_item_text);
         }
 
         public void bindView(int position) {

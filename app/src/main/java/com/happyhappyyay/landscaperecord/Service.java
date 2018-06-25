@@ -1,8 +1,10 @@
 package com.happyhappyyay.landscaperecord;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Service {
 
@@ -44,6 +46,29 @@ public class Service {
             }
         }
         return materialCost;
+    }
+
+    public String convertStartTimeToDateString() {
+        String dateMessage = "";
+        if (startTime >0) {
+            dateMessage = dateConversion(startTime);
+        }
+        return dateMessage;
+    }
+
+    public String convertEndTimeToDateString() {
+        String dateMessage = "";
+        if (endTime >0) {
+            dateMessage = dateConversion(endTime);
+        }
+        return dateMessage;
+    }
+
+    private String dateConversion(long time) {
+//        TODO: make static version in util class
+        Date date = new Date(time);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        return formatter.format(date);
     }
 
     public ServiceType getServiceType() {

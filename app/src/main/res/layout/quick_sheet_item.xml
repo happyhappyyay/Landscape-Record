@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/quick_sheet_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:gravity="top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/quick_sheet_address_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="12300 S aardvark  artichoke ln"
+            android:textSize="12sp" />
+
+        <CheckBox
+            android:id="@+id/quick_sheet_check_box1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:text="Cut"
+            android:textSize="8sp" />
+
+        <CheckBox
+            android:id="@+id/quick_sheet_check_box2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:text="Spray"
+            android:textSize="8sp" />
+
+        <CheckBox
+            android:id="@+id/quick_sheet_check_box3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:text="Prune"
+            android:textSize="8sp" />
+
+        <EditText
+            android:id="@+id/quick_sheet_notes_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:ems="10"
+            android:hint="Notes"
+            android:inputType="textMultiLine"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/quick_sheet_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:text="@string/quick_sheet_item_start"
+            android:textSize="8sp" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
