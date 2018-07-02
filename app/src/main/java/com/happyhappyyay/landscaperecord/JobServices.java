@@ -176,6 +176,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                 services += snowServices.markedCheckBoxes();
             }
             service.setServices(services);
+            service.setCustomerName(customer.getName());
             customer.addService(service);
             updateCustomer();
         }

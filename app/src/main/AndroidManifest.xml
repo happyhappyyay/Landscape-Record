@@ -53,8 +53,10 @@
         <activity android:name=".Settings" />
         <activity android:name=".HourOperations" />
         <activity android:name=".ViewActivityLogs" />
-        <activity android:name=".QuickSheet"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".QuickSheet"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".ViewServices"></activity>
     </application>
 
 </manifest>

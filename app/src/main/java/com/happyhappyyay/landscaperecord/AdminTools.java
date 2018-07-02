@@ -18,6 +18,11 @@ public class AdminTools extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startViewServices(View view) {
+        Intent intent = new Intent(this, ViewServices.class);
+        startActivity(intent);
+    }
+
     public void startHourOperations(View view) {
         Intent intent = new Intent(this, HourOperations.class);
         startActivity(intent);

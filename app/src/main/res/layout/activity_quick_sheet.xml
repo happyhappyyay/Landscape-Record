@@ -30,9 +30,10 @@
         android:hint="@string/date_time_hint"
         android:inputType="date"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_sheet_start_date_text"
         app:layout_constraintEnd_toStartOf="@+id/quick_sheet_day_spinner"
         app:layout_constraintStart_toEndOf="@+id/quick_sheet_start_date_text"
-        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_my_toolbar" />
+        app:layout_constraintTop_toTopOf="@+id/quick_sheet_start_date_text" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/quick_sheet_my_toolbar"
@@ -63,8 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/days_of_the_week"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_sheet_end_date_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_my_toolbar" />
+        app:layout_constraintTop_toTopOf="@+id/quick_sheet_end_date_text" />
 
     <TextView
         android:id="@+id/textView"

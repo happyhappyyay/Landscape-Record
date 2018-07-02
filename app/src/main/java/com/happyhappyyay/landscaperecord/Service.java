@@ -10,14 +10,12 @@ public class Service {
 
     private int serviceID;
     private ServiceType serviceType;
-    private String services;
+    private String services, username, customerName;
     private double materialCost;
     private double manHours;
+    private double mileage;
     private List<Material> materials;
-    private Date startDateTime;
     //    TODO: get pause time, then pass time difference of pause and restart to accumulated time subtract from man hours
-    private Date pausedDateTime;
-    private Date endDateTime;
     private long startTime;
     private long endTime;
     private int accumulatedTime;
@@ -111,22 +109,6 @@ public class Service {
         this.materials = materials;
     }
 
-    public Date getStartDateTime() {
-        return startDateTime;
-    }
-
-    public void setStartDateTime(Date startDateTime) {
-        this.startDateTime = startDateTime;
-    }
-
-    public Date getEndDateTime() {
-        return endDateTime;
-    }
-
-    public void setEndDateTime(Date endDateTime) {
-        this.endDateTime = endDateTime;
-    }
-
     public long getStartTime() {
         return startTime;
     }
@@ -157,6 +139,30 @@ public class Service {
 
     public void setPause(boolean pause) {
         this.pause = pause;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public double getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(double mileage) {
+        this.mileage = mileage;
     }
 
     public boolean isValid() {

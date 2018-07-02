@@ -139,6 +139,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                                 service.setPause(true);
                                 service.setStartTime(startTime);
                                 service.setServices(servicesString);
+                                service.setCustomerName(customer.getName());
                                 customer.addService(service);
                                 updateCustomer();
                             }

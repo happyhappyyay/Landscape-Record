@@ -132,4 +132,16 @@
     <string name="quick_sheet_title">Quick Sheet</string>
     <string name="quick_sheet_date">Date:</string>
     <string name="quick_sheet_dash">-</string>
+    <string name="view_services_text">Services</string>
+    <string name="view_services_all">All</string>
+    <string name="view_services_in_progress">In-Progress</string>
+    <string name="view_services_completed">Completed</string>
+    <string name="view_services_start_date">Start Date</string>
+    <string name="view_services_end_date">End Date</string>
+    <string name="view_services_customer">Customer</string>
+    <string name="view_services_view_by">View By</string>
+    <string name="view_services_sort_by">Sort By</string>
+    <string name="view_services_mileage">Mileage</string>
+    <string name="admin_tools_view_services">View Services</string>
+    <string name="view_services_search">Search</string>
 </resources>
