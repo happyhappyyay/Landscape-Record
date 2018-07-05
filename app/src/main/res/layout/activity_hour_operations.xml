@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".HourOperations">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/hour_operations_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/user_options_hour_operations" />
+
     <EditText
         android:id="@+id/hour_operations_hours_text"
         android:layout_width="wrap_content"
@@ -14,7 +28,7 @@
         android:layout_marginLeft="21dp"
         android:layout_marginRight="84dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="64dp"
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,11 +92,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="130dp"
         android:text="@string/hours_operations_hours"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hour_operations_spinner" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/hour_operations_hours_text"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/hour_operations_spinner"
@@ -92,8 +105,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/hour_operations_toolbar" />
 </android.support.constraint.ConstraintLayout>

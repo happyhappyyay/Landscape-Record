@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".NewContact">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/new_contact_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/main_menu_contact" />
+
     <TextView
         android:id="@+id/contact_name"
         android:layout_width="wrap_content"
@@ -208,9 +222,9 @@
         android:layout_marginRight="8dp"
         android:entries="@array/days_of_the_week"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/contact_phone_number_text"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/new_contact_toolbar" />
 
     <TextView
         android:id="@+id/textView10"

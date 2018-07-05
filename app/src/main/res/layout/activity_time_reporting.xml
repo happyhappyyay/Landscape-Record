@@ -6,41 +6,57 @@
     android:layout_height="match_parent"
     tools:context=".TimeReporting">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/time_reporting_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/main_menu_time" />
+
     <Button
         android:id="@+id/checkInButton"
         style="@android:style/Widget.Button.Small"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="61dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="64dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:onClick="createCheckIn"
         android:text="@string/checkInText"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toTopOf="@+id/checkOutButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/time_reporting_spinner" />
 
     <Button
         android:id="@+id/checkOutButton"
         style="@android:style/Widget.Button.Small"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="64dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:onClick="createCheckOut"
         android:text="@string/checkOutText"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkInButton" />
 
@@ -52,8 +68,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/time_reporting_toolbar" />
 </android.support.constraint.ConstraintLayout>

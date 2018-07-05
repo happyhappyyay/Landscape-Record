@@ -95,7 +95,6 @@ public class Util {
         int pos = 0;
         for (int i = 0; i < objects.size(); i++) {
             arraySpinner[i] = objects.get(i).getName();
-//                TODO: Change this?
             if (objects.get(i).getName().equals(authentication.getUser().getName())) {
                 pos = i;
             }

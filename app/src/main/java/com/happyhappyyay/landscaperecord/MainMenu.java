@@ -27,13 +27,6 @@ public class MainMenu extends AppCompatActivity {
     public void startTimeReporting(View view) {
         Intent intent = new Intent(this, TimeReporting.class);
         startActivity(intent);
-//        TODO: Delete
-//          loadUsers();
-//        users = db.userDao().getAllUsers();
-//        recreate();
-//        for(User user: users) {
-//            Log.d(TAG, user.toString());
-//        }
     }
 
     public void startPaymentReporting(View view) {
