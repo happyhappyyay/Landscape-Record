@@ -21,14 +21,14 @@ public class Dashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        authentication = authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication(this);
         checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
         if (authentication.getUser().getStartTime() != 0) {
             checkInTime.setText("Checked in at: " + timeToDate(authentication.getUser().getStartTime()));
         }
         userLoggedIn = findViewById(R.id.dashboard_username);
         userLoggedIn.setText(authentication.getUser().getName());
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = findViewById(R.id.dashboard_toolbar);
         setSupportActionBar(myToolbar);
     }
 

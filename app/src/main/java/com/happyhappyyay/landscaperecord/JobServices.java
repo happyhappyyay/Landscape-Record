@@ -53,7 +53,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         setupViewPager(viewPager);
         tabLayout = findViewById(R.id.job_services_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = findViewById(R.id.dashboard_toolbar);
         setSupportActionBar(myToolbar);
         accountSpinner = findViewById(R.id.job_services_account_spinner);
         daySpinner = findViewById(R.id.job_services_day_spinner);

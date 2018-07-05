@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -33,6 +36,8 @@ public class QuickSheet extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_sheet);
+        Toolbar myToolbar = findViewById(R.id.quick_sheet_toolbar);
+        setSupportActionBar(myToolbar);
         dateString = new SimpleDateFormat("MM/dd/yyyy").format(new Date(System.currentTimeMillis()));
         recyclerView = findViewById(R.id.quick_sheet_recycler_view);
         layoutManager = new LinearLayoutManager(this);
@@ -153,5 +158,16 @@ public class QuickSheet extends AppCompatActivity {
                 updateCustomers(customers);
             }
         }.execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
     }
 }

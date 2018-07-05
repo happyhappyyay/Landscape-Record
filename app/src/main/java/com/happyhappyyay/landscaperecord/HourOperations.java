@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -28,7 +31,9 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hour_operations);
-        hours = (EditText) findViewById(R.id.hour_operations_hours_text);
+        Toolbar myToolbar = findViewById(R.id.hour_operations_toolbar);
+        setSupportActionBar(myToolbar);
+        hours = findViewById(R.id.hour_operations_hours_text);
         authentication = Authentication.getAuthentication(this);
         db = AppDatabase.getAppDatabase(this);
         if (savedInstanceState != null) {
@@ -162,5 +167,16 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
                 }
         }.execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
     }
 }

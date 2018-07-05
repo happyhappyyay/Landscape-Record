@@ -6,7 +6,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -32,6 +35,8 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_reporting);
+        Toolbar myToolbar = findViewById(R.id.time_reporting_toolbar);
+        setSupportActionBar(myToolbar);
         db = AppDatabase.getAppDatabase(this);
         authentication = Authentication.getAuthentication(this);
         user = authentication.getUser();
@@ -63,8 +68,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 //        TODO: Minimize processing by saving list of users with view model
 //        MyViewModel model = ViewModelProviders.of(this).get(MyViewModel.class);
 //        users = model.getUsers();
-
-
     }
 
     private void resetStartTime() {
@@ -233,5 +236,18 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     public AdapterView.OnItemSelectedListener getItemSelectedListener() {
         return this;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
+    }
 }
+
+
 

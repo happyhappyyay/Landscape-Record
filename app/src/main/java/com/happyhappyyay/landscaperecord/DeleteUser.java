@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -25,6 +28,8 @@ public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_user);
+        Toolbar myToolbar = findViewById(R.id.delete_user_toolbar);
+        setSupportActionBar(myToolbar);
         db = AppDatabase.getAppDatabase(this);
         authentication = Authentication.getAuthentication(this);
         if (savedInstanceState != null) {
@@ -152,5 +157,16 @@ public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemS
     @Override
     public AdapterView.OnItemSelectedListener getItemSelectedListener() {
         return this;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
     }
 }

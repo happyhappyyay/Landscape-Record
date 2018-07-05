@@ -3,6 +3,9 @@ package com.happyhappyyay.landscaperecord;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,6 +24,8 @@ public class AddUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
+        Toolbar myToolbar = findViewById(R.id.add_user_toolbar);
+        setSupportActionBar(myToolbar);
         firstName = findViewById(R.id.add_user_first);
         lastName = findViewById(R.id.add_user_last);
         password = findViewById(R.id.add_user_pass);
@@ -28,6 +33,17 @@ public class AddUser extends AppCompatActivity {
         submit = findViewById(R.id.add_user_submit);
         admin = findViewById(R.id.add_user_admin_button);
         db = AppDatabase.getAppDatabase(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
     }
 
     public void addNewUser(View view) {

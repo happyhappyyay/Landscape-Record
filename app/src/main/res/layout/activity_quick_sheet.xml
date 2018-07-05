@@ -18,7 +18,7 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/quick_sheet_end_date_text"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_my_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_toolbar" />
 
     <EditText
         android:id="@+id/quick_sheet_end_date_text"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="@+id/quick_sheet_start_date_text" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/quick_sheet_my_toolbar"
+        android:id="@+id/quick_sheet_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"

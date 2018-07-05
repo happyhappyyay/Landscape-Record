@@ -3,7 +3,10 @@ package com.happyhappyyay.landscaperecord;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -26,6 +29,8 @@ public class NewContact extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_contact);
+        Toolbar myToolbar = findViewById(R.id.new_contact_toolbar);
+        setSupportActionBar(myToolbar);
         firstNameText = findViewById(R.id.contact_first_name_text);
         lastNameText = findViewById(R.id.contact_last_name_text);
         emailText = findViewById(R.id.contact_email_text);
@@ -88,6 +93,17 @@ public class NewContact extends AppCompatActivity {
                 finish();
             }
         }.execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
     }
 
 
