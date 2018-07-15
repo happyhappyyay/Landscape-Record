@@ -144,4 +144,20 @@
     <string name="view_services_mileage">Mileage</string>
     <string name="admin_tools_view_services">View Services</string>
     <string name="view_services_search">Search</string>
+
+<!--Strings related to preferences-->
+    <string name="pref_settings_quick_sheet_items_title">Quick Sheet Selections</string>
+    <string name="pre_settings_quick_sheet_selections_summary">A selection of three items used to
+    quickly start and finish jobs. Selections appear as checkboxes on the Quick Sheets screen. The
+        default selection is cut, prune, and spray.</string>
+    <string name="pref_settings_database_url_title">Database URL</string>
+    <string name="pref_settings_database_url_summary">The URL location of the database used to store application data. Default setting is blank, where data is persisted to the device.</string>
+    <string name="pref_settings_title">Application Settings</string>
+    <string name="pref_settings_database_usage_title">Online Database</string>
+    <string name="pref_settings_database_usage_summary">Enable/Disable database usage</string>
+    <string name="pref_settings_quick_sheet_items_selection_title1">Check Box 1</string>
+    <string name="pref_settings_quick_sheet_items_selection_title2">Check Box 2</string>
+    <string name="pref_settings_quick_sheet_items_selection_title3">Check Box 3</string>
+    <!---->
+
 </resources>

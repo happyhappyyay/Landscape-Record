@@ -1,0 +1,50 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_settings_title"
+        android:key="pref_key_storage_settings">
+    </PreferenceCategory>
+        <PreferenceScreen
+            android:key="pref_key_quick_sheet_items_holder"
+            android:summary="@string/pre_settings_quick_sheet_selections_summary"
+            android:title="@string/pref_settings_quick_sheet_items_title">
+            <PreferenceCategory
+                android:title="@string/pref_settings_quick_sheet_items_title"
+                android:key="pref_key_quick_sheet_items_title">
+            </PreferenceCategory>
+            <ListPreference
+                android:defaultValue="@string/lawn_services_prune"
+                android:entries="@array/work_activities"
+                android:entryValues="@array/work_activities_values"
+                android:key="pref_key_quick_sheet_item3"
+                android:summary="%s"
+                android:title="@string/pref_settings_quick_sheet_items_selection_title1" />
+            <ListPreference
+                android:defaultValue="@string/lawn_services_spray_grass"
+                android:entries="@array/work_activities"
+                android:entryValues="@array/work_activities_values"
+                android:key="pref_key_quick_sheet_item2"
+                android:summary="%s"
+                android:title="@string/pref_settings_quick_sheet_items_selection_title2" />
+            <ListPreference
+                android:defaultValue="@string/lawn_services_cut"
+                android:entries="@array/work_activities"
+                android:entryValues="@array/work_activities_values"
+                android:key="pref_key_quick_sheet_item1"
+                android:summary="%s"
+                android:title="@string/pref_settings_quick_sheet_items_selection_title3" />
+        </PreferenceScreen>
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="pref_settings_database_usage"
+            android:summary="@string/pref_settings_database_usage_summary"
+            android:title="@string/pref_settings_database_usage_title" />
+        <EditTextPreference
+            android:defaultValue=" "
+            android:dependency="pref_settings_database_usage"
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_settings_database_url_summary"
+            android:title="@string/pref_settings_database_url_title" />
+
+</PreferenceScreen>

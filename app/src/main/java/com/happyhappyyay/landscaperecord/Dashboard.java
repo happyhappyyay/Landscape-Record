@@ -45,8 +45,7 @@ public class Dashboard extends AppCompatActivity {
     private String timeToDate(long time) {
         Date date = new Date(time);
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd HH:mm", Locale.US);
-        String dateMessage = formatter.format(date);
-        return dateMessage;
+        return formatter.format(date);
     }
 
     @Override
