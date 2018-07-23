@@ -26,15 +26,15 @@ android {
 }
 
 dependencies {
-
+    implementation group: 'com.cloudant', name: 'cloudant-sync-datastore-android', version:'latest.release'
     // Room (use 1.1.0-beta1 for latest beta)
-    implementation "android.arch.persistence.room:runtime:1.1.0"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:support-vector-drawable:27.1.1'
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     // Test helpers for Room
-    testImplementation "android.arch.persistence.room:testing:1.1.0"
+    testImplementation "android.arch.persistence.room:testing:1.1.1"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'

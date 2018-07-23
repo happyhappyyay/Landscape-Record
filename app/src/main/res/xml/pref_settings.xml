@@ -38,13 +38,37 @@
             android:key="pref_settings_database_usage"
             android:summary="@string/pref_settings_database_usage_summary"
             android:title="@string/pref_settings_database_usage_title" />
-        <EditTextPreference
-            android:defaultValue=" "
-            android:dependency="pref_settings_database_usage"
-            android:key="edit_text_preference_1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/pref_settings_database_url_summary"
-            android:title="@string/pref_settings_database_url_title" />
+    <EditTextPreference
+        android:defaultValue=" "
+        android:dependency="pref_settings_database_usage"
+        android:key="pref_key_dbname"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_settings_database_name_summary"
+        android:title="@string/pref_settings_datebase_name_title" />
+    <EditTextPreference
+        android:defaultValue=" "
+        android:dependency="pref_settings_database_usage"
+        android:key="pref_key_username"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_settings_database_username_summary"
+        android:title="@string/pref_settings_database_username_title" />
+    <EditTextPreference
+        android:defaultValue=" "
+        android:dependency="pref_settings_database_usage"
+        android:key="pref_key_api_key"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_settings_database_api_key_summary"
+        android:title="@string/pref_settings_database_api_key_title" />
+    <EditTextPreference
+        android:defaultValue=" "
+        android:dependency="pref_settings_database_usage"
+        android:key="pref_key_api_password"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_settings_database_api_password_summary"
+        android:title="@string/pref_settings_database_api_password_title" />
 
 </PreferenceScreen>

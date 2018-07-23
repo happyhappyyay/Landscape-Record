@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class QuickSheet extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class QuickSheet extends AppCompatActivity {
         setContentView(R.layout.activity_quick_sheet);
         Toolbar myToolbar = findViewById(R.id.quick_sheet_toolbar);
         setSupportActionBar(myToolbar);
-        dateString = new SimpleDateFormat("MM/dd/yyyy").format(new Date(System.currentTimeMillis()));
+        dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(new Date(System.currentTimeMillis()));
         recyclerView = findViewById(R.id.quick_sheet_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

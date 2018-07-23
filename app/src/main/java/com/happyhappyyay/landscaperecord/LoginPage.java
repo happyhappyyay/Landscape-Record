@@ -20,7 +20,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
         db = AppDatabase.getAppDatabase(this);
-        authentication = authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication(this);
         username = findViewById(R.id.login_page_username);
         password = findViewById(R.id.login_page_password);
     }
@@ -29,16 +29,6 @@ public class LoginPage extends AppCompatActivity {
         if (!username.getText().toString().isEmpty()) {
             loginUser();
         }
-
-//        Intent intent = new Intent(getApplicationContext(), MainMenu.class);
-//        startActivity(intent);
-
-//        try {
-//            // Simulate network access.
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//
-//        }
     }
 
     public void skipLogin(View view) {

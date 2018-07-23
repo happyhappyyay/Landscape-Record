@@ -16,6 +16,11 @@ public class MainMenu extends AppCompatActivity {
     private Authentication authentication;
     private User user;
 
+    static final String SETTINGS_USER = "pref_key_username";
+    static final String SETTINGS_DB = "pref_key_dbname";
+    static final String SETTINGS_API_KEY = "pref_key_api_key";
+    static final String SETTINGS_API_SECRET = "pref_key_api_password";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

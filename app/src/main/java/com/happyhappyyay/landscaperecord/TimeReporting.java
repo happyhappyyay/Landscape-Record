@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.cloudant.sync.documentstore.DocumentStore;
+import com.cloudant.sync.documentstore.DocumentStoreNotOpenedException;
+import com.cloudant.sync.replication.Replicator;
+import com.cloudant.sync.replication.ReplicatorBuilder;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class TimeReporting extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
@@ -186,6 +195,34 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+//    private void updateDatabase() {
+//        File path = getApplicationContext().getDir("documentstores", Context.MODE_PRIVATE);
+//        URI uri = null;
+//        try {
+////            URI("https", apiKey + ":" + apiSecret, host, 443, "/" + dbName, null, null)
+////                    .username("yourAPIKey")
+////                    .password("yourAPIKeyPassphrase")
+////                    .build();
+//            uri = new URI("https://" + MainMenu.SETTINGS_API_KEY +":" + MainMenu.SETTINGS_API_SECRET
+//                    + "@" + MainMenu.SETTINGS_USER + ".cloudant.com/" + MainMenu.SETTINGS_DB);
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//        DocumentStore ds = null;
+//        try {
+//            ds = DocumentStore.getInstance(new File(path, "my_datastore"));
+//        } catch (DocumentStoreNotOpenedException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//// Replicate from the local to remote database
+//        Replicator replicator = ReplicatorBuilder.push().from(ds).to(uri).build();
+//
+//// Fire-and-forget (there are easy ways to monitor the state too)
+//        replicator.start();
+//    }
 
 
     private void updateUser() {
