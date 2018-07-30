@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     private Customer customer;
     private EditText date, manHours;
     private Service service;
+    private WorkDay workDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +131,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     public void onSubmitButton(View view) {
         if (customer != null) {
             long time = System.currentTimeMillis();
-//            if (service == null) {
-//                service = new Service();
-//            }
             LawnServices lawnServices = (LawnServices)
                     fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LAWN_SERVICES.toString()));
             LandscapeServices landscapeServices = (LandscapeServices)
@@ -233,6 +232,16 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             @Override
             protected Void doInBackground(Void... voids) {
                 db.customerDao().updateCustomer(customer);
+                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.convertLongToStringDate(service.getStartTime()));
+                if (tempWorkDay != null) {
+                    workDay = tempWorkDay;
+                }
+                else {
+                    workDay = new WorkDay();
+                    db.workDayDao().insert(workDay);
+                }
+                workDay.addServices(service);
+                db.workDayDao().updateWorkDay(workDay);
                 return null;
             }
 

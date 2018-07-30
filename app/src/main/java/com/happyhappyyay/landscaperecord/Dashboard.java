@@ -48,6 +48,11 @@ public class Dashboard extends AppCompatActivity {
         return formatter.format(date);
     }
 
+    public void startViewWorkDay(View view) {
+        Intent intent = new Intent(getApplicationContext(), ViewWorkDay.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_dashboard).setEnabled(false);

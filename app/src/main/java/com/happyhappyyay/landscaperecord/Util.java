@@ -11,9 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class Util {
     private static final String TAG = "selected";
@@ -121,5 +125,46 @@ public class Util {
             return users;
         }
 
+    }
+
+    public static String retrieveStringCurrentDate() {
+        return new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(new Date(System.currentTimeMillis()));
+    }
+
+    public static long retrieveLongCurrentDate() {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        Date date;
+        try {
+            date = dateFormat.parse(retrieveStringCurrentDate());
+            return date.getTime();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static long convertStringDateToMilliseconds(String sDate) {
+        long currentDateAsTime = 0;
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+
+        try {
+            Date date = dateFormat.parse(sDate);
+            currentDateAsTime = date.getTime();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return currentDateAsTime;
+    }
+
+    public static String convertLongToStringDate(long time) {
+
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        String dateAsString = dateFormat.format(new Date(time));
+
+
+        return dateAsString;
     }
 }

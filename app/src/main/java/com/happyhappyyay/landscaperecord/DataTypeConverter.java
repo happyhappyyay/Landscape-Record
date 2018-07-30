@@ -1,12 +1,12 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.arch.persistence.room.TypeConverter;
+        import android.arch.persistence.room.TypeConverter;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+        import com.google.gson.Gson;
+        import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.List;
+        import java.lang.reflect.Type;
+        import java.util.List;
 
 public class DataTypeConverter {
 
@@ -16,9 +16,9 @@ public class DataTypeConverter {
             return (null);
         }
         Gson gson = new Gson();
-        Type type = new TypeToken<List<Service>>() {}.getType();
-        String json = gson.toJson(services, type);
-        return json;
+        Type type = new TypeToken<List<Service>>() {
+        }.getType();
+        return gson.toJson(services, type);
     }
 
     @TypeConverter
@@ -28,7 +28,6 @@ public class DataTypeConverter {
         }
         Gson gson = new Gson();
         Type type = new TypeToken<List<Service>>() {}.getType();
-        List<Service> servicesList = gson.fromJson(services, type);
-        return servicesList;
+        return gson.fromJson(services, type);
     }
 }

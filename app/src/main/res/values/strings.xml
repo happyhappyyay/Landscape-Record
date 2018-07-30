@@ -145,7 +145,7 @@
     <string name="admin_tools_view_services">View Services</string>
     <string name="view_services_search">Search</string>
 
-<!--Strings related to preferences-->
+    <!--Strings related to preferences-->
     <string name="pref_settings_quick_sheet_items_title">Quick Sheet Selections</string>
     <string name="pre_settings_quick_sheet_selections_summary">A selection of three items used to
     quickly start and finish jobs. Selections appear as checkboxes on the Quick Sheets screen. The
@@ -164,6 +164,9 @@
     <string name="pref_settings_quick_sheet_items_selection_title1">Check Box 1</string>
     <string name="pref_settings_quick_sheet_items_selection_title2">Check Box 2</string>
     <string name="pref_settings_quick_sheet_items_selection_title3">Check Box 3</string>
+    <string name="view_work_day_title">View Work Activity</string>
+    <string name="activity_view_work_day_user_hour_title">User : Hours</string>
+    <string name="activity_view_work_day_customer_services_title">Customer : Service</string>
     <!---->
 
 </resources>

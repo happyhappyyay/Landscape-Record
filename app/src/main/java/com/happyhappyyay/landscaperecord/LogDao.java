@@ -17,7 +17,7 @@ public interface LogDao {
     List<LogActivity> getAllLogs();
 
     @Delete
-    void deleteCustomer(Customer customer);
+    void deleteLog(LogActivity log);
 
     @Query("DELETE FROM LogActivity")
     void deleteAllLogs();

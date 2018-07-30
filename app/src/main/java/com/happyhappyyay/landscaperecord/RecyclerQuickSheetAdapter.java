@@ -30,6 +30,8 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
     private AppDatabase db;
     private Customer customer;
     private Context context;
+    private Service service;
+    private WorkDay workDay;
 
     public RecyclerQuickSheetAdapter (List<Customer> customers, Context context) {
         this.customers = customers;
@@ -92,10 +94,11 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View v) {
 //                            TODO: Move to quick sheet class?
+                            service = null;
                             boolean flagDifferentEndTime = false;
                             long startTime = 0;
                             long endTime = 0;
-                            Service service = null;
+                            Service tempService = null;
 //                            set entered/automatic dates into start and end dates
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
                                 try {
@@ -119,7 +122,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                                 Service s = services.get(i);
                                 if (s.isPause()) {
                                     if (s.convertStartTimeToDateString().equals(startDateString)) {
-                                        service = s;
+                                        tempService = s;
                                         serviceListPosition = i;
                                         for (CheckBox c : checkBoxes) {
                                             if (c.isChecked()) {
@@ -133,24 +136,25 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                                 }
                             }
 //                            create new service if could not find existing service
-                            if (service == null) {
+                            if (tempService == null) {
                                 jobActionButton.setText("Finish");
-                                service = new Service();
-                                service.setPause(true);
-                                service.setStartTime(startTime);
-                                service.setServices(servicesString);
-                                service.setCustomerName(customer.getName());
-                                customer.addService(service);
+                                tempService = new Service();
+                                tempService.setPause(true);
+                                tempService.setStartTime(startTime);
+                                tempService.setServices(servicesString);
+                                tempService.setCustomerName(customer.getName());
+                                customer.addService(tempService);
                                 updateCustomer();
                             }
 //                            otherwise update existing service
                             else {
                                 if (!flagDifferentEndTime) {
                                     jobActionButton.setText("✓");
-                                    service.setServices(servicesString);
-                                    service.setEndTime(endTime);
-                                    service.setPause(false);
-                                    customer.updateService(service, serviceListPosition);
+                                    tempService.setServices(servicesString);
+                                    tempService.setEndTime(endTime);
+                                    tempService.setPause(false);
+                                    customer.updateService(tempService, serviceListPosition);
+                                    service = tempService;
                                     updateCustomer();
                                 }
                                 else {
@@ -221,6 +225,17 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
             @Override
             protected Void doInBackground(Void... voids) {
                 db.customerDao().updateCustomer(customer);
+                if(service != null) {
+                    WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(endDateString);
+                    if (tempWorkDay != null) {
+                        workDay = tempWorkDay;
+                    } else {
+                        workDay = new WorkDay();
+                        db.workDayDao().insert(workDay);
+                    }
+                    workDay.addServices(service);
+                    db.workDayDao().updateWorkDay(workDay);
+                }
                 return null;
             }
 

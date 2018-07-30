@@ -30,7 +30,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     final static double MILLISECONDS_TO_HOURS = 3600000;
     final static int MAX_NUMBER_OF_ATTEMPTED_HOURS = 16;
     final static String ADAPTER_POSITION = "adapter position";
-    private static final String TAG = "Position of adapter:";
+    private static final String TAG = "WorkDay";
     private final int VIEW_ID = R.id.time_reporting_spinner;
     private Authentication authentication;
     private AppDatabase db;
@@ -39,6 +39,8 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     private int adapterPosition;
     private List<User> users;
     private User user;
+    private WorkDay workDay;
+    private int currentHours;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -62,8 +64,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
-
-            Log.d(TAG, Integer.toString(adapterPosition));
         }
 
         //TODO: implement interface to remove on post execute?
@@ -86,6 +86,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     private void addAccumulatedHours() {
         double newHours = (System.currentTimeMillis() - startTime) / MILLISECONDS_TO_HOURS;
         user.setHours(user.getHours() + newHours);
+        currentHours = (int)Math.round(newHours);
     }
 
     public void createCheckIn(View view) {
@@ -230,6 +231,19 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             @Override
             protected Void doInBackground(Void... voids) {
                 db.userDao().updateUser(user);
+                Log.d(TAG, Util.retrieveStringCurrentDate());
+                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
+                if (tempWorkDay != null) {
+                    workDay = tempWorkDay;
+                    Log.d(TAG, "workday exists");
+                }
+                else {
+                    workDay = new WorkDay();
+                    db.workDayDao().insert(workDay);
+                    Log.d(TAG, "workday null");
+                }
+                workDay.addUserHourReference(adapterPosition, currentHours);
+                db.workDayDao().updateWorkDay(workDay);
                 return null;
             }
         }.execute();
@@ -240,6 +254,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             @Override
             protected List<User> doInBackground(Void... voids) {
                 users = db.userDao().getAllUsers();
+
                 return null;
             }
         }.execute();

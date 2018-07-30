@@ -57,6 +57,7 @@
             android:name=".QuickSheet"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".ViewServices" />
+        <activity android:name=".ViewWorkDay"></activity>
     </application>
 
 </manifest>
