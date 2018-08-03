@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c70ef7be8943793eff639db7345873c4",
+    "identityHash": "3324166793c222fb997dbc7709ea8aca",
     "entities": [
       {
         "tableName": "User",
@@ -183,11 +183,91 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "WorkDay",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workDayID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `Month` TEXT, `Year` TEXT, `currentDate` TEXT, `currentDateAsTime` INTEGER NOT NULL, `userHourReference` TEXT, `services` TEXT, `weekInMilli` INTEGER NOT NULL, `monthInMilli` INTEGER NOT NULL, `yearInMilli` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "workDayID",
+            "columnName": "workDayID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayOfWeek",
+            "columnName": "dayOfWeek",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Month",
+            "columnName": "Month",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Year",
+            "columnName": "Year",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentDate",
+            "columnName": "currentDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentDateAsTime",
+            "columnName": "currentDateAsTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userHourReference",
+            "columnName": "userHourReference",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "services",
+            "columnName": "services",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weekInMilli",
+            "columnName": "weekInMilli",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monthInMilli",
+            "columnName": "monthInMilli",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "yearInMilli",
+            "columnName": "yearInMilli",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "workDayID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c70ef7be8943793eff639db7345873c4\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3324166793c222fb997dbc7709ea8aca\")"
     ]
   }
 }

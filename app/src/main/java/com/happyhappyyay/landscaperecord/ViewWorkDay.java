@@ -47,13 +47,22 @@ public class ViewWorkDay extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView CalendarView, int year, int month, int dayOfMonth) {
                 String monthString;
+                String dayOfMonthString;
+
                 if (month < 9) {
                     monthString = "0" + (month + 1);
                 }
                 else {
                     monthString = Integer.toString(month + 1);
                 }
-                String date = monthString + "/" + dayOfMonth + "/" + year;
+                if (dayOfMonth <= 9) {
+                    dayOfMonthString = "0" + dayOfMonth;
+                }
+                else
+                {
+                    dayOfMonthString = Integer.toString(dayOfMonth);
+                }
+                String date = monthString + "/" + dayOfMonthString + "/" + year;
                 String TAG = "Gadriel";
                 Log.d(TAG, date + " Gadriel");
                 workDay = null;
@@ -119,22 +128,25 @@ public class ViewWorkDay extends AppCompatActivity {
         return usersAndHours;
     }
 
-    private List<String> convertCustomerServicesToString(List<Service> services) {
+    public List<String> convertCustomerServicesToString(List<Service> services) {
         List<String> customerServices = new ArrayList<>();
         for (Service s: services) {
             String serviceModified = s.getServices();
             String tempServiceModified = "";
-            int endServicePosition = 0;
+            int endServicePosition;
             int startServicePosition = 0;
 //          check for substring separator "#*#", leaves last separator off;
-            for (int i = 0; i < serviceModified.length() - 3; i++) {
+            for (int i = 0; i < serviceModified.length() - 2; i++) {
                 if (serviceModified.substring(i,i+3).equals("#*#")) {
                         endServicePosition = i;
                     tempServiceModified = tempServiceModified + serviceModified.substring(startServicePosition, endServicePosition) + ", ";
                     startServicePosition = i+3;
                 }
             }
-            tempServiceModified = tempServiceModified.substring(0, tempServiceModified.length()-2);
+//          Remove comma from the end
+            if (tempServiceModified.length() > 2) {
+                tempServiceModified = tempServiceModified.substring(0, tempServiceModified.length()-2);
+            }
             String customerService = s.getCustomerName() + System.getProperty ("line.separator") + tempServiceModified;
             customerServices.add(customerService);
         }
