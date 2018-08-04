@@ -24,8 +24,9 @@ public class WorkDay {
     private String Year;
     private String currentDate;
     private long currentDateAsTime;
-    @TypeConverters(IntArrayConverter.class)
-    private int[][] userHourReference;
+    @TypeConverters(IntegerListConverter.class)
+    private List<Integer> hours;
+    private List<Integer> userReference;
     private List<Service> services;
     private long weekInMilli;
     private long monthInMilli;
@@ -35,8 +36,6 @@ public class WorkDay {
         Date date;
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
         currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        String TAG = "WorkDay";
-        Log.d(TAG, currentDate);
 
         try {
             date = dateFormat.parse(currentDate);
@@ -45,66 +44,16 @@ public class WorkDay {
         catch (Exception e) {
             e.printStackTrace();
         }
-
-        userHourReference = new int[0][0];
         services = new ArrayList<>();
+        hours = new ArrayList<>();
+        userReference = new ArrayList<>();
         findCalendarInformation();
     }
 
-    private static WorkDay instance;
-
-    public static WorkDay getWorkDay(Context context) {
-        if (instance == null) {
-            instance = new WorkDay();
-        }
-        return instance;
-    }
-
     public void addUserHourReference (int userReference, int hours) {
-        final int USER_ROW = 0;
-        final int HOUR_ROW = 1;
-        final int NUMBER_OF_ROWS = 2;
-        if (userHourReference.length > 0) {
-            int[][] tempArray;
-            int tempPositionMarker = -1;
-            for (int h = 0; h < userHourReference[USER_ROW].length; h++) {
-                if (userHourReference[USER_ROW][h] == userReference) {
-                    tempPositionMarker = h;
-                }
-            }
-            if (tempPositionMarker == -1) {
-                String TAG = "Inside";
-                tempArray = new int[NUMBER_OF_ROWS][userHourReference[USER_ROW].length + 1];
-                for (int i = 0; i < userHourReference.length; i++) {
-                    for (int j = 0; j < userHourReference[i].length; j++) {
-                        tempArray[i][j] = userHourReference[i][j];
-                    }
-                }
-                Log.d(TAG, "Size of array " + tempArray.length + tempArray[0].length);
-                tempArray[USER_ROW][userHourReference[USER_ROW].length] = userReference;
-                tempArray[HOUR_ROW][userHourReference[USER_ROW].length] = hours;
-            }
-            else {
-                tempArray = new int[userHourReference.length][userHourReference[USER_ROW].length];
-                for (int i = 0; i < userHourReference.length; i++) {
-                    for (int j = 0; j < userHourReference[i].length; j++) {
-                        tempArray[i][j] = userHourReference[i][j];
-                    }
-                }
-                tempArray[HOUR_ROW][tempPositionMarker] = tempArray[HOUR_ROW][tempPositionMarker] + hours;
-            }
-            userHourReference = new int[tempArray.length][tempArray[HOUR_ROW].length];
-            for (int i = 0; i < tempArray.length; i++) {
-                for (int j = 0; j < tempArray[i].length; j++) {
-                    userHourReference[i][j] = tempArray[i][j];
-                }
-            }
-        }
-        else {
-            userHourReference = new int[NUMBER_OF_ROWS][1];
-            userHourReference[USER_ROW][0] = userReference;
-            userHourReference[HOUR_ROW][0] = hours;
-        }
+        this.hours.add(hours);
+        this.userReference.add(userReference);
+
     }
 
     public void addServices(Service service) {
@@ -113,10 +62,6 @@ public class WorkDay {
 
     public String getCurrentDate() {
         return currentDate;
-    }
-
-    public int[][] getUserHourReference() {
-        return userHourReference;
     }
 
     public List<Service> getServices() {
@@ -206,10 +151,6 @@ public class WorkDay {
         this.currentDateAsTime = currentDateAsTime;
     }
 
-    public void setUserHourReference(int[][] userHourReference) {
-        this.userHourReference = userHourReference;
-    }
-
     public void setServices(List<Service> services) {
         this.services = services;
     }
@@ -240,5 +181,21 @@ public class WorkDay {
 
     public void setYear(String year) {
         Year = year;
+    }
+
+    public List<Integer> getHours() {
+        return hours;
+    }
+
+    public void setHours(List<Integer> hours) {
+        this.hours = hours;
+    }
+
+    public List<Integer> getUserReference() {
+        return userReference;
+    }
+
+    public void setUserReference(List<Integer> userReference) {
+        this.userReference = userReference;
     }
 }

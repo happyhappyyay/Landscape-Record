@@ -23,6 +23,12 @@ public interface WorkDayDao {
     @Query("SELECT * FROM workDay WHERE currentDateAsTime = :time")
     WorkDay findWorkDayByTime(long time);
 
+    @Query("SELECT * FROM workDay WHERE weekInMilli = :time")
+    List<WorkDay> findWorkWeekByTime(long time);
+
+    @Query("SELECT * FROM workDay WHERE monthInMilli = :time")
+    List<WorkDay> findWorkMonthByTime(long time);
+
     @Update
     void updateWorkDay(WorkDay workDay);
 

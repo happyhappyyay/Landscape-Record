@@ -167,6 +167,9 @@
     <string name="view_work_day_title">View Work Activity</string>
     <string name="activity_view_work_day_user_hour_title">User : Hours</string>
     <string name="activity_view_work_day_customer_services_title">Customer : Service</string>
+    <string name="view_work_day_day_button">Day</string>
+    <string name="view_work_day_week_button">Week</string>
+    <string name="view_work_day_month_button">Month</string>
     <!---->
 
 </resources>

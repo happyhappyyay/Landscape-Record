@@ -61,4 +61,35 @@
         app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/view_work_activity_calendar" />
 
+    <RadioGroup
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/view_work_day_day_button"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/textView11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/view_work_day_day_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/view_work_day_day_button" />
+
+        <RadioButton
+            android:id="@+id/view_work_day_week_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/view_work_day_week_button" />
+
+        <RadioButton
+            android:id="@+id/view_work_day_month_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/view_work_day_month_button" />
+    </RadioGroup>
+
 </android.support.constraint.ConstraintLayout>

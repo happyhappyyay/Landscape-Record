@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +21,14 @@ public class ViewWorkDay extends AppCompatActivity {
     private CalendarView calendarView;
     private static AppDatabase db;
     private WorkDay workDay;
+    private List<WorkDay> workDays;
     private TextView name;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerViewWorkDayAdapter adapter;
     private List<Customer> customers;
     private List<User> users;
+    private RadioButton dayButton, weekButton, monthButton;
     private String calendarPosition = Util.retrieveStringCurrentDate();
     final static String CALENDAR_POSITION = "calendar position";
 
@@ -37,9 +40,11 @@ public class ViewWorkDay extends AppCompatActivity {
         db = AppDatabase.getAppDatabase(this);
         recyclerView = findViewById(R.id.view_work_day_recyclerview);
         layoutManager = new LinearLayoutManager(this);
+        dayButton = findViewById(R.id.view_work_day_day_button);
+        weekButton = findViewById(R.id.view_work_day_week_button);
+        monthButton = findViewById(R.id.view_work_day_month_button);
         recyclerView.setLayoutManager(layoutManager);
         if (savedInstanceState != null) {
-            // Restore value of members from saved state
             calendarPosition = savedInstanceState.getString(CALENDAR_POSITION);
             calendarView.setDate(Util.convertStringDateToMilliseconds(calendarPosition));
         }
@@ -63,14 +68,17 @@ public class ViewWorkDay extends AppCompatActivity {
                     dayOfMonthString = Integer.toString(dayOfMonth);
                 }
                 String date = monthString + "/" + dayOfMonthString + "/" + year;
-                String TAG = "Gadriel";
-                Log.d(TAG, date + " Gadriel");
                 workDay = null;
+                workDays = null;
                 findWorkDayByDate(date);
                 calendarPosition = date;
             }
         });
         findWorkDayByDate(calendarPosition);
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override
@@ -90,40 +98,109 @@ public class ViewWorkDay extends AppCompatActivity {
             @Override
             protected Void doInBackground(String... sDate) {
                 WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
-                if (tempWorkDay != null) { workDay = tempWorkDay; }
+                if (tempWorkDay != null) {
+                    if (dayButton.isChecked()) {
+                        workDay = tempWorkDay;
+                    } else if (weekButton.isChecked()) {
+                        List<WorkDay> tempWorkWeek = db.workDayDao().findWorkWeekByTime(tempWorkDay.getWeekInMilli());
+
+                        if (tempWorkWeek != null) {
+                            workDays = tempWorkWeek;
+                        }
+                    } else {
+                        List<WorkDay> tempWorkMonth = db.workDayDao().findWorkMonthByTime(tempWorkDay.getMonthInMilli());
+
+                        if (tempWorkMonth != null) {
+                            workDays = tempWorkMonth;
+                        }
+                    }
+                }
+
                 users = db.userDao().getAllUsers();
                 return null;
             }
             @Override
             protected void onPostExecute(Void aVoid) {
-                List<String> userWithHours = new ArrayList<>();
-                List<String> customerWithServices = new ArrayList<>();
-                if (workDay != null) {
-                    List<Service> services = workDay.getServices();
-                    if (users != null) {
-                        int[][] userHour = workDay.getUserHourReference();
-                        userWithHours = checkArrayAgainstUserHours(userHour);
-                    }
-                    if (services != null) {
-                        customerWithServices = convertCustomerServicesToString(services);
-                    }
-                }
-                else {
-                    noWorkDayMessage();
-                }
-                adapter = new RecyclerViewWorkDayAdapter(userWithHours, customerWithServices);
-                recyclerView.setAdapter(adapter);
+                setupViewWorkDayAdapter();
             }
         }.execute(date);
     }
 
-    private List<String> checkArrayAgainstUserHours(int[][] userHour) {
-        List<String> usersAndHours = new ArrayList<>();
-        for (int i = 1; i < userHour.length;i++) {
-            for (int j = 0; j < userHour[i].length; j++) {
-                String userAndHours = users.get(userHour[0][j]).getName() + " : " + userHour[1][j];
-                usersAndHours.add(userAndHours);
+    private void setupViewWorkDayAdapter() {
+        List<String> userWithHours = new ArrayList<>();
+        List<String> customerWithServices = new ArrayList<>();
+        List<Service> services = new ArrayList<>();
+
+        if (workDay != null) {
+            services = workDay.getServices();
+            if (users != null) {
+                userWithHours = createStringFromUserHourReferences(workDay);
             }
+            if (services != null) {
+                customerWithServices = convertCustomerServicesToString(services);
+            }
+        }
+        else if (workDays != null) {
+            for (WorkDay w: workDays) {
+                services.addAll(w.getServices());
+            }
+            userWithHours = createStringFromUserHourReferences(workDays);
+            if (!services.isEmpty()) {
+                customerWithServices = convertCustomerServicesToString(services);
+            }
+        }
+        else {
+            noWorkDayMessage();
+        }
+        adapter = new RecyclerViewWorkDayAdapter(userWithHours, customerWithServices);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public List<String> createStringFromUserHourReferences(WorkDay workDay) {
+        List<String> usersAndHours = new ArrayList<>();
+        List<Integer> userReferences = workDay.getUserReference();
+        List<Integer> userHours = workDay.getHours();
+
+        for(int i = 0; i < workDay.getHours().size(); i++) {
+            String userAndHours = users.get(userReferences.get(i)).getName() + " : " + userHours.get(i);
+            usersAndHours.add(userAndHours);
+        }
+
+        return usersAndHours;
+    }
+
+    public List<String> createStringFromUserHourReferences(List<WorkDay> workDays) {
+        List<String> usersAndHours = new ArrayList<>();
+        List<Integer> userHours = new ArrayList<>();
+        List<Integer> userReferences = new ArrayList<>();
+        boolean init = false;
+        for (WorkDay w: workDays) {
+            if (init) {
+                for (int i = 0; i < w.getHours().size(); i++) {
+                    boolean userAlreadyExists = false;
+                    for (int j = 0; j < userReferences.size(); j++) {
+                        if (w.getUserReference().get(i).equals(userReferences.get(j))) {
+                            userAlreadyExists = true;
+                            int existingUserHours = userHours.get(j);
+                            int additionalUserHours = w.getHours().get(i);
+                            userHours.set(j, existingUserHours + additionalUserHours);
+                        }
+                    }
+                    if (!userAlreadyExists) {
+                        userReferences.add(w.getUserReference().get(i));
+                        userHours.add(w.getHours().get(i));
+                    }
+                }
+            } else {
+                init = true;
+                userReferences.addAll(w.getUserReference());
+                userHours.addAll(w.getHours());
+            }
+        }
+
+        for(int i = 0; i < userHours.size(); i++) {
+            String userAndHours = users.get(userReferences.get(i)).getName() + " : " + userHours.get(i);
+            usersAndHours.add(userAndHours);
         }
         return usersAndHours;
     }
@@ -131,36 +208,28 @@ public class ViewWorkDay extends AppCompatActivity {
     public List<String> convertCustomerServicesToString(List<Service> services) {
         List<String> customerServices = new ArrayList<>();
         for (Service s: services) {
-            String serviceModified = s.getServices();
-            String tempServiceModified = "";
+            String serviceString = s.getServices();
+            String serviceStringWithoutSeparators = "";
             int endServicePosition;
             int startServicePosition = 0;
-//          check for substring separator "#*#", leaves last separator off;
-            for (int i = 0; i < serviceModified.length() - 2; i++) {
-                if (serviceModified.substring(i,i+3).equals("#*#")) {
+
+            for (int i = 0; i < serviceString.length() - 2; i++) {
+                if (serviceString.substring(i,i+3).equals("#*#")) {
                         endServicePosition = i;
-                    tempServiceModified = tempServiceModified + serviceModified.substring(startServicePosition, endServicePosition) + ", ";
+                    serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
                     startServicePosition = i+3;
                 }
             }
-//          Remove comma from the end
-            if (tempServiceModified.length() > 2) {
-                tempServiceModified = tempServiceModified.substring(0, tempServiceModified.length()-2);
+
+            if (serviceStringWithoutSeparators.length() > 2) {
+                serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
             }
-            String customerService = s.getCustomerName() + System.getProperty ("line.separator") + tempServiceModified;
+            String customerService = s.convertEndTimeToDateString() + ": "  + s.getCustomerName() +
+                    System.getProperty ("line.separator") + serviceStringWithoutSeparators;
             customerServices.add(customerService);
         }
         return customerServices;
     }
-
-    public static class FindWorkDay extends AsyncTask<String, Void, WorkDay> {
-
-        @Override
-        protected WorkDay doInBackground(String... params) {
-            return db.workDayDao().findWorkDayByDate(params[0]);
-        }
-
-    }
-    }
+}
 
 
