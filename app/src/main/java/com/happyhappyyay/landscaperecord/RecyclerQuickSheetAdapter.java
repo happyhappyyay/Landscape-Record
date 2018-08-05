@@ -231,6 +231,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                         workDay = tempWorkDay;
                     } else {
                         workDay = new WorkDay();
+                        workDay.alterCurrentDate(endDateString);
                         db.workDayDao().insert(workDay);
                     }
                     workDay.addServices(service);

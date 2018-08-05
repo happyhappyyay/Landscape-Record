@@ -60,6 +60,20 @@ public class WorkDay {
         services.add(service);
     }
 
+    public void alterCurrentDate(String newDate) {
+        currentDate = newDate;
+        currentDateAsTime = Util.convertStringDateToMilliseconds(newDate);
+        Date date = new Date(newDate);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        weekInMilli = cal.getTimeInMillis();
+        cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
+        monthInMilli = cal.getTimeInMillis();
+        cal.set(Calendar.DAY_OF_YEAR, cal.getFirstDayOfWeek());
+        yearInMilli = cal.getTimeInMillis();
+    }
+
     public String getCurrentDate() {
         return currentDate;
     }
@@ -78,7 +92,7 @@ public class WorkDay {
         dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
 
         cal = clearCalendar(cal);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
         monthInMilli = cal.getTimeInMillis();
         date = new Date(monthInMilli);
         Month = new SimpleDateFormat("MMMM", Locale.US).format(date);

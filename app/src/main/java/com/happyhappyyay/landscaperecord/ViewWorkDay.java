@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.RadioButton;
@@ -41,8 +42,26 @@ public class ViewWorkDay extends AppCompatActivity {
         recyclerView = findViewById(R.id.view_work_day_recyclerview);
         layoutManager = new LinearLayoutManager(this);
         dayButton = findViewById(R.id.view_work_day_day_button);
+        dayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findWorkDayByDate(calendarPosition);
+            }
+        });
         weekButton = findViewById(R.id.view_work_day_week_button);
+        weekButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findWorkDayByDate(calendarPosition);
+            }
+        });
         monthButton = findViewById(R.id.view_work_day_month_button);
+        monthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findWorkDayByDate(calendarPosition);
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
         if (savedInstanceState != null) {
             calendarPosition = savedInstanceState.getString(CALENDAR_POSITION);
@@ -68,8 +87,6 @@ public class ViewWorkDay extends AppCompatActivity {
                     dayOfMonthString = Integer.toString(dayOfMonth);
                 }
                 String date = monthString + "/" + dayOfMonthString + "/" + year;
-                workDay = null;
-                workDays = null;
                 findWorkDayByDate(date);
                 calendarPosition = date;
             }
@@ -85,7 +102,6 @@ public class ViewWorkDay extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(CALENDAR_POSITION, calendarPosition);
 
-        // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 
@@ -97,22 +113,24 @@ public class ViewWorkDay extends AppCompatActivity {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... sDate) {
-                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
-                if (tempWorkDay != null) {
-                    if (dayButton.isChecked()) {
-                        workDay = tempWorkDay;
-                    } else if (weekButton.isChecked()) {
-                        List<WorkDay> tempWorkWeek = db.workDayDao().findWorkWeekByTime(tempWorkDay.getWeekInMilli());
 
-                        if (tempWorkWeek != null) {
-                            workDays = tempWorkWeek;
-                        }
-                    } else {
-                        List<WorkDay> tempWorkMonth = db.workDayDao().findWorkMonthByTime(tempWorkDay.getMonthInMilli());
+                if (dayButton.isChecked()) {
+                    WorkDay selectedWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
+                    if (selectedWorkDay != null) {
+                        workDay = selectedWorkDay;
+                    }
+                }
+                else if (weekButton.isChecked()) {
+                    List<WorkDay> selectedWorkWeek = db.workDayDao().findWorkWeekByTime(Util.convertStringToFirstDayOfWeekMilli(sDate[0]));
 
-                        if (tempWorkMonth != null) {
-                            workDays = tempWorkMonth;
-                        }
+                    if (selectedWorkWeek != null) {
+                        workDays = selectedWorkWeek;
+                    }
+                } else if(monthButton.isChecked()){
+                    List<WorkDay> selectedWorkMonth = db.workDayDao().findWorkMonthByTime(Util.convertStringToFirstDayOfMonthMilli(sDate[0]));
+
+                    if (selectedWorkMonth != null) {
+                        workDays = selectedWorkMonth;
                     }
                 }
 
@@ -154,6 +172,8 @@ public class ViewWorkDay extends AppCompatActivity {
         }
         adapter = new RecyclerViewWorkDayAdapter(userWithHours, customerWithServices);
         recyclerView.setAdapter(adapter);
+        workDay = null;
+        workDays = null;
     }
 
     public List<String> createStringFromUserHourReferences(WorkDay workDay) {

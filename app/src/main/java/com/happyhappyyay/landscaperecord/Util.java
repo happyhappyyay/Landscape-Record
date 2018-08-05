@@ -162,9 +162,22 @@ public class Util {
     public static String convertLongToStringDate(long time) {
 
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-        String dateAsString = dateFormat.format(new Date(time));
+        return dateFormat.format(new Date(time));
+    }
 
+    public static long convertStringToFirstDayOfWeekMilli(String dateString) {
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date(dateString);
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        return cal.getTimeInMillis();
+    }
 
-        return dateAsString;
+    public static long convertStringToFirstDayOfMonthMilli(String dateString) {
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date(dateString);
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
+        return cal.getTimeInMillis();
     }
 }
