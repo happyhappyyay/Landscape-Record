@@ -238,7 +238,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
                     Log.d(TAG, "workday exists");
                 }
                 else {
-                    workDay = new WorkDay();
+                    workDay = new WorkDay(Util.retrieveStringCurrentDate());
                     db.workDayDao().insert(workDay);
                     Log.d(TAG, "workday null");
                 }

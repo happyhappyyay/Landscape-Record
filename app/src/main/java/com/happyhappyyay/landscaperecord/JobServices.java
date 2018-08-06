@@ -140,13 +140,8 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             List<Material> materials = landscapeServices.getMaterials();
 
             if (!date.getText().toString().isEmpty()) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-                String dateString = date.getText().toString();
-                try {
-                    Date date = dateFormat.parse(dateString);
-                    time = date.getTime();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(Util.checkDateFormat(date.getText().toString())) {
+                    time = Util.convertStringDateToMilliseconds(date.getText().toString());
                 }
             }
 
@@ -237,7 +232,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                     workDay = tempWorkDay;
                 }
                 else {
-                    workDay = new WorkDay();
+                    workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
                     db.workDayDao().insert(workDay);
                 }
                 workDay.addServices(service);

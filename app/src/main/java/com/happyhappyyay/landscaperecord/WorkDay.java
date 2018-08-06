@@ -32,22 +32,11 @@ public class WorkDay {
     private long monthInMilli;
     private long yearInMilli;
 
-    public WorkDay () {
-        Date date;
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-        currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
-
-        try {
-            date = dateFormat.parse(currentDate);
-            currentDateAsTime = date.getTime();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+    public WorkDay (String currentDate) {
         services = new ArrayList<>();
         hours = new ArrayList<>();
         userReference = new ArrayList<>();
-        findCalendarInformation();
+        findCalendarInformation(currentDate);
     }
 
     public void addUserHourReference (int userReference, int hours) {
@@ -60,20 +49,6 @@ public class WorkDay {
         services.add(service);
     }
 
-    public void alterCurrentDate(String newDate) {
-        currentDate = newDate;
-        currentDateAsTime = Util.convertStringDateToMilliseconds(newDate);
-        Date date = new Date(newDate);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-        weekInMilli = cal.getTimeInMillis();
-        cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
-        monthInMilli = cal.getTimeInMillis();
-        cal.set(Calendar.DAY_OF_YEAR, cal.getFirstDayOfWeek());
-        yearInMilli = cal.getTimeInMillis();
-    }
-
     public String getCurrentDate() {
         return currentDate;
     }
@@ -82,26 +57,22 @@ public class WorkDay {
         return services;
     }
 
-    private void findCalendarInformation() {
-        Calendar cal = Calendar.getInstance();
-        cal = clearCalendar(cal);
+    private void findCalendarInformation(String newDate) {
 //TODO: Allow setting of first day of the week (default is sunday)
+//        TODO: Deprecated date(String s) method
+        currentDate = newDate;
+        currentDateAsTime = Util.convertStringDateToMilliseconds(newDate);
+        Date date = new Date(newDate);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         weekInMilli = cal.getTimeInMillis();
-        Date date = new Date(weekInMilli);
         dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
-
-        cal = clearCalendar(cal);
         cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
         monthInMilli = cal.getTimeInMillis();
-        date = new Date(monthInMilli);
         Month = new SimpleDateFormat("MMMM", Locale.US).format(date);
-
-
-        cal = clearCalendar(cal);
-        cal.set(Calendar.DAY_OF_YEAR, 1);
+        cal.set(Calendar.DAY_OF_YEAR, cal.getFirstDayOfWeek());
         yearInMilli = cal.getTimeInMillis();
-        date = new Date(yearInMilli);
         Year = new SimpleDateFormat("yyyy", Locale.US).format(date);
 
     }
