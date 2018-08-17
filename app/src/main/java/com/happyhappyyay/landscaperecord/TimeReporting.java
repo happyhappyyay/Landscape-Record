@@ -231,6 +231,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             @Override
             protected Void doInBackground(Void... voids) {
                 db.userDao().updateUser(user);
+                authentication.setUser(user);
                 Log.d(TAG, Util.retrieveStringCurrentDate());
                 WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
                 if (tempWorkDay != null) {

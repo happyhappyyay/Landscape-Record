@@ -170,6 +170,7 @@
     <string name="view_work_day_day_button">Day</string>
     <string name="view_work_day_week_button">Week</string>
     <string name="view_work_day_month_button">Month</string>
+    <string name="pref_key_import_contacts">pref_key_import_contacts</string>
     <!---->
 
 </resources>

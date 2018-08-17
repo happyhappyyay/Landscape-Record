@@ -155,6 +155,22 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         new AsyncTask<Integer, Void, Void>() {
             @Override
             protected Void doInBackground(Integer... integers) {
+                int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
+                int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
+                if (!integers[0].equals(payLogReference)) {
+                    WorkDay workDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
+                    int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
+                    if (workDay == null) {
+                        workDay = new WorkDay(Util.retrieveStringCurrentDate());
+                        db.workDayDao().insert(workDay);
+                    }
+                    if (integers[0].equals(deleteLogReference)) {
+                        numberOfHours = -numberOfHours;
+                    }
+                    workDay.addUserHourReference(adapterPosition, numberOfHours);
+                    db.workDayDao().updateWorkDay(workDay);
+                }
+
                 LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, 3);
                 db.logDao().insert(log);
                 db.userDao().updateUser(user);
@@ -166,7 +182,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                 hours.setText("");
 
                 }
-        }.execute();
+        }.execute(logActivityReference);
     }
 
     @Override

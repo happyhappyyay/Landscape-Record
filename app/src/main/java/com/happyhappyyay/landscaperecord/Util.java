@@ -2,8 +2,12 @@ package com.happyhappyyay.landscaperecord;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.AdapterView;
@@ -167,17 +171,40 @@ public class Util {
 
     public static long convertStringToFirstDayOfWeekMilli(String dateString) {
         Calendar cal = Calendar.getInstance();
-        Date date = new Date(dateString);
-        cal.setTime(date);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-        return cal.getTimeInMillis();
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            Date date = dateFormat.parse(dateString);
+            cal.setTime(date);
+            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+            return cal.getTimeInMillis();
+        }
+        catch (Exception e) {
+            return 0;
+        }
     }
 
     public static long convertStringToFirstDayOfMonthMilli(String dateString) {
         Calendar cal = Calendar.getInstance();
-        Date date = new Date(dateString);
-        cal.setTime(date);
-        cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
-        return cal.getTimeInMillis();
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            Date date = dateFormat.parse(dateString);
+            cal.setTime(date);
+            cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
+            return cal.getTimeInMillis();
+        }
+        catch (Exception e) {
+            return 0;
+        }
     }
+    public static String getRealPathFromURI(Uri contentUri, Context context) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader loader = new CursorLoader(context, contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
 }

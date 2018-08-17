@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,9 +24,6 @@ public class Dashboard extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         authentication = Authentication.getAuthentication(this);
         checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
-        if (authentication.getUser().getStartTime() != 0) {
-            checkInTime.setText("Checked in at: " + timeToDate(authentication.getUser().getStartTime()));
-        }
         userLoggedIn = findViewById(R.id.dashboard_username);
         userLoggedIn.setText(authentication.getUser().getName());
         Toolbar myToolbar = findViewById(R.id.dashboard_toolbar);
@@ -53,6 +51,16 @@ public class Dashboard extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void setNotifications(){
+        String checkedInDateTime = "Checked in at: " + timeToDate(authentication.getUser().getStartTime());
+        if (authentication.getUser().getStartTime() != 0) {
+            checkInTime.setText(checkedInDateTime);
+        }
+        else {
+            checkInTime.setText("");
+        }
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_dashboard).setEnabled(false);
@@ -70,18 +78,11 @@ public class Dashboard extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         return Util.toolbarItemSelection(this, item);
-//        switch (item.getItemId()) {
-//            case R.id.menu_dashboard:
-//                toolbarActions.goToDashboard();
-//                return true;
-//            case R.id.menu_settings:
-//                toolbarActions.goToSettings();
-//                return true;
-//            case R.id.menu_logout:
-//                  toolbarActions.goToLogout();
-//                  return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        setNotifications();
     }
 }

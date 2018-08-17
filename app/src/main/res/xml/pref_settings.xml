@@ -71,4 +71,9 @@
         android:summary="@string/pref_settings_database_api_password_summary"
         android:title="@string/pref_settings_database_api_password_title" />
 
+    <Preference
+        android:key="@string/pref_key_import_contacts"
+        android:summary="Upload a Comma-seperated Values(.csv) file to import contacts. Headers needed: First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."
+        android:title="Import Contacts" />
+
 </PreferenceScreen>

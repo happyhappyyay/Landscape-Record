@@ -60,4 +60,22 @@ public class DateUnitTest {
         Assert.assertEquals(expected, date);
     }
 
+    @Test
+    public void add_user_hours_isCorrect() {
+        String expected = "0, 8, 1, 11, 2, 15, ";
+        WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
+        workDay.addUserHourReference(0, 5);
+        workDay.addUserHourReference(1, 10);
+        workDay.addUserHourReference(2, 15);
+        workDay.addUserHourReference(0,2);
+        workDay.addUserHourReference(1,1);
+        workDay.addUserHourReference(0,1);
+        String actual = "";
+        for(int i = 0; i < workDay.getUserReference().size(); i++) {
+            actual += workDay.getUserReference().get(i) + ", " + workDay.getHours().get(i) + ", ";
+        }
+        Assert.assertEquals(expected, actual);
+
+    }
+
 }

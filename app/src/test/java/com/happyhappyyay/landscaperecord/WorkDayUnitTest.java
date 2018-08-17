@@ -39,7 +39,7 @@ public class WorkDayUnitTest {
         users.add(user);
         ViewWorkDay day = new ViewWorkDay();
         day.setUsers(users);
-        WorkDay workDay = new WorkDay();
+        WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
         for (int i = 0; i < users.size(); i++) {
             workDay.addUserHourReference(i, 2*(i+1));
         }
@@ -66,7 +66,7 @@ public class WorkDayUnitTest {
         day.setUsers(users);
         List<WorkDay> workDays = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
-            WorkDay workDay = new WorkDay();
+            WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
             for (int j = 0; j < users.size(); j++) {
                 workDay.addUserHourReference(j, j);
             }

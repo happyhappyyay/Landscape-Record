@@ -31,6 +31,8 @@ public class ViewWorkDay extends AppCompatActivity {
     private List<User> users;
     private RadioButton dayButton, weekButton, monthButton;
     private String calendarPosition = Util.retrieveStringCurrentDate();
+    private int timeSpanChoice;
+    final static String TIME_SPAN_CHOICE = "time span choice";
     final static String CALENDAR_POSITION = "calendar position";
 
     @Override
@@ -45,6 +47,7 @@ public class ViewWorkDay extends AppCompatActivity {
         dayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeSpanChoice = 0;
                 findWorkDayByDate(calendarPosition);
             }
         });
@@ -52,6 +55,7 @@ public class ViewWorkDay extends AppCompatActivity {
         weekButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeSpanChoice = 1;
                 findWorkDayByDate(calendarPosition);
             }
         });
@@ -59,12 +63,14 @@ public class ViewWorkDay extends AppCompatActivity {
         monthButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeSpanChoice = 2;
                 findWorkDayByDate(calendarPosition);
             }
         });
         recyclerView.setLayoutManager(layoutManager);
         if (savedInstanceState != null) {
             calendarPosition = savedInstanceState.getString(CALENDAR_POSITION);
+            timeSpanChoice = savedInstanceState.getInt(TIME_SPAN_CHOICE);
             calendarView.setDate(Util.convertStringDateToMilliseconds(calendarPosition));
         }
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -101,7 +107,7 @@ public class ViewWorkDay extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(CALENDAR_POSITION, calendarPosition);
-
+        outState.putInt(TIME_SPAN_CHOICE, timeSpanChoice);
         super.onSaveInstanceState(outState);
     }
 
@@ -114,26 +120,27 @@ public class ViewWorkDay extends AppCompatActivity {
             @Override
             protected Void doInBackground(String... sDate) {
 
-                if (dayButton.isChecked()) {
-                    WorkDay selectedWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
-                    if (selectedWorkDay != null) {
-                        workDay = selectedWorkDay;
-                    }
+                switch(timeSpanChoice) {
+                    case 0:
+                        WorkDay selectedWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
+                        if (selectedWorkDay != null) {
+                            workDay = selectedWorkDay;
+                        }
+                        break;
+                    case 1:
+                        List<WorkDay> selectedWorkWeek = db.workDayDao().findWorkWeekByTime(Util.convertStringToFirstDayOfWeekMilli(sDate[0]));
+
+                        if (selectedWorkWeek != null) {
+                            workDays = selectedWorkWeek;
+                        }
+                        break;
+                    case 2:
+                        List<WorkDay> selectedWorkMonth = db.workDayDao().findWorkMonthByTime(Util.convertStringToFirstDayOfMonthMilli(sDate[0]));
+
+                        if (selectedWorkMonth != null) {
+                            workDays = selectedWorkMonth;
+                        }
                 }
-                else if (weekButton.isChecked()) {
-                    List<WorkDay> selectedWorkWeek = db.workDayDao().findWorkWeekByTime(Util.convertStringToFirstDayOfWeekMilli(sDate[0]));
-
-                    if (selectedWorkWeek != null) {
-                        workDays = selectedWorkWeek;
-                    }
-                } else if(monthButton.isChecked()){
-                    List<WorkDay> selectedWorkMonth = db.workDayDao().findWorkMonthByTime(Util.convertStringToFirstDayOfMonthMilli(sDate[0]));
-
-                    if (selectedWorkMonth != null) {
-                        workDays = selectedWorkMonth;
-                    }
-                }
-
                 users = db.userDao().getAllUsers();
                 return null;
             }

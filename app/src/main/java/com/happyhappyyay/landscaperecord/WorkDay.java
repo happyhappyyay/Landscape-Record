@@ -40,8 +40,18 @@ public class WorkDay {
     }
 
     public void addUserHourReference (int userReference, int hours) {
-        this.hours.add(hours);
-        this.userReference.add(userReference);
+        boolean existingReference = false;
+        for (int i = 0; i < this.userReference.size(); i++) {
+            if(userReference == this.userReference.get(i)) {
+                this.hours.set(i, this.hours.get(i) + hours);
+                existingReference = true;
+                break;
+            }
+        }
+        if(!existingReference) {
+            this.hours.add(hours);
+            this.userReference.add(userReference);
+        }
 
     }
 
@@ -59,22 +69,26 @@ public class WorkDay {
 
     private void findCalendarInformation(String newDate) {
 //TODO: Allow setting of first day of the week (default is sunday)
-//        TODO: Deprecated date(String s) method
-        currentDate = newDate;
-        currentDateAsTime = Util.convertStringDateToMilliseconds(newDate);
-        Date date = new Date(newDate);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-        weekInMilli = cal.getTimeInMillis();
-        dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
-        cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
-        monthInMilli = cal.getTimeInMillis();
-        Month = new SimpleDateFormat("MMMM", Locale.US).format(date);
-        cal.set(Calendar.DAY_OF_YEAR, cal.getFirstDayOfWeek());
-        yearInMilli = cal.getTimeInMillis();
-        Year = new SimpleDateFormat("yyyy", Locale.US).format(date);
-
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            Date date = dateFormat.parse(newDate);
+            currentDateAsTime = date.getTime();
+            currentDate = newDate;
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+            weekInMilli = cal.getTimeInMillis();
+            dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
+            cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
+            monthInMilli = cal.getTimeInMillis();
+            Month = new SimpleDateFormat("MMMM", Locale.US).format(date);
+            cal.set(Calendar.DAY_OF_YEAR, cal.getFirstDayOfWeek());
+            yearInMilli = cal.getTimeInMillis();
+            Year = new SimpleDateFormat("yyyy", Locale.US).format(date);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     private Calendar clearCalendar(Calendar cal) {
         cal.set(Calendar.HOUR_OF_DAY, 0);
