@@ -33,20 +33,20 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
     private Service service;
     private WorkDay workDay;
 
-    public RecyclerQuickSheetAdapter (List<Customer> customers, Context context) {
+    public RecyclerQuickSheetAdapter (List<Customer> customers, Context context, String startDateString, String endDateString) {
         this.customers = customers;
         if (this.customers == null) {
             this.customers = new ArrayList<>();
         }
         db = AppDatabase.getAppDatabase(context);
         this.context = context;
+        this.startDateString = startDateString;
+        this.endDateString = endDateString;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        startDateString = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(new Date(System.currentTimeMillis()));
-        endDateString = startDateString;
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.quick_sheet_item, parent, false);
         return new ListViewHolder(view);
     }
@@ -110,28 +110,20 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                                     e.printStackTrace();
                                 }
 
-                                if (!startDateString.equals(endDateString) || endTime < startTime) {
+                                if (endTime < startTime) {
                                     flagDifferentEndTime = true;
                                 }
-                            String servicesString = "";
+                            String servicesString = updateCheckBoxes();
                             customer = customers.get(getAdapterPosition());
                             List<Service> services = customer.getCustomerServices();
                             int serviceListPosition = 0;
 //                            check for service pause and date then set inputs to services string
                             for (int i = 0; i < services.size(); i++) {
                                 Service s = services.get(i);
-                                if (s.isPause()) {
-                                    if (s.convertStartTimeToDateString().equals(startDateString)) {
-                                        tempService = s;
+                                if (s.convertStartTimeToDateString().equals(startDateString)) {
+                                    tempService = s;
+                                    if (s.isPause()) {
                                         serviceListPosition = i;
-                                        for (CheckBox c : checkBoxes) {
-                                            if (c.isChecked()) {
-                                                servicesString += c.getText().toString() + "#*#";
-                                            }
-                                        }
-                                        if (!notes.getText().toString().isEmpty()) {
-                                            servicesString += "Other " + notes.getText().toString() + "#*#";
-                                        }
                                     }
                                 }
                             }
@@ -218,7 +210,21 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                 }
             }
         }
+        private String updateCheckBoxes() {
+            String servicesString = "";
+            for (CheckBox c : checkBoxes) {
+                if (c.isChecked()) {
+                    servicesString += c.getText().toString() + "#*#";
+                }
+            }
+            if (!notes.getText().toString().isEmpty()) {
+                servicesString += "Other " + notes.getText().toString() + "#*#";
+            }
+            return servicesString;
+        }
     }
+
+
 
     private void updateCustomer() {
         new AsyncTask<Void, Void, Void>() {

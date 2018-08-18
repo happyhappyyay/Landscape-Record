@@ -26,6 +26,9 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     private User user;
     private AppDatabase db;
     private int adapterPosition;
+    private EditText dateText;
+    private String dateString = Util.retrieveStringCurrentDate();
+    public static final String DATE_STRING = "String of date";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,31 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
+            dateString = savedInstanceState.getString(DATE_STRING);
         }
+
+        dateText = findViewById(R.id.hour_operations_date_edit_text);
+        dateText.setText(dateString);
+        dateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String customDateString = dateText.getText().toString();
+                    if(Util.checkDateFormat(customDateString)) {
+                        dateString = customDateString;
+                    }
+                    else if (customDateString.equals("") || customDateString.equals(" ")){
+                        dateText.setText(dateString);
+                    }
+                    else {
+                        dateText.setText("");
+                        Toast.makeText(HourOperations.this,
+                                "Date format incorrect. Please reenter the date.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
         Util.UserAccountsSpinner task = new Util.UserAccountsSpinner() {
             @Override
             protected void onPostExecute(List<User> dbUsers) {
@@ -127,6 +154,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(ADAPTER_POSITION, adapterPosition);
+        outState.putString(DATE_STRING, dateString);
 
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
@@ -158,10 +186,10 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                 int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
                 int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
                 if (!integers[0].equals(payLogReference)) {
-                    WorkDay workDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
+                    WorkDay workDay = db.workDayDao().findWorkDayByDate(dateString);
                     int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
                     if (workDay == null) {
-                        workDay = new WorkDay(Util.retrieveStringCurrentDate());
+                        workDay = new WorkDay(dateString);
                         db.workDayDao().insert(workDay);
                     }
                     if (integers[0].equals(deleteLogReference)) {
@@ -171,7 +199,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                     db.workDayDao().updateWorkDay(workDay);
                 }
 
-                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, 3);
+                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString() + " for " + dateString, logActivityReference, 3);
                 db.logDao().insert(log);
                 db.userDao().updateUser(user);
                 return null;

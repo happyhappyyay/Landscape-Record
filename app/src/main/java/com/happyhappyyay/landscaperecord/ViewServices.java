@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.Locale;
 
+import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
+import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
+
 public class ViewServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private RecyclerView recyclerView;
@@ -41,20 +44,25 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     private TextView dateTextLabel;
     private EditText dateText;
     private Customer customer;
-    private String dateString;
+    private String dateString = Util.retrieveStringCurrentDate();
     private Button searchButton;
     private Boolean searchByDate = false;
+    private int adapterPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_services);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dateString = "";
         recyclerView = findViewById(R.id.view_services_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         db = AppDatabase.getAppDatabase(this);
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
+            dateString = savedInstanceState.getString(DATE_STRING);
+        }
         allCheckBox = findViewById(R.id.view_services_all_box);
         inProgressCheckBox = findViewById(R.id.view_services_in_progress_box);
         completedCheckBox = findViewById(R.id.view_services_completed_box);
@@ -62,13 +70,23 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         startDateBox = findViewById(R.id.view_services_start_date_box);
         endDateBox = findViewById(R.id.view_services_end_date_box);
         dateText = findViewById(R.id.view_services_date_edit_text);
+        dateText.setText(dateString);
         dateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (!dateString.equals(dateText.getText().toString())) {
-                        searchByDate = false;
-                        dateString = dateText.getText().toString();
+                    String customDateString = dateText.getText().toString();
+                    if(Util.checkDateFormat(customDateString)) {
+                        dateString = customDateString;
+                    }
+                    else if (customDateString.equals("") || customDateString.equals(" ")){
+                        dateText.setText(dateString);
+                    }
+                    else {
+                        dateText.setText("");
+                        Toast.makeText(ViewServices.this,
+                                "Date format incorrect. Please reenter the date.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -126,6 +144,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         customer = customers.get(position);
         adapter.setServices(getSortedServicesList());
         adapter.notifyDataSetChanged();
+        adapterPosition = position;
     }
 
     @Override
@@ -135,6 +154,15 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         }
 
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ADAPTER_POSITION, adapterPosition);
+        outState.putString(DATE_STRING, dateString);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
     }
 
     private List<Service> getDateSortedServices(List<Service> services) {
@@ -179,14 +207,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                     spinner.setVisibility(View.INVISIBLE);
                 }
 //TODO: Check the sorting mechanism, may not be sorting correctly- perfect opportunity to create a test
-                Collections.sort(services, new Comparator<Service>() {
-                    public int compare(Service service1, Service service2) {
-                        if (service1.getEndTime() > service2.getEndTime()) return -1;
-                        if (service1.getEndTime() < service2.getEndTime()) return 1;
-                        if (service1.getStartTime() > service2.getStartTime()) return -1;
-                        if (service1.getStartTime() < service2.getStartTime()) return 1;
-                        return 0;
-                    }});
+                services = sortServices(services);
             }
         }
 //      check specific sort method
@@ -216,6 +237,18 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         return services;
     }
 
+    private List<Service> sortServices(List<Service> services) {
+        Collections.sort(services, new Comparator<Service>() {
+            public int compare(Service service1, Service service2) {
+                if (service1.getEndTime() > service2.getEndTime()) return -1;
+                if (service1.getEndTime() < service2.getEndTime()) return 1;
+                if (service1.getStartTime() > service2.getStartTime()) return -1;
+                if (service1.getStartTime() < service2.getStartTime()) return 1;
+                return 0;
+            }});
+        return services;
+    }
+
     private void getCustomers() {
         new AsyncTask<Void, Void, List<Service>>() {
             @Override
@@ -232,14 +265,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             protected void onPostExecute(List<Service> passedServices) {
-                Collections.sort(passedServices, new Comparator<Service>() {
-                    public int compare(Service service1, Service service2) {
-                        if (service1.getStartTime() > service2.getStartTime()) return -1;
-                        if (service1.getStartTime() < service2.getStartTime()) return 1;
-                        if (service1.getEndTime() > service2.getEndTime()) return -1;
-                        if (service1.getEndTime() < service2.getEndTime()) return 1;
-                        return 0;
-                    }});
+                passedServices = sortServices(passedServices);
                 services = passedServices;
                 adapter = new RecyclerServiceAdapter(services);
                 recyclerView.setAdapter(adapter);

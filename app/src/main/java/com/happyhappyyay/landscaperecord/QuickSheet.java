@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,11 +15,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
+import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
 
 public class QuickSheet extends AppCompatActivity {
 
@@ -31,7 +31,9 @@ public class QuickSheet extends AppCompatActivity {
     private List<Customer> sortedCustomers;
     private EditText startDateText;
     private EditText endDateText;
-    private String dateString;
+    private String startDateString;
+    private String endDateString;
+    private final String DATE_STRING_END = "End date string";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +41,16 @@ public class QuickSheet extends AppCompatActivity {
         setContentView(R.layout.activity_quick_sheet);
         Toolbar myToolbar = findViewById(R.id.quick_sheet_toolbar);
         setSupportActionBar(myToolbar);
-        dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(new Date(System.currentTimeMillis()));
+        endDateString = startDateString = Util.retrieveStringCurrentDate();
         recyclerView = findViewById(R.id.quick_sheet_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         db = AppDatabase.getAppDatabase(this);
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            endDateString = savedInstanceState.getString(DATE_STRING_END);
+            startDateString = savedInstanceState.getString(DATE_STRING);
+        }
         daySpinner = findViewById(R.id.quick_sheet_day_spinner);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -71,7 +78,7 @@ public class QuickSheet extends AppCompatActivity {
 
         });
         startDateText = findViewById(R.id.quick_sheet_start_date_text);
-        startDateText.setText(dateString);
+        startDateText.setText(startDateString);
         startDateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -79,11 +86,14 @@ public class QuickSheet extends AppCompatActivity {
                     String customDateString = startDateText.getText().toString();
                     if(Util.checkDateFormat(customDateString)) {
                         adapter.setStartDateString(customDateString);
+                        startDateString = customDateString;
                         adapter.notifyDataSetChanged();
+
                     }
                     else if (customDateString.equals("") || customDateString.equals(" ")){
-                        adapter.setStartDateString(dateString);
-                        startDateText.setText(dateString);
+                        adapter.setStartDateString(startDateString);
+                        startDateText.setText(startDateString);
+                        startDateString = customDateString;
                         adapter.notifyDataSetChanged();
                     }
                     else {
@@ -97,52 +107,47 @@ public class QuickSheet extends AppCompatActivity {
         });
 
         endDateText = findViewById(R.id.quick_sheet_end_date_text);
-        endDateText.setText(dateString);
+        endDateText.setText(endDateString);
         endDateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String customDateString = endDateText.getText().toString();
-                    if(Util.checkDateFormat(customDateString)) {
-                        adapter.setEndDateString(customDateString);
-                    }
-                    else if (customDateString.equals("") || customDateString.equals(" ")){
-                        adapter.setEndDateString(dateString);
-                        endDateText.setText(dateString);
-                    }
-                    else {
-                        endDateText.setText("");
-                        Toast.makeText(QuickSheet.this,
-                                "Date format incorrect. Please reenter the date.",
-                                Toast.LENGTH_LONG).show();
+                    if (!hasFocus) {
+                        String customDateString = endDateText.getText().toString();
+                        if(Util.checkDateFormat(customDateString)) {
+                            adapter.setEndDateString(customDateString);
+                            endDateString = customDateString;
+                            adapter.notifyDataSetChanged();
+                        }
+                        else if (customDateString.equals("") || customDateString.equals(" ")){
+                            adapter.setEndDateString(startDateString);
+                            endDateText.setText(startDateString);
+                            endDateString = customDateString;
+                            adapter.notifyDataSetChanged();
+                        }
+                        else {
+                            endDateText.setText("");
+                            Toast.makeText(QuickSheet.this,
+                                    "Date format incorrect. Please reenter the date.",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
         });
 
         getCustomers();
     }
 
-    private void checkDateFormat(String customDateString) {
-        if (Util.checkDateFormat(customDateString)) {
-            adapter.setStartDateString(customDateString);
-            adapter.notifyDataSetChanged();
-        }
-        else if (customDateString.equals("") || customDateString.equals(" ")) {
-            adapter.setStartDateString(dateString);
-            startDateText.setText(dateString);
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            startDateText.setText("");
-            Toast.makeText(this,
-                    "Date format incorrect. Please reenter the date.",
-                    Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(DATE_STRING_END, endDateString);
+        outState.putString(DATE_STRING, startDateString);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
     }
 
     public void updateCustomers(List<Customer> customers) {
-        adapter = new RecyclerQuickSheetAdapter(customers, this);
+        adapter = new RecyclerQuickSheetAdapter(customers, this, startDateString, endDateString);
         recyclerView.setAdapter(adapter);
     }
 
