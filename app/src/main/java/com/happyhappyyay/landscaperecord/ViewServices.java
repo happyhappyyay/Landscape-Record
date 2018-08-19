@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,13 +16,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Comparator;
-import java.util.Locale;
 
 import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
 import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
@@ -36,6 +32,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     private AppDatabase db;
     private RadioButton allCheckBox, inProgressCheckBox, completedCheckBox, customerCheckBox, endDateBox,
     startDateBox;
+    private List<RadioButton> radioButtons;
     private List<Customer> customers;
     private List<Customer> modifiedCustomers;
     private List<Service> services;
@@ -48,27 +45,37 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     private Button searchButton;
     private Boolean searchByDate = false;
     private int adapterPosition;
+    private int sortByPosition;
+    private int viewByPosition;
+    private final String DATE_SEARCH = "Searched for date ";
+    private final String SORT_SEARCH = "Sorted by ";
+    private final String VIEW_SEARCH = "Viewed by ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_services);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        services = new ArrayList<>();
         recyclerView = findViewById(R.id.view_services_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         db = AppDatabase.getAppDatabase(this);
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
-            dateString = savedInstanceState.getString(DATE_STRING);
-        }
         allCheckBox = findViewById(R.id.view_services_all_box);
         inProgressCheckBox = findViewById(R.id.view_services_in_progress_box);
         completedCheckBox = findViewById(R.id.view_services_completed_box);
         customerCheckBox = findViewById(R.id.view_services_customer_box);
         startDateBox = findViewById(R.id.view_services_start_date_box);
         endDateBox = findViewById(R.id.view_services_end_date_box);
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
+            dateString = savedInstanceState.getString(DATE_STRING);
+            searchByDate = savedInstanceState.getBoolean(DATE_SEARCH);
+            sortByPosition = savedInstanceState.getInt(SORT_SEARCH);
+            viewByPosition = savedInstanceState.getInt(VIEW_SEARCH);
+            convertIntToRadioButtonClick();
+        }
         dateText = findViewById(R.id.view_services_date_edit_text);
         dateText.setText(dateString);
         dateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -97,9 +104,64 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         getCustomers();
     }
 
-    public void checkOptionClick(View view) {
+    public void radioButtonOptionClick(View view) {
+        convertRadioButtonClickToInt();
         adapter.setServices(getSortedServicesList());
         adapter.notifyDataSetChanged();
+    }
+
+    private void convertRadioButtonClickToInt()  {
+        int temporaryViewPosition = viewByPosition;
+        int temporarySortPosition = sortByPosition;
+        if(allCheckBox.isChecked()) {
+            viewByPosition = 0;
+        }
+        else if (inProgressCheckBox.isChecked()){
+            viewByPosition = 1;
+        }
+        else {
+            viewByPosition = 2;
+        }
+
+        if (startDateBox.isChecked()) {
+            sortByPosition = 0;
+        }
+        else if (customerCheckBox.isChecked()) {
+            sortByPosition = 2;
+        }
+        else {
+            sortByPosition = 1;
+        }
+
+        if(temporaryViewPosition != viewByPosition || temporarySortPosition != sortByPosition) {
+            searchByDate = false;
+        }
+    }
+
+    public void convertIntToRadioButtonClick() {
+        switch(sortByPosition) {
+            case 0:
+                startDateBox.setChecked(true);
+                break;
+            case 1:
+                endDateBox.setChecked(true);
+                break;
+            case 2:
+                customerCheckBox.setChecked(true);
+                break;
+        }
+
+        switch (viewByPosition) {
+            case 0:
+                allCheckBox.setChecked(true);
+                break;
+            case 1:
+                inProgressCheckBox.setChecked(true);
+                break;
+            case 2:
+                customerCheckBox.setChecked(true);
+                break;
+        }
     }
 
     public void checkSearchClick(View view) {
@@ -133,9 +195,11 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(Adapter.NO_SELECTION);
+        spinner.setSelection(adapterPosition);
         if (!customers.isEmpty()) {
-            customer = customers.get(0);
+            customer = customers.get(adapterPosition);
+            this.adapter.setServices(getSortedServicesList());
+            this.adapter.notifyDataSetChanged();
         }
     }
 
@@ -160,6 +224,9 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(ADAPTER_POSITION, adapterPosition);
         outState.putString(DATE_STRING, dateString);
+        outState.putBoolean(DATE_SEARCH, searchByDate);
+        outState.putInt(SORT_SEARCH, sortByPosition);
+        outState.putInt(VIEW_SEARCH, viewByPosition);
 
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
@@ -168,7 +235,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     private List<Service> getDateSortedServices(List<Service> services) {
         List<Service> tempServices = new ArrayList<>();
 
-        if (endDateBox.isChecked()) {
+        if (sortByPosition == 1) {
             for (Service s : services) {
                 if (s.convertEndTimeToDateString().equals(dateText.getText().toString())) {
                     tempServices.add(s);
@@ -189,7 +256,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         List<Service> services;
         List<Service> tempServices = new ArrayList<>();
 //      check general sort method
-        if (customerCheckBox.isChecked() & customer != null) {
+        if (sortByPosition == 2 & customer != null) {
             services = customer.getCustomerServices();
             if (spinner.getVisibility() != View.VISIBLE) {
                 spinner.setVisibility(View.VISIBLE);
@@ -197,21 +264,22 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         }
         else {
             services = this.services;
-            if (startDateBox.isChecked()) {
+            if (sortByPosition == 0) {
                 if (spinner.getVisibility() != View.INVISIBLE) {
                     spinner.setVisibility(View.INVISIBLE);
                 }
+                services = sortServicesByStartTime(services);
             }
-            else if (endDateBox.isChecked()){
+            else if (sortByPosition == 1){
                 if (spinner.getVisibility() != View.INVISIBLE) {
                     spinner.setVisibility(View.INVISIBLE);
                 }
+                services = sortServicesByEndTime(services);
 //TODO: Check the sorting mechanism, may not be sorting correctly- perfect opportunity to create a test
-                services = sortServices(services);
             }
         }
 //      check specific sort method
-        if (inProgressCheckBox.isChecked()) {
+        if (viewByPosition == 1) {
             for (Service s: services) {
                 if (s.isPause()) {
                     tempServices.add(s);
@@ -219,7 +287,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
             }
             services = tempServices;
         }
-        else if (completedCheckBox.isChecked()) {
+        else if (viewByPosition == 2) {
             for (Service s : services) {
                 if (!s.isPause()) {
                     tempServices.add(s);
@@ -237,7 +305,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         return services;
     }
 
-    private List<Service> sortServices(List<Service> services) {
+    private List<Service> sortServicesByEndTime(List<Service> services) {
         Collections.sort(services, new Comparator<Service>() {
             public int compare(Service service1, Service service2) {
                 if (service1.getEndTime() > service2.getEndTime()) return -1;
@@ -249,24 +317,37 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         return services;
     }
 
+    private List<Service> sortServicesByStartTime(List<Service> services) {
+        Collections.sort(services, new Comparator<Service>() {
+            public int compare(Service service1, Service service2) {
+                if (service1.getStartTime() > service2.getStartTime()) return -1;
+                if (service1.getStartTime() < service2.getStartTime()) return 1;
+                if (service1.getEndTime() > service2.getEndTime()) return -1;
+                if (service1.getEndTime() < service2.getEndTime()) return 1;
+                return 0;
+            }});
+        return services;
+    }
+
     private void getCustomers() {
-        new AsyncTask<Void, Void, List<Service>>() {
+        new AsyncTask<Void, Void, List<Customer>>() {
             @Override
-            protected List<Service> doInBackground(Void... voids) {
-                List<Service> services = new ArrayList<>();
-                customers = db.customerDao().getAllCustomers();
-                for (Customer c: customers) {
-                    for(Service s: c.getCustomerServices()) {
-                        services.add(s);
-                    }
-                }
-                return services;
+            protected List<Customer> doInBackground(Void... voids) {
+                return db.customerDao().getAllCustomers();
             }
 
             @Override
-            protected void onPostExecute(List<Service> passedServices) {
-                passedServices = sortServices(passedServices);
-                services = passedServices;
+            protected void onPostExecute(List<Customer> allCustomers) {
+                customers = allCustomers;
+                for(Customer c: customers) {
+                    services.addAll(c.getCustomerServices());
+                }
+                if(viewByPosition == 1) {
+                    services = sortServicesByEndTime(services);
+                }
+                else {
+                    services = sortServicesByStartTime(services);
+                    }
                 adapter = new RecyclerServiceAdapter(services);
                 recyclerView.setAdapter(adapter);
                 modifiedServices = services;
