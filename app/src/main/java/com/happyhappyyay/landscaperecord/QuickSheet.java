@@ -1,6 +1,8 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ public class QuickSheet extends AppCompatActivity {
     private AppDatabase db;
     private RecyclerQuickSheetAdapter adapter;
     private Spinner daySpinner;
+    private CheckBox quickSheetBox, quickSheetBox1, quickSheetBox2;
     private List<Customer> allCustomers;
     private List<Customer> sortedCustomers;
     private EditText startDateText;

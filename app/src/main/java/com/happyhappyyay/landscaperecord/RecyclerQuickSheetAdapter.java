@@ -2,7 +2,9 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -159,9 +161,18 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                         }
                     }
             );
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            String quickSheetItem = "";
+                    quickSheetItem = sharedPref.getString("pref_key_quick_sheet_item1", "1");
+            String quickSheetItem1 = sharedPref.getString("pref_key_quick_sheet_item2", "2");
+            String quickSheetItem2 = sharedPref.getString("pref_key_quick_sheet_item3", "3");
+            String[] workActivitiesArray = context.getResources().getStringArray(R.array.work_activities);
             checkBox1 = view.findViewById(R.id.quick_sheet_check_box1);
+            checkBox1.setText(workActivitiesArray[Integer.parseInt(quickSheetItem)]);
             checkBox2 = view.findViewById(R.id.quick_sheet_check_box2);
+            checkBox2.setText(workActivitiesArray[Integer.parseInt(quickSheetItem1)]);
             checkBox3 = view.findViewById(R.id.quick_sheet_check_box3);
+            checkBox3.setText(workActivitiesArray[Integer.parseInt(quickSheetItem2)]);
             notes = view.findViewById(R.id.quick_sheet_notes_text);
             checkBoxes = new ArrayList<>(Arrays.asList(checkBox1, checkBox2, checkBox3));
         }

@@ -40,7 +40,6 @@ public class CSVReadWrite {
 
             while((customerInformation = csvReader.readNext())!=null)
             {
-                //Save the employee details in Employee object
                 Customer customer = new Customer(customerInformation[0],
                         customerInformation[1],customerInformation[2]);
                 customer.setCustomerCity(customerInformation[3]);

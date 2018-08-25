@@ -15,7 +15,7 @@
                 android:defaultValue="@string/lawn_services_prune"
                 android:entries="@array/work_activities"
                 android:entryValues="@array/work_activities_values"
-                android:key="pref_key_quick_sheet_item3"
+                android:key="pref_key_quick_sheet_item1"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title1" />
             <ListPreference
@@ -29,7 +29,7 @@
                 android:defaultValue="@string/lawn_services_cut"
                 android:entries="@array/work_activities"
                 android:entryValues="@array/work_activities_values"
-                android:key="pref_key_quick_sheet_item1"
+                android:key="pref_key_quick_sheet_item3"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title3" />
         </PreferenceScreen>

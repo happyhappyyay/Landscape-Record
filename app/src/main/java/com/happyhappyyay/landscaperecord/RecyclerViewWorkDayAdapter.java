@@ -53,6 +53,16 @@ public class RecyclerViewWorkDayAdapter extends Adapter {
         return services;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     private class ListViewHolder extends RecyclerView.ViewHolder {
         public TextView userText, serviceText;
 
