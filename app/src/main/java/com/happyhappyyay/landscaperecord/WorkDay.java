@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -67,15 +69,19 @@ public class WorkDay {
         return services;
     }
 
-    private void findCalendarInformation(String newDate) {
+    protected void findCalendarInformation(String newDate) {
 //TODO: Allow setting of first day of the week (default is sunday)
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+//        int dayOfWeekRef = Integer.parseInt(sharedPref.getString("pref_key_day_of_week", "0"));
         try {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
             Date date = dateFormat.parse(newDate);
             currentDateAsTime = date.getTime();
             currentDate = newDate;
             Calendar cal = Calendar.getInstance();
+//            cal.setFirstDayOfWeek(dayOfWeekRef);
             cal.setTime(date);
+
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             weekInMilli = cal.getTimeInMillis();
             dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
@@ -90,12 +96,10 @@ public class WorkDay {
             e.printStackTrace();
         }
     }
-    private Calendar clearCalendar(Calendar cal) {
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MILLISECOND);
-        return cal;
+    private void updateCalendarFirstWeekDay(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        int dayOfWeek = Integer.parseInt(sharedPref.getString("pref_key_day_of_week", "0"));
+
     }
 
     public long getWeekInMilli() {

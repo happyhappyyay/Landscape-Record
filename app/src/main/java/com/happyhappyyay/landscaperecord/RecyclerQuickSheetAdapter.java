@@ -95,7 +95,6 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            TODO: Move to quick sheet class?
                             service = null;
                             boolean flagDifferentEndTime = false;
                             long startTime = 0;
@@ -162,8 +161,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                     }
             );
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            String quickSheetItem = "";
-                    quickSheetItem = sharedPref.getString("pref_key_quick_sheet_item1", "1");
+            String quickSheetItem = sharedPref.getString("pref_key_quick_sheet_item1", "1");
             String quickSheetItem1 = sharedPref.getString("pref_key_quick_sheet_item2", "2");
             String quickSheetItem2 = sharedPref.getString("pref_key_quick_sheet_item3", "3");
             String[] workActivitiesArray = context.getResources().getStringArray(R.array.work_activities);

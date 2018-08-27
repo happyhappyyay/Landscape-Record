@@ -49,7 +49,7 @@ public class Service {
     public String convertStartTimeToDateString() {
         String dateMessage = "";
         if (startTime >0) {
-            dateMessage = dateConversion(startTime);
+            dateMessage = Util.convertLongToStringDate(startTime);
         }
         return dateMessage;
     }
@@ -57,16 +57,9 @@ public class Service {
     public String convertEndTimeToDateString() {
         String dateMessage = "";
         if (endTime >0) {
-            dateMessage = dateConversion(endTime);
+            dateMessage = Util.convertLongToStringDate(endTime);
         }
         return dateMessage;
-    }
-
-    private String dateConversion(long time) {
-//        TODO: make static version in util class
-        Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-        return formatter.format(date);
     }
 
     public ServiceType getServiceType() {

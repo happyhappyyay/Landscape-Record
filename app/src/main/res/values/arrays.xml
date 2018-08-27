@@ -70,6 +70,16 @@
         <item>Sunday</item>
     </string-array>
 
+    <string-array name="only_days_of_the_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
     <string-array name="types_of_materials">
         <item>Other</item>
         <item>Dirt</item>
@@ -138,6 +148,16 @@
         <item>14</item>
         <item>15</item>
         <item>16</item>
+    </string-array>
+
+    <string-array name="only_days_of_the_week_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
     </string-array>
 
 </resources>

@@ -2,15 +2,13 @@
     <PreferenceCategory
         android:title="@string/pref_settings_title"
         android:key="pref_key_storage_settings">
-    </PreferenceCategory>
         <PreferenceScreen
             android:key="pref_key_quick_sheet_items_holder"
             android:summary="@string/pre_settings_quick_sheet_selections_summary"
             android:title="@string/pref_settings_quick_sheet_items_title">
             <PreferenceCategory
-                android:title="@string/pref_settings_quick_sheet_items_title"
-                android:key="pref_key_quick_sheet_items_title">
-            </PreferenceCategory>
+                android:key="pref_key_quick_sheet_items_title"
+                android:title="@string/pref_settings_quick_sheet_items_title"></PreferenceCategory>
             <ListPreference
                 android:defaultValue="@string/lawn_services_prune"
                 android:entries="@array/work_activities"
@@ -33,6 +31,21 @@
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title3" />
         </PreferenceScreen>
+        <EditTextPreference
+            android:defaultValue="@string/billing_item_company_name"
+            android:key="pref_key_company"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_settings_company_name_summary"
+            android:title="@string/billing_item_company_name" />
+        <ListPreference
+            android:defaultValue="6"
+            android:entries="@array/only_days_of_the_week"
+            android:entryValues="@array/only_days_of_the_week_values"
+            android:key="pref_key_day_of_week"
+            android:summary="@string/pref_settings_first_day_of_week_summary"
+            android:title="@string/pref_settings_first_day_of_week" />
+    </PreferenceCategory>
     <SwitchPreference
             android:defaultValue="false"
             android:key="pref_settings_database_usage"
@@ -62,6 +75,7 @@
         android:singleLine="true"
         android:summary="@string/pref_settings_database_api_key_summary"
         android:title="@string/pref_settings_database_api_key_title" />
+
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"
@@ -70,7 +84,6 @@
         android:singleLine="true"
         android:summary="@string/pref_settings_database_api_password_summary"
         android:title="@string/pref_settings_database_api_password_title" />
-
     <Preference
         android:key="@string/pref_key_import_contacts"
         android:summary="Upload a Comma-seperated Values(.csv) file to import contacts. Headers needed: First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."

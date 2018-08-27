@@ -275,7 +275,6 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                     spinner.setVisibility(View.INVISIBLE);
                 }
                 services = sortServicesByEndTime(services);
-//TODO: Check the sorting mechanism, may not be sorting correctly- perfect opportunity to create a test
             }
         }
 //      check specific sort method

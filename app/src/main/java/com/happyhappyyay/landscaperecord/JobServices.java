@@ -92,8 +92,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
 
         });
         findAllCustomers();
-//TODO: Resize for text input
-
     }
 
     private void setupViewPager(ViewPager viewPager) {

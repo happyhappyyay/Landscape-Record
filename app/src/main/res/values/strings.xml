@@ -1,18 +1,5 @@
 <resources>
     <string name="app_name">Landscape Record</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="checkInText">Check In</string>
     <string name="checkOutText">Check Out</string>
     <string name="accountNameText">Account:</string>
@@ -164,6 +151,7 @@
     <string name="pref_settings_quick_sheet_items_selection_title1">Check Box 1</string>
     <string name="pref_settings_quick_sheet_items_selection_title2">Check Box 2</string>
     <string name="pref_settings_quick_sheet_items_selection_title3">Check Box 3</string>
+
     <string name="view_work_day_title">View Work Activity</string>
     <string name="activity_view_work_day_user_hour_title">User : Hours</string>
     <string name="activity_view_work_day_customer_services_title">Customer : Service</string>
@@ -171,6 +159,11 @@
     <string name="view_work_day_week_button">Week</string>
     <string name="view_work_day_month_button">Month</string>
     <string name="pref_key_import_contacts">pref_key_import_contacts</string>
+    <string name="billing_item_company_name">Company Name</string>
+    <string name="billing_item_signature">Thank you.</string>
+    <string name="pref_settings_company_name_summary">Name of company: %s</string>
+    <string name="pref_settings_first_day_of_week">Start of Work Week</string>
+    <string name="pref_settings_first_day_of_week_summary">Set the day that starts the week. The current day selected is %s.</string>
     <!---->
 
 </resources>

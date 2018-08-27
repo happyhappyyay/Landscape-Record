@@ -42,12 +42,43 @@ public class CSVReadWrite {
             {
                 Customer customer = new Customer(customerInformation[0],
                         customerInformation[1],customerInformation[2]);
-                customer.setCustomerCity(customerInformation[3]);
-                customer.setCustomerState(customerInformation[4]);
-                customer.setCustomerPhoneNumber(customerInformation[5]);
-                customer.setCustomerEmail(customerInformation[6]);
-                customer.setCustomerBusiness(customerInformation[7]);
-                customer.setCustomerDay(customerInformation[8]);
+
+                if(customerInformation[3] != null) {
+                    if (!customerInformation[3].equals("")) {
+                        customer.setCustomerCity(customerInformation[3]);
+                    }
+                }
+
+                if(customerInformation[4] != null) {
+                    if (!customerInformation[4].equals("")) {
+                        customer.setCustomerCity(customerInformation[4]);
+                    }
+                }
+
+                if(customerInformation[5] != null) {
+                    if (!customerInformation[5].equals("")) {
+                        customer.setCustomerCity(customerInformation[5]);
+                    }
+                }
+
+                if(customerInformation[6] != null) {
+                    if (!customerInformation[6].equals("")) {
+                        customer.setCustomerCity(customerInformation[6]);
+                    }
+                }
+
+                if(customerInformation[7] != null) {
+                    if (!customerInformation[7].equals("")) {
+                        customer.setCustomerCity(customerInformation[7]);
+                    }
+                }
+
+                if(customerInformation[8] != null) {
+                    if (!customerInformation[8].equals("")) {
+                        customer.setCustomerCity(customerInformation[8]);
+                    }
+                }
+
                 customers.add(customer);
             }
 

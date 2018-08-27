@@ -74,9 +74,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             }
         };
         task.execute(this);
-//        TODO: Minimize processing by saving list of users with view model
-//        MyViewModel model = ViewModelProviders.of(this).get(MyViewModel.class);
-//        users = model.getUsers();
     }
 
     private void resetStartTime() {
