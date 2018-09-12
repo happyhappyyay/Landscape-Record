@@ -30,7 +30,7 @@ public class AdminTools extends AppCompatActivity {
     }
 
     public void startUserOptions(View view) {
-        Intent intent = new Intent(this, UserOptions.class);
+        Intent intent = new Intent(this, ViewUsers.class);
         startActivity(intent);
     }
 

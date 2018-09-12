@@ -54,11 +54,9 @@ public class AddUser extends AppCompatActivity {
             if (password.getText().toString().length() > 5) {
                 user.setPassword(password.getText().toString());
             } else {
-                if (!error) {
-                    Toast.makeText(getApplicationContext(), "Password must be at least 6 characters" +
-                            " long", Toast.LENGTH_LONG).show();
-                    error = true;
-                }
+                Toast.makeText(getApplicationContext(), "Password must be at least 6 characters" +
+                        " long", Toast.LENGTH_LONG).show();
+                error = true;
                 password.setText("");
             }
             if (hours.getText().toString().isEmpty()) {

@@ -167,6 +167,7 @@
     <string name="dashboard_payments">Payments</string>
     <string name="main_menu_contacts">Contacts</string>
     <string name="user_settings_title">User Settings</string>
+    <string name="view_users_users_title">Users</string>
     <!---->
 
 </resources>
