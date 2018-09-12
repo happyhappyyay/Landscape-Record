@@ -55,14 +55,16 @@
     <Button
         android:id="@+id/dashboard_main_menu"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="32dp"
         android:onClick="startMainMenu"
         android:text="@string/login_page_main_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_username" />
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
 
     <TextView
         android:id="@+id/dashboard_checked_in_time_text"
@@ -74,16 +76,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_username" />
 
-    <Button
-        android:id="@+id/button16"
+    <TextView
+        android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="52dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="56dp"
-        android:onClick="startViewWorkDay"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_username" />
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:drawableTop="@drawable/ic_twotone_settings_applications_64px"
+        android:onClick="startUserSettings"
+        android:text="@string/user_settings_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

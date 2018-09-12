@@ -164,6 +164,9 @@
     <string name="pref_settings_company_name_summary">Name of company: %s</string>
     <string name="pref_settings_first_day_of_week">Start of Work Week</string>
     <string name="pref_settings_first_day_of_week_summary">Set the day that starts the week. The current day selected is %s.</string>
+    <string name="dashboard_payments">Payments</string>
+    <string name="main_menu_contacts">Contacts</string>
+    <string name="user_settings_title">User Settings</string>
     <!---->
 
 </resources>

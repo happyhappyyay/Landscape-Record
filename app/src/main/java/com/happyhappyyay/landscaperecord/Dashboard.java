@@ -40,19 +40,13 @@ public class Dashboard extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private String timeToDate(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd HH:mm", Locale.US);
-        return formatter.format(date);
-    }
-
-    public void startViewWorkDay(View view) {
-        Intent intent = new Intent(getApplicationContext(), ViewWorkDay.class);
+    public void startUserSettings(View view) {
+        Intent intent = new Intent(getApplicationContext(), UserSettings.class);
         startActivity(intent);
     }
 
     private void setNotifications(){
-        String checkedInDateTime = "Checked in at: " + timeToDate(authentication.getUser().getStartTime());
+        String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDate(authentication.getUser().getStartTime());
         if (authentication.getUser().getStartTime() != 0) {
             checkInTime.setText(checkedInDateTime);
         }

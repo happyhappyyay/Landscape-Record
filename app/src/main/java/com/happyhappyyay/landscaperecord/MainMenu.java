@@ -8,11 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainMenu extends AppCompatActivity {
 
     static AppDatabase db;
-    private Button adminToolsButton;
+    private TextView adminToolsButton;
     private Authentication authentication;
     private User user;
 
@@ -56,6 +57,11 @@ public class MainMenu extends AppCompatActivity {
 
     public void startNewContact(View view) {
         Intent intent = new Intent(this, NewContact.class);
+        startActivity(intent);
+    }
+
+    public void startViewWorkDay(View view) {
+        Intent intent = new Intent(this, ViewWorkDay.class);
         startActivity(intent);
     }
 

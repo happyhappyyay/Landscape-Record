@@ -58,7 +58,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".ViewServices" />
         <activity android:name=".ViewWorkDay" />
-        <activity android:name=".BillingPreview"></activity>
+        <activity android:name=".BillingPreview" />
+        <activity android:name=".UserSettings"></activity>
     </application>
 
 </manifest>
