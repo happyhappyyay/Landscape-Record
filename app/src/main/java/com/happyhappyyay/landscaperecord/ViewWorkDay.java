@@ -177,6 +177,7 @@ public class ViewWorkDay extends AppCompatActivity {
         else {
             noWorkDayMessage();
         }
+
         adapter = new RecyclerViewWorkDayAdapter(userWithHours, customerWithServices);
         recyclerView.setAdapter(adapter);
         workDay = null;

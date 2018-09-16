@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -186,17 +187,26 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                 int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
                 int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
                 if (!integers[0].equals(payLogReference)) {
+                    boolean isNewWorkDay = false;
                     WorkDay workDay = db.workDayDao().findWorkDayByDate(dateString);
                     int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
                     if (workDay == null) {
+                        isNewWorkDay = true;
                         workDay = new WorkDay(dateString);
-                        db.workDayDao().insert(workDay);
                     }
                     if (integers[0].equals(deleteLogReference)) {
                         numberOfHours = -numberOfHours;
                     }
+
                     workDay.addUserHourReference(adapterPosition, numberOfHours);
-                    db.workDayDao().updateWorkDay(workDay);
+
+                    if (isNewWorkDay) {
+                        db.workDayDao().insert(workDay);
+                    }
+                    else {
+                        db.workDayDao().updateWorkDay(workDay);
+                    }
+
                 }
 
                 LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString() + " for " + dateString, logActivityReference, 3);

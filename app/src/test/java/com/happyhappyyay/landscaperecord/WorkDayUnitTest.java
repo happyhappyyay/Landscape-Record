@@ -77,6 +77,24 @@ public class WorkDayUnitTest {
     }
 
     @Test
+    public void create_string_from_user_hours_simulation_isCorrect() {
+        List<String> expected = Arrays.asList("Bob : 2");
+        List<User> users = new ArrayList<>();
+        User user = new User();
+        user.setName("Bob");
+        users.add(user);
+        ViewWorkDay day = new ViewWorkDay();
+        day.setUsers(users);
+        WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
+        for (int i = 0; i < users.size(); i++) {
+            workDay.addUserHourReference(i, 2*(i+1));
+        }
+        List<String> actual = day.createStringFromUserHourReferences(workDay);
+
+
+        Assert.assertEquals(expected, actual);
+    }
+    @Test
     public void create_week_isCorrect() {
         String expected = "07/29/2018";
         Calendar cal = Calendar.getInstance();

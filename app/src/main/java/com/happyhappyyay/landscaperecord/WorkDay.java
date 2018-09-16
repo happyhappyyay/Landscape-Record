@@ -54,6 +54,8 @@ public class WorkDay {
             this.hours.add(hours);
             this.userReference.add(userReference);
         }
+//        String TAG = "Size of Strings";
+//        Log.d(TAG, "number " + this.userReference.size());
 
     }
 
