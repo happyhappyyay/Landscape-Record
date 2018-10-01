@@ -2,7 +2,7 @@ package com.happyhappyyay.landscaperecord;
 
 public enum LogActivityType {
     USER,
-    ACCOUNT,
+    CUSTOMER,
     PAYMENT,
     HOURS,
     JOB

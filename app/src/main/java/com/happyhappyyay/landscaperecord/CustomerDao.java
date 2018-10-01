@@ -20,6 +20,9 @@ public interface CustomerDao {
     @Query("SELECT * FROM Customer WHERE customerFirstName + ' ' + customerLastName OR customerBusiness = :customerName")
     Customer findCustomerByName(String customerName);
 
+    @Query("SELECT * FROM Customer WHERE customerId = :customerID")
+    Customer findCustomerByID(int customerID);
+
     @Update
     void updateCustomer(Customer customer);
 

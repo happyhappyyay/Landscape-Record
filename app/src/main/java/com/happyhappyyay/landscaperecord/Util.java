@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -169,6 +170,11 @@ public class Util {
         return dateFormat.format(new Date(time));
     }
 
+    public static String convertLongToStringDateTime(long time) {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
+        return dateFormat.format(new Date(time));
+    }
+
     public static long convertStringToFirstDayOfWeekMilli(String dateString) {
         Calendar cal = Calendar.getInstance();
         try {
@@ -195,5 +201,53 @@ public class Util {
         catch (Exception e) {
             return 0;
         }
+    }
+
+    public static List<String> removeCustomerServicesStopCharacters(List<Service> services) {
+        List<String> customerServices = new ArrayList<>();
+        for (Service s: services) {
+            String serviceString = s.getServices();
+            String serviceStringWithoutSeparators = "";
+            int endServicePosition;
+            int startServicePosition = 0;
+
+            for (int i = 0; i < serviceString.length() - 2; i++) {
+                if (serviceString.substring(i,i+3).equals("#*#")) {
+                    endServicePosition = i;
+                    serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                    startServicePosition = i+3;
+                }
+            }
+
+            if (serviceStringWithoutSeparators.length() > 2) {
+                serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
+            }
+            String customerService = s.convertEndTimeToDateString() + ": "  + s.getCustomerName() +
+                    System.getProperty ("line.separator") + serviceStringWithoutSeparators;
+            customerServices.add(customerService);
+        }
+        return customerServices;
+    }
+
+    public static String removeCustomerServicesStopCharacters(Service service) {
+        String serviceString = service.getServices();
+        String serviceStringWithoutSeparators = "";
+        int endServicePosition;
+        int startServicePosition = 0;
+
+        for (int i = 0; i < serviceString.length() - 2; i++) {
+            if (serviceString.substring(i,i+3).equals("#*#")) {
+                endServicePosition = i;
+                serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                startServicePosition = i+3;
+            }
+        }
+
+        if (serviceStringWithoutSeparators.length() > 2) {
+            serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
+        }
+
+        return service.convertEndTimeToDateString() + ": "  + service.getCustomerName() +
+                System.getProperty ("line.separator") + serviceStringWithoutSeparators;
     }
 }

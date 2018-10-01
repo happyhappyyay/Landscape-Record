@@ -63,14 +63,18 @@ public class RecyclerServiceAdapter extends Adapter {
 
         public void bindView(int position) {
             Service service = services.get(position);
+            String startToEndDate = service.convertStartTimeToDateString() + " - " + service.convertEndTimeToDateString();
+            String manHoursString = Double.toString(service.getManHours()) + "hrs";
+            String mileageString = Double.toString(service.getMileage()) + "mi";
+            String services = Util.removeCustomerServicesStopCharacters(service);
             customerText.setText(service.getCustomerName());
-            dateText.setText(service.convertStartTimeToDateString() + " - " + service.convertEndTimeToDateString());
+            dateText.setText(startToEndDate);
             stateText.setText(service.isPause() ? "In-Progress": "Completed");
             stateText.setTextColor(service.isPause() ? Color.GREEN : Color.RED);
             usernameText.setText(service.getUsername());
-            manHoursText.setText(Double.toString(service.getManHours()) + "hrs");
-            mileageText.setText(Double.toString(service.getMileage()) + "mi");
-            servicesText.setText(service.getServices());
+            manHoursText.setText(manHoursString);
+            mileageText.setText(mileageString);
+            servicesText.setText(services);
 
         }
 

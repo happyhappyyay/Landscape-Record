@@ -12,13 +12,13 @@
     <string name="payment_check_number_hint">If payment is a check, include the check number</string>
     <string name="contact_first_name">First:</string>
     <string name="contact_last_name">Last:</string>
-    <string name="contact_phone_number">Phone Number:</string>
+    <string name="contact_phone_number">Phone:</string>
     <string name="contact_email">Email:</string>
     <string name="contact_business">Business:</string>
     <string name="contact_address">Address:</string>
     <string name="contact_city">City:</string>
     <string name="contact_state">State:</string>
-    <string name="name_text_field">Name</string>
+    <string name="name_text_field">Name:</string>
     <string name="email_example">John.Smith@Example.com</string>
     <string name="address_example">12300 Country Road</string>
     <string name="city_example">Chicago</string>
@@ -31,14 +31,14 @@
     <string name="job_lawn_service">Lawn Services</string>
     <string name="job_landscaping_services">Landscaping Services</string>
     <string name="job_snow_services">Snow Services</string>
-    <string name="user_options">User Options</string>
+    <string name="user_options">Manage Users</string>
     <string name="add_user">Add User</string>
     <string name="delete_user">Delete User</string>
     <string name="view_users">View Users</string>
     <string name="update_user">Update User Information</string>
     <string name="add_user_first">First</string>
     <string name="add_user_last">Last</string>
-    <string name="add_user_hours">Start Hours (leave blank for 0)</string>
+    <string name="add_user_hours">Start Hours (opt.)</string>
     <string name="user_options_payment_queue">Payment Queue</string>
     <string name="user_options_hour_operations">Hour Operations</string>
     <string name="password">Password</string>
@@ -113,7 +113,7 @@
     <string name="admin_tools_view_logs">View Logged Activity</string>
     <string name="log_item_text">Log</string>
     <string name="job_activity_fragment_other">Enter non-standard activity or notes</string>
-    <string name="contact_day_of_the_week">Day of the Week:</string>
+    <string name="contact_day_of_the_week">Work Day:</string>
     <string name="quick_sheet_item_start">Start</string>
     <string name="quick_sheet_item_finish">Finish</string>
     <string name="quick_sheet_title">Quick Sheet</string>
@@ -128,7 +128,7 @@
     <string name="view_services_customer">Customer</string>
     <string name="view_services_view_by">View By</string>
     <string name="view_services_sort_by">Sort By</string>
-    <string name="view_services_mileage">Mileage</string>
+    <string name="view_services_mileage">Mileage:</string>
     <string name="admin_tools_view_services">View Services</string>
     <string name="view_services_search">Search</string>
 
@@ -168,6 +168,9 @@
     <string name="main_menu_contacts">Contacts</string>
     <string name="user_settings_title">User Settings</string>
     <string name="view_users_users_title">Users</string>
+    <string name="add_user_nickname">Nickname</string>
+    <string name="edit_user_title">Edit User</string>
+    <string name="edit_customer_title">Edit Customer</string>
     <!---->
 
 </resources>

@@ -46,7 +46,7 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void setNotifications(){
-        String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDate(authentication.getUser().getStartTime());
+        String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDateTime(authentication.getUser().getStartTime());
         if (authentication.getUser().getStartTime() != 0) {
             checkInTime.setText(checkedInDateTime);
         }

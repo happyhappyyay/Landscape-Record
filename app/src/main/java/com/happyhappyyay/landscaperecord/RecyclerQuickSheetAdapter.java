@@ -141,20 +141,21 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                             }
 //                            otherwise update existing service
                             else {
-                                if (!flagDifferentEndTime) {
-                                    jobActionButton.setText("✓");
-                                    tempService.setServices(servicesString);
-                                    tempService.setEndTime(endTime);
-                                    tempService.setPause(false);
-                                    customer.updateService(tempService, serviceListPosition);
-                                    service = tempService;
-                                    updateCustomer();
-                                }
-                                else {
-                                    Toast.makeText(context,
-                                            "There was an error with the start - end date " +
-                                                    "combination. Please check the dates are correct.",
-                                            Toast.LENGTH_SHORT).show();
+                                if (!jobActionButton.getText().toString().equals("✓")) {
+                                    if (!flagDifferentEndTime) {
+                                        jobActionButton.setText("✓");
+                                        tempService.setServices(servicesString);
+                                        tempService.setEndTime(endTime);
+                                        tempService.setPause(false);
+                                        customer.updateService(tempService, serviceListPosition);
+                                        service = tempService;
+                                        updateCustomer();
+                                    } else {
+                                        Toast.makeText(context,
+                                                "There was an error with the start - end date " +
+                                                        "combination. Please check the dates are correct.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         }

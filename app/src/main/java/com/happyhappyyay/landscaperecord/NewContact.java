@@ -20,7 +20,7 @@ import java.util.List;
 public class NewContact extends AppCompatActivity {
     private static final String TAG = "Customer List";
     private EditText firstNameText, lastNameText, emailText, businessText, addressText, cityText,
-            phoneText, weekDay;
+            phoneText;
     private Spinner stateSpinner, daySpinner;
     private Customer customer;
     private AppDatabase db;
@@ -58,7 +58,7 @@ public class NewContact extends AppCompatActivity {
             }
 
             if (!cityText.getText().toString().isEmpty()) {
-                customer.setCustomerCity(emailText.getText().toString());
+                customer.setCustomerCity(cityText.getText().toString());
             }
 
             if (!phoneText.getText().toString().isEmpty()) {

@@ -42,9 +42,7 @@ public class Customer implements SpinnerObjects {
     }
 
     public void removeService(Service customerService) {
-        if (customerServices.contains(customerService)) {
-            customerServices.remove(customerService);
-        }
+        customerServices.remove(customerService);
     }
 
     public String getCustomerFirstName() {
@@ -123,6 +121,14 @@ public class Customer implements SpinnerObjects {
         this.customerState = customerState;
     }
 
+    public void setCustomerFirstName(String customerFirstName) {
+        this.customerFirstName = customerFirstName;
+    }
+
+    public void setCustomerLastName (String customerLastName) {
+        this.customerLastName = customerLastName;
+    }
+
     @Override
     public String toString() {
         if (customerBusiness == null) {
@@ -136,5 +142,10 @@ public class Customer implements SpinnerObjects {
     @Override
     public String getName() {
         return toString();
+    }
+
+    public String concatenateFullAddress() {
+        return getCustomerAddress() + " " + getCustomerCity()
+                + ", " + getCustomerState();
     }
 }

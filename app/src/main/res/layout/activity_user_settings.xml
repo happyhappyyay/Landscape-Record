@@ -7,12 +7,12 @@
     tools:context=".UserSettings">
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/user_settings_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_twotone_account_circle_100px"
-        android:text="@string/login_page_username"
         android:gravity="center"
+        android:text="@string/login_page_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_settings_toolbar" />
 
@@ -32,7 +32,7 @@
         app:title="@string/user_settings_title" />
 
     <Button
-        android:id="@+id/button16"
+        android:id="@+id/main_menu_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/user_settings_toolbar" />
 
     <Button
-        android:id="@+id/button17"
+        android:id="@+id/main_menu_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -51,6 +51,17 @@
         android:layout_marginTop="8dp"
         android:text="Change Nickname"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button16" />
+        app:layout_constraintTop_toBottomOf="@+id/main_menu_password" />
+
+    <Button
+        android:id="@+id/main_menu_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/menu_logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

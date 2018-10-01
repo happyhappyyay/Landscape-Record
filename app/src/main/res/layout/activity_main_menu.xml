@@ -63,13 +63,28 @@
         app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar" />
 
     <TextView
-        android:id="@+id/textView25"
+        android:id="@+id/main_menu_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:drawableTop="@drawable/ic_twotone_hourglass_full_64px"
         android:onClick="startTimeReporting"
         android:text="@string/main_menu_time"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar" />
+
+    <TextView
+        android:id="@+id/main_menu_full"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableTop="@drawable/ic_twotone_hourglass_empty_64px"
+        android:onClick="startTimeReporting"
+        android:text="@string/main_menu_time"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

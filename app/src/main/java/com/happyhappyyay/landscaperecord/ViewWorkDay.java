@@ -1,16 +1,13 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
-import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,7 +159,7 @@ public class ViewWorkDay extends AppCompatActivity {
                 userWithHours = createStringFromUserHourReferences(workDay);
             }
             if (services != null) {
-                customerWithServices = convertCustomerServicesToString(services);
+                customerWithServices = Util.removeCustomerServicesStopCharacters(services);
             }
         }
         else if (workDays != null) {
@@ -171,7 +168,7 @@ public class ViewWorkDay extends AppCompatActivity {
             }
             userWithHours = createStringFromUserHourReferences(workDays);
             if (!services.isEmpty()) {
-                customerWithServices = convertCustomerServicesToString(services);
+                customerWithServices = Util.removeCustomerServicesStopCharacters(services);
             }
         }
         else {
@@ -231,32 +228,6 @@ public class ViewWorkDay extends AppCompatActivity {
             usersAndHours.add(userAndHours);
         }
         return usersAndHours;
-    }
-
-    public List<String> convertCustomerServicesToString(List<Service> services) {
-        List<String> customerServices = new ArrayList<>();
-        for (Service s: services) {
-            String serviceString = s.getServices();
-            String serviceStringWithoutSeparators = "";
-            int endServicePosition;
-            int startServicePosition = 0;
-
-            for (int i = 0; i < serviceString.length() - 2; i++) {
-                if (serviceString.substring(i,i+3).equals("#*#")) {
-                        endServicePosition = i;
-                    serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
-                    startServicePosition = i+3;
-                }
-            }
-
-            if (serviceStringWithoutSeparators.length() > 2) {
-                serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
-            }
-            String customerService = s.convertEndTimeToDateString() + ": "  + s.getCustomerName() +
-                    System.getProperty ("line.separator") + serviceStringWithoutSeparators;
-            customerServices.add(customerService);
-        }
-        return customerServices;
     }
 }
 

@@ -12,8 +12,7 @@ import android.widget.TextView;
 
 public class MainMenu extends AppCompatActivity {
 
-    static AppDatabase db;
-    private TextView adminToolsButton;
+    private TextView checkedInButton, checkedOutButton;
     private Authentication authentication;
     private User user;
 
@@ -24,15 +23,28 @@ public class MainMenu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TextView adminToolsButton;
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_menu);
         Toolbar myToolbar = findViewById(R.id.main_menu_toolbar);
-        setSupportActionBar(myToolbar);
-        db = AppDatabase.getAppDatabase(this);
         authentication = Authentication.getAuthentication(this);
         user = authentication.getUser();
+        setSupportActionBar(myToolbar);
         adminToolsButton = findViewById(R.id.admin_tools_button);
         adminToolsButton.setVisibility(!user.isAdmin() ? View.GONE : View.VISIBLE);
+        checkedInButton = findViewById(R.id.main_menu_full);
+        checkedOutButton = findViewById(R.id.main_menu_empty);
+
+        checkInButtonVisibility();
+    }
+
+    private void checkInButtonVisibility() {
+        authentication = Authentication.getAuthentication(this);
+        user = authentication.getUser();
+        checkedOutButton.setVisibility(user.getStartTime() <= 0 ? View.GONE : View.VISIBLE);
+        checkedInButton.setVisibility(user.getStartTime() <= 0 ? View.VISIBLE : View.GONE);
     }
 
     public void startTimeReporting(View view) {
@@ -56,7 +68,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void startNewContact(View view) {
-        Intent intent = new Intent(this, NewContact.class);
+        Intent intent = new Intent(this, ViewContacts.class);
         startActivity(intent);
     }
 
@@ -74,5 +86,11 @@ public class MainMenu extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return Util.toolbarItemSelection(this, item);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        checkInButtonVisibility();
     }
 }

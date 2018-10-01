@@ -10,40 +10,39 @@ import android.view.View;
 
 import java.util.List;
 
-public class ViewUsers extends AppCompatActivity {
+public class ViewContacts extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private RecyclerViewUsersAdapter adapter;
+    private RecyclerViewCustomersAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_users);
+        setContentView(R.layout.activity_view_contacts);
         db = AppDatabase.getAppDatabase(this);
-        recyclerView = findViewById(R.id.view_users_recycler_view);
+        recyclerView = findViewById(R.id.view_customers_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        getUsers();
-
+        getCustomers();
     }
 
     public void onAddClick(View view) {
-        Intent intent = new Intent(this, AddUser.class);
+        Intent intent = new Intent(this, NewContact.class);
         startActivity(intent);
     }
 
-    private void getUsers() {
-        new AsyncTask<Void, Void, List<User>>() {
+    private void getCustomers() {
+        new AsyncTask<Void, Void, List<Customer>>() {
             @Override
-            protected List<User> doInBackground(Void... voids) {
-                return db.userDao().getAllUsers();
+            protected List<Customer> doInBackground(Void... voids) {
+                return db.customerDao().getAllCustomers();
             }
 
             @Override
-            protected void onPostExecute(List<User> users) {
+            protected void onPostExecute(List<Customer> customers) {
 
-                adapter = new RecyclerViewUsersAdapter(ViewUsers.this, users);
+                adapter = new RecyclerViewCustomersAdapter(ViewContacts.this, customers);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -53,6 +52,6 @@ public class ViewUsers extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        getUsers();
+        getCustomers();
     }
 }

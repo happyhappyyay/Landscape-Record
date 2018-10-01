@@ -20,6 +20,9 @@ public interface UserDao {
     @Query("SELECT * FROM User WHERE name = :username")
     User findUserByName(String username);
 
+    @Query("SELECT * FROM User WHERE userId = :userID")
+    User findUserByID(int userID);
+
     @Update
     void updateUser(User user);
 
@@ -27,6 +30,6 @@ public interface UserDao {
     void deleteUser(User user);
 
     @Query("DELETE FROM User")
-    public void deleteAllUsers();
+    void deleteAllUsers();
 
 }
