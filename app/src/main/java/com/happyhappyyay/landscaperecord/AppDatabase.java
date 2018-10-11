@@ -8,7 +8,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 @Database(entities = {User.class, Customer.class, LogActivity.class, WorkDay.class}, version = 1)
-@TypeConverters({DataTypeConverter.class, IntegerListConverter.class})
+@TypeConverters({DataTypeConverter.class, IntegerListConverter.class, PaymentTypeConverter.class, StringListConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
@@ -27,8 +27,4 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract LogDao logDao();
 
     public abstract WorkDayDao workDayDao();
-
-//    public abstract ServiceDao serviceDao();
-
-
 }

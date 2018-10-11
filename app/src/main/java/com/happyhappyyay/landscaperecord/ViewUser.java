@@ -115,9 +115,4 @@ public class ViewUser extends AppCompatActivity {
         outState.putInt(USER_ID, userID);
         super.onSaveInstanceState(outState);
     }
-
-    public void startAddUser(View view) {
-        Intent intent = new Intent(this, AddUser.class);
-        startActivity(intent);
-    }
 }

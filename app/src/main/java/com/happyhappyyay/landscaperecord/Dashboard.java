@@ -25,7 +25,7 @@ public class Dashboard extends AppCompatActivity {
         authentication = Authentication.getAuthentication(this);
         checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
         userLoggedIn = findViewById(R.id.dashboard_username);
-        userLoggedIn.setText(authentication.getUser().getName());
+        userLoggedIn.setText(authentication.getUser().toString());
         Toolbar myToolbar = findViewById(R.id.dashboard_toolbar);
         setSupportActionBar(myToolbar);
     }

@@ -66,7 +66,7 @@ public class RecyclerServiceAdapter extends Adapter {
             String startToEndDate = service.convertStartTimeToDateString() + " - " + service.convertEndTimeToDateString();
             String manHoursString = Double.toString(service.getManHours()) + "hrs";
             String mileageString = Double.toString(service.getMileage()) + "mi";
-            String services = Util.removeCustomerServicesStopCharacters(service);
+            String services = removeCustomerServicesStopCharacters(service);
             customerText.setText(service.getCustomerName());
             dateText.setText(startToEndDate);
             stateText.setText(service.isPause() ? "In-Progress": "Completed");
@@ -76,6 +76,27 @@ public class RecyclerServiceAdapter extends Adapter {
             mileageText.setText(mileageString);
             servicesText.setText(services);
 
+        }
+
+        public String removeCustomerServicesStopCharacters(Service service) {
+            String serviceString = service.getServices();
+            String serviceStringWithoutSeparators = "";
+            int endServicePosition;
+            int startServicePosition = 0;
+
+            for (int i = 0; i < serviceString.length() - 2; i++) {
+                if (serviceString.substring(i,i+3).equals("#*#")) {
+                    endServicePosition = i;
+                    serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                    startServicePosition = i+3;
+                }
+            }
+
+            if (serviceStringWithoutSeparators.length() > 2) {
+                serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
+            }
+
+            return serviceStringWithoutSeparators;
         }
 
     }

@@ -2,13 +2,8 @@ package com.happyhappyyay.landscaperecord;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,12 +20,17 @@ import java.util.List;
 import java.util.Locale;
 
 public class Util {
+    public static final Customer CUSTOMER_REFERENCE = new Customer();
+    public static final LogActivity LOG_REFERENCE = new LogActivity();
+    public static final WorkDay WORK_DAY_REFERENCE = new WorkDay(retrieveStringCurrentDate());
+    public static final User USER_REFERENCE = new User();
+
     private static final String TAG = "selected";
 
     public static boolean toolbarItemSelection(Context context, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_contact:
-                goToNewContact(context);
+                gotToContacts(context);
                 return true;
             case R.id.menu_add_service:
                 goToQuickSheet(context);
@@ -65,8 +65,8 @@ public class Util {
         Toast.makeText(context.getApplicationContext(), "Logged out! ", Toast.LENGTH_LONG).show();
     }
 
-    private static void goToNewContact(Context context) {
-        Intent intent = new Intent(context, NewContact.class);
+    private static void gotToContacts(Context context) {
+        Intent intent = new Intent(context, ViewContacts.class);
         context.startActivity(intent);
     }
 
@@ -94,7 +94,7 @@ public class Util {
     }
 
     /* Loads spinner with list items and sets initial item of list */
-    private static <T extends SpinnerObjects> void populateSpinner(PopulateSpinner populateSpinner, List<T> objects) {
+    private static <T extends DatabaseObjects> void populateSpinner(PopulateSpinner populateSpinner, List<T> objects) {
         Authentication authentication = populateSpinner.getAuthentication();
         Activity activity = populateSpinner.getActivity();
         int viewID = populateSpinner.getViewID();
@@ -229,25 +229,35 @@ public class Util {
         return customerServices;
     }
 
-    public static String removeCustomerServicesStopCharacters(Service service) {
-        String serviceString = service.getServices();
-        String serviceStringWithoutSeparators = "";
-        int endServicePosition;
-        int startServicePosition = 0;
-
-        for (int i = 0; i < serviceString.length() - 2; i++) {
-            if (serviceString.substring(i,i+3).equals("#*#")) {
-                endServicePosition = i;
-                serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
-                startServicePosition = i+3;
+    public static <T extends DatabaseObjects<T>> void findAllObjects(final DatabaseAccess<T> access, final DatabaseObjects<T> object)
+    {
+        new AsyncTask<Void, Void, List<T>>() {
+            @Override
+            protected List<T> doInBackground(Void... Voids) {
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                return object.retrieveAllClassInstancesFromDatabase(db);
             }
-        }
 
-        if (serviceStringWithoutSeparators.length() > 2) {
-            serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
-        }
+            @Override
+            protected void onPostExecute(List<T> objects) {
+                access.setObjectsToAccessor(objects);
+            }
+        }.execute();
+    }
 
-        return service.convertEndTimeToDateString() + ": "  + service.getCustomerName() +
-                System.getProperty ("line.separator") + serviceStringWithoutSeparators;
+    public static <T extends DatabaseObjects<T>> void deleteObject(final DatabaseAccess<T> access, final DatabaseObjects<T> object)
+    {
+        new AsyncTask<Void, Void, List<T>>() {
+            @Override
+            protected List<T> doInBackground(Void... Voids) {
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                return object.retrieveAllClassInstancesFromDatabase(db);
+            }
+
+            @Override
+            protected void onPostExecute(List<T> objects) {
+                access.setObjectsToAccessor(objects);
+            }
+        }.execute();
     }
 }

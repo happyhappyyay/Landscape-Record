@@ -146,6 +146,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
                                         jobActionButton.setText("✓");
                                         tempService.setServices(servicesString);
                                         tempService.setEndTime(endTime);
+                                        tempService.setManHours((tempService.getStartTime() - tempService.getEndTime()) / TimeReporting.MILLISECONDS_TO_HOURS );
                                         tempService.setPause(false);
                                         customer.updateService(tempService, serviceListPosition);
                                         service = tempService;

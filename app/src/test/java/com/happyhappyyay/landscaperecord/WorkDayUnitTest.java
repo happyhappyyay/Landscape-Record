@@ -20,7 +20,7 @@ public class WorkDayUnitTest {
         List<Service> services = new ArrayList<>();
         services.add(service);
         ViewWorkDay day = new ViewWorkDay();
-        List<String> actual = day.convertCustomerServicesToString(services);
+        List<String> actual = day.removeCustomerServicesStopCharacters(services);
         Assert.assertEquals(expected, actual);
     }
 
@@ -41,7 +41,7 @@ public class WorkDayUnitTest {
         day.setUsers(users);
         WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
         for (int i = 0; i < users.size(); i++) {
-            workDay.addUserHourReference(i, 2*(i+1));
+            workDay.addUserHourReference(users.get(i).getName(), 2*(i+1));
         }
         List<String> actual = day.createStringFromUserHourReferences(workDay);
 
@@ -68,7 +68,7 @@ public class WorkDayUnitTest {
         for (int i = 0; i < users.size(); i++) {
             WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
             for (int j = 0; j < users.size(); j++) {
-                workDay.addUserHourReference(j, j);
+                workDay.addUserHourReference(users.get(j).getName(), j);
             }
             workDays.add(workDay);
         }
@@ -87,7 +87,7 @@ public class WorkDayUnitTest {
         day.setUsers(users);
         WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
         for (int i = 0; i < users.size(); i++) {
-            workDay.addUserHourReference(i, 2*(i+1));
+            workDay.addUserHourReference(users.get(i).getName(), 2*(i+1));
         }
         List<String> actual = day.createStringFromUserHourReferences(workDay);
 

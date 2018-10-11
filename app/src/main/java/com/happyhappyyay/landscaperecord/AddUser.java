@@ -14,7 +14,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 public class AddUser extends AppCompatActivity {
-    private EditText firstName, lastName, password, hours;
+    private EditText firstName, lastName, password, hours, nickname;
     private Button submit;
     private User user;
     private AppDatabase db;
@@ -28,6 +28,7 @@ public class AddUser extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         firstName = findViewById(R.id.add_user_first);
         lastName = findViewById(R.id.add_user_last);
+        nickname = findViewById(R.id.add_user_nickname);
         password = findViewById(R.id.add_user_pass);
         hours = findViewById(R.id.add_user_hours);
         submit = findViewById(R.id.add_user_submit);
@@ -75,11 +76,8 @@ public class AddUser extends AppCompatActivity {
                 }
 
             }
-            if (admin.isChecked()) {
-                user.setAdmin(true);
-            } else {
-                user.setAdmin(false);
-            }
+            user.setAdmin(admin.isChecked());
+            user.setNickname(nickname.getText().toString());
             if (!error) {
                 insertUser();
             }

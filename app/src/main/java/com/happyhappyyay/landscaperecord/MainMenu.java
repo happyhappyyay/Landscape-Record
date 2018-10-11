@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class MainMenu extends AppCompatActivity {
@@ -53,7 +52,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void startPaymentReporting(View view) {
-        Intent intent = new Intent(this, Payment.class);
+        Intent intent = new Intent(this, ReceivePayment.class);
         startActivity(intent);
     }
 

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.RadioButton;
@@ -36,6 +37,8 @@ public class ViewWorkDay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_work_day);
+        Toolbar myToolbar = findViewById(R.id.view_work_day_toolbar);
+        setSupportActionBar(myToolbar);
         calendarView = findViewById(R.id.view_work_activity_calendar);
         db = AppDatabase.getAppDatabase(this);
         recyclerView = findViewById(R.id.view_work_day_recyclerview);
@@ -159,7 +162,7 @@ public class ViewWorkDay extends AppCompatActivity {
                 userWithHours = createStringFromUserHourReferences(workDay);
             }
             if (services != null) {
-                customerWithServices = Util.removeCustomerServicesStopCharacters(services);
+                customerWithServices = removeCustomerServicesStopCharacters(services);
             }
         }
         else if (workDays != null) {
@@ -168,7 +171,7 @@ public class ViewWorkDay extends AppCompatActivity {
             }
             userWithHours = createStringFromUserHourReferences(workDays);
             if (!services.isEmpty()) {
-                customerWithServices = Util.removeCustomerServicesStopCharacters(services);
+                customerWithServices = removeCustomerServicesStopCharacters(services);
             }
         }
         else {
@@ -183,11 +186,11 @@ public class ViewWorkDay extends AppCompatActivity {
 
     public List<String> createStringFromUserHourReferences(WorkDay workDay) {
         List<String> usersAndHours = new ArrayList<>();
-        List<Integer> userReferences = workDay.getUserReference();
+        List<String> userReferences = workDay.getUserReference();
         List<Integer> userHours = workDay.getHours();
 
         for(int i = 0; i < workDay.getHours().size(); i++) {
-            String userAndHours = users.get(userReferences.get(i)).getName() + " : " + userHours.get(i);
+            String userAndHours = userReferences.get(i) + " : " + userHours.get(i);
             usersAndHours.add(userAndHours);
         }
 
@@ -197,7 +200,7 @@ public class ViewWorkDay extends AppCompatActivity {
     public List<String> createStringFromUserHourReferences(List<WorkDay> workDays) {
         List<String> usersAndHours = new ArrayList<>();
         List<Integer> userHours = new ArrayList<>();
-        List<Integer> userReferences = new ArrayList<>();
+        List<String> userReferences = new ArrayList<>();
         boolean init = false;
         for (WorkDay w: workDays) {
             if (init) {
@@ -224,10 +227,36 @@ public class ViewWorkDay extends AppCompatActivity {
         }
 
         for(int i = 0; i < userHours.size(); i++) {
-            String userAndHours = users.get(userReferences.get(i)).getName() + " : " + userHours.get(i);
+            String userAndHours = userReferences.get(i) + " : " + userHours.get(i);
             usersAndHours.add(userAndHours);
         }
         return usersAndHours;
+    }
+
+    public List<String> removeCustomerServicesStopCharacters(List<Service> services) {
+        List<String> customerServices = new ArrayList<>();
+        for (Service s: services) {
+            String serviceString = s.getServices();
+            String serviceStringWithoutSeparators = "";
+            int endServicePosition;
+            int startServicePosition = 0;
+
+            for (int i = 0; i < serviceString.length() - 2; i++) {
+                if (serviceString.substring(i,i+3).equals("#*#")) {
+                    endServicePosition = i;
+                    serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                    startServicePosition = i+3;
+                }
+            }
+
+            if (serviceStringWithoutSeparators.length() > 2) {
+                serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
+            }
+            String customerService = s.convertEndTimeToDateString() + ": "  + s.getCustomerName() +
+                    System.getProperty ("line.separator") + serviceStringWithoutSeparators;
+            customerServices.add(customerService);
+        }
+        return customerServices;
     }
 }
 

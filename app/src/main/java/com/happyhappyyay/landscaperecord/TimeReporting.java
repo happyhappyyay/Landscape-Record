@@ -180,9 +180,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (users != null) {
-            Toast.makeText(parent.getContext(),
-                    "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
-                    Toast.LENGTH_SHORT).show();
             user = users.get(pos);
             adapterPosition = pos;
         } else {
@@ -228,7 +225,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             @Override
             protected Void doInBackground(Void... voids) {
                 db.userDao().updateUser(user);
-                authentication.setUser(user);
                 Log.d(TAG, Util.retrieveStringCurrentDate());
                 WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
                 if (tempWorkDay != null) {
@@ -240,7 +236,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
                     db.workDayDao().insert(workDay);
                     Log.d(TAG, "workday null");
                 }
-                workDay.addUserHourReference(adapterPosition, currentHours);
+                workDay.addUserHourReference(user.toString(), currentHours);
                 db.workDayDao().updateWorkDay(workDay);
                 return null;
             }

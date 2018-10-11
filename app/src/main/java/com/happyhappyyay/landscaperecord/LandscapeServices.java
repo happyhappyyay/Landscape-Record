@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +27,8 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     private FragmentListener callBack;
     private CheckBox drain, till, edging, dump, other;
     private List<CheckBox> checkBoxes;
-    private Button deleteButton, addButton, removeButton;
+    private Button addButton, removeButton;
+    private FloatingActionButton deleteButton;
     private EditText materialName, materialQuantity, materialPrice, dumpText, otherText;
     private Spinner materialTypeSpinner, materialMeasurementSpinner, dumpSpinner, dumpTypeSpinner;
     private boolean pause;
@@ -141,12 +143,8 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     private boolean checkMaterialAddition() {
         String materialSpinnerText = materialTypeSpinner.getSelectedItem().toString().toLowerCase();
         String other = MaterialType.OTHER.toString().toLowerCase();
-        if ((materialName.toString().isEmpty() &
-                materialSpinnerText.equals(other)) || materialQuantity.toString().isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return (!(materialName.toString().isEmpty() &
+                materialSpinnerText.equals(other))) && !materialQuantity.toString().isEmpty();
 
     }
 

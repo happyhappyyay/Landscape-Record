@@ -41,7 +41,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/user_item_check_in"
+        app:layout_constraintBottom_toBottomOf="@+id/user_item_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/user_item_check_in" />
+        app:layout_constraintTop_toTopOf="@+id/user_item_name" />
 </android.support.constraint.ConstraintLayout>

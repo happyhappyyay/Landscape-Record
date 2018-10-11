@@ -60,15 +60,10 @@ public class EditUser extends AppCompatActivity {
         if (!firstName.isEmpty() & !lastName.isEmpty())
         {
             user.setName(firstName + " " + lastName);
-            if (adminBox.isChecked()) {
-                user.setAdmin(true);
-            } else {
-                user.setAdmin(false);
-            }
-
-            if(!nickname.isEmpty()) {
-//                user.setUsername(nickname);
-            }
+            user.setAdmin(adminBox.isChecked());
+        }
+        if(!nickname.isEmpty()) {
+            user.setNickname(nickname);
         }
     }
 }

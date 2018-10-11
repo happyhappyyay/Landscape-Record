@@ -96,9 +96,9 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
 
     private void setupViewPager(ViewPager viewPager) {
         fragAdapter = new FragmentPageAdapter(getSupportFragmentManager());
-        fragAdapter.addFragment(new LawnServices(), ServiceType.LAWN_SERVICES.toString());
-        fragAdapter.addFragment(new LandscapeServices(), ServiceType.LANDSCAPING_SERVICES.toString());
-        fragAdapter.addFragment(new SnowServices(), ServiceType.SNOW_SERVICES.toString());
+        fragAdapter.addFragment(new LawnServices(), "LAWN SERVICES");
+        fragAdapter.addFragment(new LandscapeServices(), "LANDSCAPING SERVICES");
+        fragAdapter.addFragment(new SnowServices(), "SNOW SERVICES");
         viewPager.setAdapter(fragAdapter);
 //        lawnFrag.setFragmentListener(this);
 //        landFrag.setFragmentListener(this);
@@ -244,6 +244,12 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                 finish();
             }
         }.execute();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_add_contact).setEnabled(false);
+        return true;
     }
 
     private class FragmentPageAdapter extends FragmentPagerAdapter {

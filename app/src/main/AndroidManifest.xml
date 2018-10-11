@@ -26,13 +26,10 @@
             android:name=".TimeReporting"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Payment"
+            android:name=".ReceivePayment"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".NewContact"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".Job"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".JobServices"

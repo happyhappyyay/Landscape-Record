@@ -198,7 +198,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                         numberOfHours = -numberOfHours;
                     }
 
-                    workDay.addUserHourReference(adapterPosition, numberOfHours);
+                    workDay.addUserHourReference(user.toString(), numberOfHours);
 
                     if (isNewWorkDay) {
                         db.workDayDao().insert(workDay);

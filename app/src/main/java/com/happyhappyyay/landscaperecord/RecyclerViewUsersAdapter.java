@@ -80,7 +80,7 @@ public class RecyclerViewUsersAdapter extends Adapter {
                 checkInText = "Checked in " + Util.convertLongToStringDateTime(user.getStartTime());
             }
 
-            username.setText(user.getName());
+            username.setText(user.toString());
             userHours.setText(hoursUnpaid);
             userCheckIn.setText(checkInText);
         }

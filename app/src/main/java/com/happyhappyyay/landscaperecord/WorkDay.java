@@ -6,19 +6,17 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 @Entity
-public class WorkDay {
+public class WorkDay implements DatabaseObjects<WorkDay> {
     @PrimaryKey (autoGenerate = true)
     private int workDayID;
     private String dayOfWeek;
@@ -28,7 +26,8 @@ public class WorkDay {
     private long currentDateAsTime;
     @TypeConverters(IntegerListConverter.class)
     private List<Integer> hours;
-    private List<Integer> userReference;
+    @TypeConverters(StringListConverter.class)
+    private List<String> userReference;
     private List<Service> services;
     private long weekInMilli;
     private long monthInMilli;
@@ -41,10 +40,10 @@ public class WorkDay {
         findCalendarInformation(currentDate);
     }
 
-    public void addUserHourReference (int userReference, int hours) {
+    public void addUserHourReference (String userReference, int hours) {
         boolean existingReference = false;
         for (int i = 0; i < this.userReference.size(); i++) {
-            if(userReference == this.userReference.get(i)) {
+            if(userReference.equals(this.userReference.get(i))) {
                 this.hours.set(i, this.hours.get(i) + hours);
                 existingReference = true;
                 break;
@@ -72,16 +71,12 @@ public class WorkDay {
     }
 
     protected void findCalendarInformation(String newDate) {
-//TODO: Allow setting of first day of the week (default is sunday)
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-//        int dayOfWeekRef = Integer.parseInt(sharedPref.getString("pref_key_day_of_week", "0"));
         try {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
             Date date = dateFormat.parse(newDate);
             currentDateAsTime = date.getTime();
             currentDate = newDate;
             Calendar cal = Calendar.getInstance();
-//            cal.setFirstDayOfWeek(dayOfWeekRef);
             cal.setTime(date);
 
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
@@ -97,11 +92,6 @@ public class WorkDay {
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    private void updateCalendarFirstWeekDay(Context context) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int dayOfWeek = Integer.parseInt(sharedPref.getString("pref_key_day_of_week", "0"));
-
     }
 
     public long getWeekInMilli() {
@@ -196,11 +186,42 @@ public class WorkDay {
         this.hours = hours;
     }
 
-    public List<Integer> getUserReference() {
+    public List<String> getUserReference() {
         return userReference;
     }
 
-    public void setUserReference(List<Integer> userReference) {
+    public void setUserReference(List<String> userReference) {
         this.userReference = userReference;
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public List<WorkDay> retrieveAllClassInstancesFromDatabase(AppDatabase db) {
+        return db.workDayDao().getAllWorkDays();
+    }
+
+    @Override
+    public WorkDay retrieveClassInstanceFromDatabase(AppDatabase db, int id) {
+        return db.workDayDao().findWorkDayByTime(id);
+    }
+
+    @Override
+    public void deleteClassInstanceFromDatabase(WorkDay objectToDelete, AppDatabase db) {
+        db.workDayDao().deleteWorkDay(objectToDelete);
+    }
+
+    @Override
+    public void updateClassInstanceFromDatabase(WorkDay objectToUpdate, AppDatabase db) {
+        db.workDayDao().updateWorkDay(objectToUpdate);
+    }
+
+    @Override
+    public void insertClassInstanceFromDatabase(WorkDay objectToInsert, AppDatabase db) {
+        db.workDayDao().insert(objectToInsert);
+    }
+
 }

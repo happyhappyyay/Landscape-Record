@@ -1,16 +1,15 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Customer implements SpinnerObjects {
+public class Customer implements DatabaseObjects<Customer> {
     @PrimaryKey(autoGenerate = true)
     private int customerId;
     private String customerFirstName;
@@ -23,6 +22,9 @@ public class Customer implements SpinnerObjects {
     private String customerDay;
     private String customerState;
 
+    @TypeConverters(PaymentTypeConverter.class)
+    private Payment payment;
+
     @TypeConverters(DataTypeConverter.class)
     private List<Service> customerServices;
 
@@ -30,6 +32,11 @@ public class Customer implements SpinnerObjects {
         this.customerFirstName = customerFirstName;
         this.customerLastName = customerLastName;
         this.customerAddress = customerAddress;
+        customerServices = new ArrayList<>();
+    }
+
+    @Ignore
+    public Customer() {
         customerServices = new ArrayList<>();
     }
 
@@ -129,19 +136,51 @@ public class Customer implements SpinnerObjects {
         this.customerLastName = customerLastName;
     }
 
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
     @Override
     public String toString() {
-        if (customerBusiness == null) {
-            return customerFirstName + " " + customerLastName;
-        } else {
-            return customerBusiness;
-        }
-
+        return customerBusiness == null ? customerFirstName + customerLastName : customerBusiness;
     }
 
     @Override
     public String getName() {
         return toString();
+    }
+
+    @Override
+    public List<Customer> retrieveAllClassInstancesFromDatabase(AppDatabase db) {
+        return db.customerDao().getAllCustomers();
+    }
+
+    @Override
+    public Customer retrieveClassInstanceFromDatabase(AppDatabase db, int id) {
+        return db.customerDao().findCustomerByID(id);
+    }
+
+    @Override
+    public void deleteClassInstanceFromDatabase(Customer objectToDelete, AppDatabase db) {
+        db.customerDao().deleteCustomer(objectToDelete);
+    }
+
+    @Override
+    public void updateClassInstanceFromDatabase(Customer objectToUpdate, AppDatabase db) {
+        db.customerDao().updateCustomer(objectToUpdate);
+    }
+
+    @Override
+    public void insertClassInstanceFromDatabase(Customer objectToInsert, AppDatabase db) {
+        db.customerDao().insert(objectToInsert);
     }
 
     public String concatenateFullAddress() {
