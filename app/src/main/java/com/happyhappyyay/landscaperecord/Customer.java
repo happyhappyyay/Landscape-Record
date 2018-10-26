@@ -164,8 +164,13 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     @Override
-    public Customer retrieveClassInstanceFromDatabase(AppDatabase db, int id) {
+    public Customer retrieveClassInstanceFromDatabaseID(AppDatabase db, int id) {
         return db.customerDao().findCustomerByID(id);
+    }
+
+    @Override
+    public Customer retrieveClassInstanceFromDatabaseString(AppDatabase db, String string) {
+        return null;
     }
 
     @Override

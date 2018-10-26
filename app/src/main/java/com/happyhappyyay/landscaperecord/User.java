@@ -108,8 +108,13 @@ public class User implements DatabaseObjects<User> {
     }
 
     @Override
-    public User retrieveClassInstanceFromDatabase(AppDatabase db, int id) {
+    public User retrieveClassInstanceFromDatabaseID(AppDatabase db, int id) {
         return db.userDao().findUserByID(id);
+    }
+
+    @Override
+    public User retrieveClassInstanceFromDatabaseString(AppDatabase db, String string) {
+        return db.userDao().findUserByName(string);
     }
 
     @Override

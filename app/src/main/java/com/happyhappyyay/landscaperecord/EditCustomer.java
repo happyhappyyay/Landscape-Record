@@ -1,5 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.arch.persistence.room.Database;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +13,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class EditCustomer extends AppCompatActivity {
-    private int customerID;
+import java.util.List;
+
+public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Customer> {
     private EditText customerFirstName, customerLastName, customerEmail, customerBusiness, customerAddress,
             customerCity, customerPhoneNumber, customerMileage;
     private Spinner stateSpinner, daySpinner;
     private Customer customer;
-    private AppDatabase db;
+    private String logInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int customerID;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_customer);
         Toolbar myToolbar = findViewById(R.id.new_contact_toolbar);
@@ -35,7 +39,6 @@ public class EditCustomer extends AppCompatActivity {
         customerPhoneNumber = findViewById(R.id.contact_phone_number_text);
         stateSpinner = findViewById(R.id.contact_state_spinner);
         daySpinner = findViewById(R.id.contact_day_spinner);
-        db = AppDatabase.getAppDatabase(this);
         Intent intent = getIntent();
         customerID = intent.getIntExtra("CUSTOMER_ID", 0);
         findCustomer(customerID);
@@ -74,57 +77,110 @@ public class EditCustomer extends AppCompatActivity {
         updateCustomer();
     }
 
-    private void findCustomer(Integer customerID) {
-        new AsyncTask<Integer, Void, Customer>() {
-            @Override
-            protected Customer doInBackground(Integer... integers) {
-                return db.customerDao().findCustomerByID(integers[0]);
-            }
-
-            @Override
-            protected void onPostExecute(Customer customer) {
-                customerFirstName.setText(customer.getCustomerFirstName());
-                customerLastName.setText(customer.getCustomerLastName());
-                customerBusiness.setText(customer.getCustomerBusiness());
-                customerCity.setText(customer.getCustomerCity());
-                customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-                customerEmail.setText(customer.getCustomerEmail());
-                customerMileage.setText("0");
-                customerAddress.setText(customer.getCustomerAddress());
-                String compareValue = customer.getCustomerDay();
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.days_of_the_week, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                daySpinner.setAdapter(adapter);
-                if (compareValue != null) {
-                    int spinnerPosition = adapter.getPosition(compareValue);
-                    daySpinner.setSelection(spinnerPosition);
-                }
-                String compareStateValue = customer.getCustomerState();
-                ArrayAdapter<CharSequence> stateAdapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.US_states_list, android.R.layout.simple_spinner_item);
-                stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                stateSpinner.setAdapter(stateAdapter);
-                if (compareStateValue != null) {
-                    int spinnerPosition = stateAdapter.getPosition(compareStateValue);
-                    stateSpinner.setSelection(spinnerPosition);
-                }
-                EditCustomer.this.customer = customer;
-            }
-        }.execute(customerID);
+    private void findCustomer(int customerID) {
+        Util.findObjectByID(this, Util.CUSTOMER_REFERENCE, customerID);
+//        new AsyncTask<Integer, Void, Customer>() {
+//            @Override
+//            protected Customer doInBackground(Integer... integers) {
+//                return db.customerDao().findCustomerByID(integers[0]);
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Customer customer) {
+//                customerFirstName.setText(customer.getCustomerFirstName());
+//                customerLastName.setText(customer.getCustomerLastName());
+//                customerBusiness.setText(customer.getCustomerBusiness());
+//                customerCity.setText(customer.getCustomerCity());
+//                customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
+//                customerEmail.setText(customer.getCustomerEmail());
+//                customerMileage.setText("0");
+//                customerAddress.setText(customer.getCustomerAddress());
+//                String compareValue = customer.getCustomerDay();
+//                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.days_of_the_week, android.R.layout.simple_spinner_item);
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                daySpinner.setAdapter(adapter);
+//                if (compareValue != null) {
+//                    int spinnerPosition = adapter.getPosition(compareValue);
+//                    daySpinner.setSelection(spinnerPosition);
+//                }
+//                String compareStateValue = customer.getCustomerState();
+//                ArrayAdapter<CharSequence> stateAdapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.US_states_list, android.R.layout.simple_spinner_item);
+//                stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                stateSpinner.setAdapter(stateAdapter);
+//                if (compareStateValue != null) {
+//                    int spinnerPosition = stateAdapter.getPosition(compareStateValue);
+//                    stateSpinner.setSelection(spinnerPosition);
+//                }
+//                EditCustomer.this.customer = customer;
+//            }
+//        }.execute(customerID);
     }
-    private void updateCustomer() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.customerDao().updateCustomer(customer);
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Customer account for " + customer.toString() +
-                        " updated.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }.execute();
+    private void loadCustomerInformation() {
+        customerFirstName.setText(customer.getCustomerFirstName());
+        customerLastName.setText(customer.getCustomerLastName());
+        customerBusiness.setText(customer.getCustomerBusiness());
+        customerCity.setText(customer.getCustomerCity());
+        customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
+        customerEmail.setText(customer.getCustomerEmail());
+        customerMileage.setText("0");
+        customerAddress.setText(customer.getCustomerAddress());
+        String compareValue = customer.getCustomerDay();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.days_of_the_week, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        daySpinner.setAdapter(adapter);
+        if (compareValue != null) {
+            int spinnerPosition = adapter.getPosition(compareValue);
+            daySpinner.setSelection(spinnerPosition);
+        }
+        String compareStateValue = customer.getCustomerState();
+        ArrayAdapter<CharSequence> stateAdapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.US_states_list, android.R.layout.simple_spinner_item);
+        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        stateSpinner.setAdapter(stateAdapter);
+        if (compareStateValue != null) {
+            int spinnerPosition = stateAdapter.getPosition(compareStateValue);
+            stateSpinner.setSelection(spinnerPosition);
+        }
+    }
+
+    private void updateCustomer() {
+        logInfo = customer.getName();
+        Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
+        Toast.makeText(getApplicationContext(), "Customer account for " + customer.toString() +
+                " updated.", Toast.LENGTH_LONG).show();
+        finish();
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                db.customerDao().updateCustomer(customer);
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                Toast.makeText(getApplicationContext(), "Customer account for " + customer.toString() +
+//                        " updated.", Toast.LENGTH_LONG).show();
+//                finish();
+//            }
+//        }.execute();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return logInfo;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+        if(databaseObjects != null) {
+            customer = databaseObjects.get(0);
+            loadCustomerInformation();
+        }
+
     }
 }

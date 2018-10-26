@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
+public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements MultiDatabaseAccess<Customer> {
     private String startDateString;
     private String endDateString;
     private List<Customer> customers;
@@ -73,6 +73,45 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
 
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
+    }
+
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        AppDatabase db = AppDatabase.getAppDatabase(context);
+        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(customer, db);
+        if(service != null) {
+            WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
+            if (tempWorkDay != null) {
+                workDay = tempWorkDay;
+            } else {
+                workDay = new WorkDay(endDateString);
+                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+            }
+            workDay.addServices(service);
+            Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
+        }
+    }
+
+    @Override
+    public void createCustomLog() {
+        String userName = Authentication.getAuthentication(context).getUser().getName();
+        LogActivity log = new LogActivity(userName, customer.getName(), LogActivityAction.ADD.ordinal(), LogActivityType.SERVICES.ordinal());
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
@@ -166,13 +205,12 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
             String quickSheetItem = sharedPref.getString("pref_key_quick_sheet_item1", "1");
             String quickSheetItem1 = sharedPref.getString("pref_key_quick_sheet_item2", "2");
             String quickSheetItem2 = sharedPref.getString("pref_key_quick_sheet_item3", "3");
-            String[] workActivitiesArray = context.getResources().getStringArray(R.array.work_activities);
             checkBox1 = view.findViewById(R.id.quick_sheet_check_box1);
-            checkBox1.setText(workActivitiesArray[Integer.parseInt(quickSheetItem)]);
+            checkBox1.setText(quickSheetItem);
             checkBox2 = view.findViewById(R.id.quick_sheet_check_box2);
-            checkBox2.setText(workActivitiesArray[Integer.parseInt(quickSheetItem1)]);
+            checkBox2.setText(quickSheetItem1);
             checkBox3 = view.findViewById(R.id.quick_sheet_check_box3);
-            checkBox3.setText(workActivitiesArray[Integer.parseInt(quickSheetItem2)]);
+            checkBox3.setText(quickSheetItem2);
             notes = view.findViewById(R.id.quick_sheet_notes_text);
             checkBoxes = new ArrayList<>(Arrays.asList(checkBox1, checkBox2, checkBox3));
         }
@@ -238,28 +276,29 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter {
 
 
     private void updateCustomer() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.customerDao().updateCustomer(customer);
-                if(service != null) {
-                    WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(endDateString);
-                    if (tempWorkDay != null) {
-                        workDay = tempWorkDay;
-                    } else {
-                        workDay = new WorkDay(endDateString);
-                        db.workDayDao().insert(workDay);
-                    }
-                    workDay.addServices(service);
-                    db.workDayDao().updateWorkDay(workDay);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute();
+        Util.enactMultipleDatabaseOperations(this);
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                db.customerDao().updateCustomer(customer);
+//                if(service != null) {
+//                    WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(endDateString);
+//                    if (tempWorkDay != null) {
+//                        workDay = tempWorkDay;
+//                    } else {
+//                        workDay = new WorkDay(endDateString);
+//                        db.workDayDao().insert(workDay);
+//                    }
+//                    workDay.addServices(service);
+//                    db.workDayDao().updateWorkDay(workDay);
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                super.onPostExecute(aVoid);
+//            }
+//        }.execute();
     }
 }

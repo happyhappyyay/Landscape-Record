@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,7 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ViewCustomer extends AppCompatActivity {
+import java.util.List;
+
+public class ViewCustomer extends AppCompatActivity implements MultiDatabaseAccess<Customer> {
     private int customerID;
     private AppDatabase db;
     private Authentication authentication;
@@ -77,45 +80,87 @@ public class ViewCustomer extends AppCompatActivity {
         }
 
     private void findCustomer(Integer customerID) {
-        new AsyncTask<Integer, Void, Customer>() {
-            @Override
-            protected Customer doInBackground(Integer... integers) {
-                return db.customerDao().findCustomerByID(integers[0]);
-            }
+        Util.findObjectByID(this, Util.CUSTOMER_REFERENCE,customerID);
+//        new AsyncTask<Integer, Void, Customer>() {
+//            @Override
+//            protected Customer doInBackground(Integer... integers) {
+//                return db.customerDao().findCustomerByID(integers[0]);
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Customer customer) {
+//                String fullName = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
+//                customerFullName.setText(fullName);
+//                customerDisplayName.setText(customer.getName());
+//                customerBusiness.setText(customer.getCustomerBusiness());
+//                customerDay.setText(customer.getCustomerDay());
+//                customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
+//                customerEmail.setText(customer.getCustomerEmail());
+//                customerMileage.setText("0");
+//                customerFullAddress.setText(customer.concatenateFullAddress());
+//                ViewCustomer.this.customer = customer;
+//            }
+//        }.execute(customerID);
+    }
 
-            @Override
-            protected void onPostExecute(Customer customer) {
-                String fullName = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
-                customerFullName.setText(fullName);
-                customerDisplayName.setText(customer.getName());
-                customerBusiness.setText(customer.getCustomerBusiness());
-                customerDay.setText(customer.getCustomerDay());
-                customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-                customerEmail.setText(customer.getCustomerEmail());
-                customerMileage.setText("0");
-                customerFullAddress.setText(customer.concatenateFullAddress());
-                ViewCustomer.this.customer = customer;
-            }
-        }.execute(customerID);
+    private void populateTextFields(Customer customer) {
+        String fullName = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
+        customerFullName.setText(fullName);
+        customerDisplayName.setText(customer.getName());
+        customerBusiness.setText(customer.getCustomerBusiness());
+        customerDay.setText(customer.getCustomerDay());
+        customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
+        customerEmail.setText(customer.getCustomerEmail());
+        customerMileage.setText("0");
+        customerFullAddress.setText(customer.concatenateFullAddress());
     }
 
     private void deleteCustomer(Customer customer) {
-        new AsyncTask<Customer, Void, Void>() {
-            @Override
-            protected Void doInBackground(Customer... params) {
-                Customer customer = params[0];
-                LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),1, 1);
-                db.logDao().insert(log);
-                db.customerDao().deleteCustomer(customer);
-                finish();
-                return null;
-            }
-        }.execute(customer);
+        Util.enactMultipleDatabaseOperations(this);
+//        new AsyncTask<Customer, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Customer... params) {
+//                Customer customer = params[0];
+//                LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),1, 1);
+//                db.logDao().insert(log);
+//                db.customerDao().deleteCustomer(customer);
+//                finish();
+//                return null;
+//            }
+//        }.execute(customer);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         findCustomer(customerID);
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        Util.CUSTOMER_REFERENCE.deleteClassInstanceFromDatabase(customer,db);
+    }
+
+    @Override
+    public void createCustomLog() {
+        LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),LogActivityAction.DELETE.ordinal(), LogActivityType.CUSTOMER.ordinal());
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
+        finish();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute (List<Customer> databaseObjects) {
+        Customer customer = databaseObjects.get(0);
+        populateTextFields(customer);
     }
 }

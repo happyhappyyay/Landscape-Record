@@ -18,8 +18,6 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     private RecyclerView recyclerView;
     private RecyclerViewCustomersAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private AppDatabase db;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +25,6 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
         setContentView(R.layout.activity_view_contacts);
         Toolbar myToolbar = findViewById(R.id.view_contacts_toolbar);
         setSupportActionBar(myToolbar);
-        db = AppDatabase.getAppDatabase(this);
         recyclerView = findViewById(R.id.view_customers_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -88,8 +85,14 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     }
 
     @Override
-    public void setObjectsToAccessor(List<Customer> databaseObjects) {
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
         adapter = new RecyclerViewCustomersAdapter(ViewContacts.this, databaseObjects);
         recyclerView.setAdapter(adapter);
     }
+
 }

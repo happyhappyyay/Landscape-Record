@@ -205,8 +205,13 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     }
 
     @Override
-    public WorkDay retrieveClassInstanceFromDatabase(AppDatabase db, int id) {
-        return db.workDayDao().findWorkDayByTime(id);
+    public WorkDay retrieveClassInstanceFromDatabaseID(AppDatabase db, int time) {
+        return db.workDayDao().findWorkDayByTime(time);
+    }
+
+    @Override
+    public WorkDay retrieveClassInstanceFromDatabaseString(AppDatabase db, String date) {
+        return db.workDayDao().findWorkDayByDate(date);
     }
 
     @Override
@@ -222,6 +227,14 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     @Override
     public void insertClassInstanceFromDatabase(WorkDay objectToInsert, AppDatabase db) {
         db.workDayDao().insert(objectToInsert);
+    }
+
+    public List<WorkDay> retrieveClassInstancesFromDatabaseByWeek(AppDatabase db, long weekInMilli) {
+        return db.workDayDao().findWorkWeekByTime(weekInMilli);
+    }
+
+    public List<WorkDay> retrieveClassInstancesFromDatabaseByMonth(AppDatabase db, long monthInMilli) {
+        return db.workDayDao().findWorkMonthByTime(monthInMilli);
     }
 
 }

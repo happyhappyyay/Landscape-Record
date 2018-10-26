@@ -49,6 +49,10 @@ public class Util {
         }
     }
 
+    public static Authentication getAuthentication(Context context) {
+       return Authentication.getAuthentication(context);
+    }
+
     private static void goToDashboard(Context context) {
         Intent intent = new Intent(context, Dashboard.class);
         context.startActivity(intent);
@@ -240,24 +244,158 @@ public class Util {
 
             @Override
             protected void onPostExecute(List<T> objects) {
-                access.setObjectsToAccessor(objects);
+                access.onPostExecute(objects);
             }
         }.execute();
     }
 
-    public static <T extends DatabaseObjects<T>> void deleteObject(final DatabaseAccess<T> access, final DatabaseObjects<T> object)
+    public static <T extends DatabaseObjects<T>> void deleteObject(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final T objectToDelete)
     {
-        new AsyncTask<Void, Void, List<T>>() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            protected List<T> doInBackground(Void... Voids) {
+            protected Void doInBackground(Void... Voids) {
                 AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                return object.retrieveAllClassInstancesFromDatabase(db);
+                Authentication authentication = Util.getAuthentication(access.getContext());
+                LogActivityType logType = findLogTypeInt(access,object);
+                if(!(object instanceof WorkDay)){
+                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
+                    db.logDao().insert(log);
+                }
+                object.deleteClassInstanceFromDatabase(objectToDelete, db);
+                return null;
             }
 
             @Override
-            protected void onPostExecute(List<T> objects) {
-                access.setObjectsToAccessor(objects);
+            protected void onPostExecute(Void aVoid) {
+                access.onPostExecute(null);
             }
         }.execute();
+    }
+
+    public static <T extends DatabaseObjects<T>> void updateObject(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final T objectToUpdate)
+    {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                Authentication authentication = Util.getAuthentication(access.getContext());
+                LogActivityType logType = findLogTypeInt(access,object);
+                if(!(object instanceof WorkDay)){
+                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
+                    db.logDao().insert(log);
+                }
+                object.updateClassInstanceFromDatabase(objectToUpdate, db);
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                access.onPostExecute(null);
+            }
+
+        }.execute();
+    }
+
+    public static <T extends DatabaseObjects<T>> void insertObject(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final T objectToInsert)
+    {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                Authentication authentication = Util.getAuthentication(access.getContext());
+                LogActivityType logType = findLogTypeInt(access,object);
+                if(!(object instanceof WorkDay)){
+                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
+                    db.logDao().insert(log);
+                }
+                object.insertClassInstanceFromDatabase(objectToInsert, db);
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                access.onPostExecute(null);
+            }
+        }.execute();
+    }
+
+    public static <T extends DatabaseObjects<T>> void findObjectByID(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final int IDToFind)
+    {
+        new AsyncTask<Void, Void, T>() {
+            @Override
+            protected T doInBackground(Void... Voids) {
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                return object.retrieveClassInstanceFromDatabaseID(db, IDToFind);
+            }
+            @Override
+            protected void onPostExecute(T object) {
+                List<T> objects = new ArrayList<>();
+                objects.add(object);
+                access.onPostExecute(objects);
+            }
+        }.execute();
+    }
+
+    public static <T extends DatabaseObjects<T>> void findObjectByString(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final String stringToFind)
+    {
+        new AsyncTask<Void, Void, T>() {
+            @Override
+            protected T doInBackground(Void... Voids) {
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                return object.retrieveClassInstanceFromDatabaseString(db, stringToFind);
+            }
+            @Override
+            protected void onPostExecute(T object) {
+                List<T> objects = new ArrayList<>();
+                objects.add(object);
+                access.onPostExecute(objects);
+            }
+        }.execute();
+    }
+
+    public static <T extends DatabaseObjects<T>> void enactMultipleDatabaseOperationsPostExecute(final MultiDatabaseAccess<T> access)
+    {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+                access.accessDatabaseMultipleTimes();
+                access.createCustomLog();
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                List<T> objects = new ArrayList<>();
+                access.onPostExecute(objects);
+            }
+        }.execute();
+    }
+
+    public static void enactMultipleDatabaseOperations(final MultiDatabaseAccess access)
+    {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+                access.accessDatabaseMultipleTimes();
+                access.createCustomLog();
+                return null;
+            }
+        }.execute();
+    }
+
+    public static <T extends DatabaseObjects<T>> LogActivityType findLogTypeInt(DatabaseAccess<T> access, DatabaseObjects<T> object) {
+        LogActivityType logType = LogActivityType.USER;
+        if(access instanceof TimeReporting || access instanceof HourOperations) {
+            logType = LogActivityType.HOURS;
+        }
+        else if (access instanceof ReceivePayment) {
+            logType = LogActivityType.PAYMENT;
+        }
+        else {
+//                        if(access instanceof EditServices) {
+//                            logType = 5;
+//                    }
+        if (object instanceof Customer) {
+                logType = LogActivityType.CUSTOMER;
+            }
+        }
+        return logType;
     }
 }

@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,9 +9,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginPage extends AppCompatActivity {
+import java.util.List;
 
-    private AppDatabase db;
+public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>{
+
     private EditText username;
     private EditText password;
     private Authentication authentication;
@@ -19,7 +21,6 @@ public class LoginPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-        db = AppDatabase.getAppDatabase(this);
         authentication = Authentication.getAuthentication(this);
         username = findViewById(R.id.login_page_username);
         password = findViewById(R.id.login_page_password);
@@ -37,30 +38,62 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private void loginUser() {
-        new AsyncTask<Void, Void, User>() {
-            @Override
-            protected User doInBackground(Void... voids) {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Util.findObjectByString(this, Util.USER_REFERENCE, username.getText().toString());
+//        new AsyncTask<Void, Void, User>() {
+//            @Override
+//            protected User doInBackground(Void... voids) {
+//
+//                return db.userDao().findUserByName(username.getText().toString());
+//            }
+//
+//            protected void onPostExecute(User user) {
+//                boolean authorized = false;
+//                if (user != null) {
+//                    if (user.getPassword().equals(password.getText().toString())) {
+//                        authorized = true;
+//                        authentication.setUser(user);
+//                        Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+//                        startActivity(intent);
+//                    }
+//                }
+//                if (!authorized) {
+//                    username.setText("");
+//                    password.setText("");
+//                    Toast.makeText(getApplicationContext(), "Could not login with the provided " +
+//                            "credentials", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }.execute();
+    }
 
-                return db.userDao().findUserByName(username.getText().toString());
-            }
+    @Override
+    public Context getContext() {
+        return this;
+    }
 
-            protected void onPostExecute(User user) {
-                boolean authorized = false;
-                if (user != null) {
-                    if (user.getPassword().equals(password.getText().toString())) {
-                        authorized = true;
-                        authentication.setUser(user);
-                        Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-                        startActivity(intent);
-                    }
-                }
-                if (!authorized) {
-                    username.setText("");
-                    password.setText("");
-                    Toast.makeText(getApplicationContext(), "Could not login with the provided " +
-                            "credentials", Toast.LENGTH_LONG).show();
-                }
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<User> databaseObjects) {
+        User user = databaseObjects.get(0);
+        boolean authorized = false;
+        if (user != null) {
+            if (user.getPassword().equals(password.getText().toString())) {
+                authorized = true;
+                authentication.setUser(user);
+                Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                startActivity(intent);
             }
-        }.execute();
+        }
+        if (!authorized) {
+            username.setText("");
+            password.setText("");
+            Toast.makeText(getApplicationContext(), "Could not login with the provided " +
+                    "credentials", Toast.LENGTH_LONG).show();
+        }
     }
 }

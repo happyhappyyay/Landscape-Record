@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,25 +25,18 @@ import java.util.Comparator;
 import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
 import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
 
-public class ViewServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ViewServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatabaseAccess<Customer> {
 
     private RecyclerView recyclerView;
     private RecyclerServiceAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private AppDatabase db;
-    private RadioButton allCheckBox, inProgressCheckBox, completedCheckBox, customerCheckBox, endDateBox,
+    private RadioButton allCheckBox, inProgressCheckBox, customerCheckBox, endDateBox,
     startDateBox;
-    private List<RadioButton> radioButtons;
     private List<Customer> customers;
-    private List<Customer> modifiedCustomers;
     private List<Service> services;
-    private List<Service> modifiedServices;
     private Spinner spinner;
-    private TextView dateTextLabel;
     private EditText dateText;
     private Customer customer;
     private String dateString = Util.retrieveStringCurrentDate();
-    private Button searchButton;
     private Boolean searchByDate = false;
     private int adapterPosition;
     private int sortByPosition;
@@ -53,6 +47,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        RecyclerView.LayoutManager layoutManager;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_services);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -60,15 +55,12 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         recyclerView = findViewById(R.id.view_services_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        db = AppDatabase.getAppDatabase(this);
         allCheckBox = findViewById(R.id.view_services_all_box);
         inProgressCheckBox = findViewById(R.id.view_services_in_progress_box);
-        completedCheckBox = findViewById(R.id.view_services_completed_box);
         customerCheckBox = findViewById(R.id.view_services_customer_box);
         startDateBox = findViewById(R.id.view_services_start_date_box);
         endDateBox = findViewById(R.id.view_services_end_date_box);
         if (savedInstanceState != null) {
-            // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
             dateString = savedInstanceState.getString(DATE_STRING);
             searchByDate = savedInstanceState.getBoolean(DATE_SEARCH);
@@ -98,9 +90,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
-        dateTextLabel = findViewById(R.id.view_services_date_text_label);
         spinner = findViewById(R.id.view_services_spinner);
-        searchButton = findViewById(R.id.view_services_search_button);
         getCustomers();
     }
 
@@ -228,7 +218,6 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         outState.putInt(SORT_SEARCH, sortByPosition);
         outState.putInt(VIEW_SEARCH, viewByPosition);
 
-        // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 
@@ -329,29 +318,56 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void getCustomers() {
-        new AsyncTask<Void, Void, List<Customer>>() {
-            @Override
-            protected List<Customer> doInBackground(Void... voids) {
-                return db.customerDao().getAllCustomers();
-            }
+        Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
+//        new AsyncTask<Void, Void, List<Customer>>() {
+//            @Override
+//            protected List<Customer> doInBackground(Void... voids) {
+//                return db.customerDao().getAllCustomers();
+//            }
+//
+//            @Override
+//            protected void onPostExecute(List<Customer> allCustomers) {
+//                customers = allCustomers;
+//                for(Customer c: customers) {
+//                    services.addAll(c.getCustomerServices());
+//                }
+//                if(viewByPosition == 1) {
+//                    services = sortServicesByEndTime(services);
+//                }
+//                else {
+//                    services = sortServicesByStartTime(services);
+//                    }
+//                adapter = new RecyclerServiceAdapter(services);
+//                recyclerView.setAdapter(adapter);
+//                populateSpinner(customers);
+//            }
+//        }.execute();
+    }
 
-            @Override
-            protected void onPostExecute(List<Customer> allCustomers) {
-                customers = allCustomers;
-                for(Customer c: customers) {
-                    services.addAll(c.getCustomerServices());
-                }
-                if(viewByPosition == 1) {
-                    services = sortServicesByEndTime(services);
-                }
-                else {
-                    services = sortServicesByStartTime(services);
-                    }
-                adapter = new RecyclerServiceAdapter(services);
-                recyclerView.setAdapter(adapter);
-                modifiedServices = services;
-                populateSpinner(customers);
-            }
-        }.execute();
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+        customers = databaseObjects;
+        for(Customer c: customers) {
+            services.addAll(c.getCustomerServices());
+        }
+        if(viewByPosition == 1) {
+            services = sortServicesByEndTime(services);
+        }
+        else {
+            services = sortServicesByStartTime(services);
+        }
+        adapter = new RecyclerServiceAdapter(services);
+        recyclerView.setAdapter(adapter);
+        populateSpinner(customers);
     }
 }

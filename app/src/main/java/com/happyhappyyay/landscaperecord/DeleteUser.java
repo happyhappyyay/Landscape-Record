@@ -44,6 +44,7 @@ public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemS
             }
         };
         task.execute(this);
+//        TODO: Recreate spinner util method
     }
 
     //    private void populateSpinner(List<User> users) {

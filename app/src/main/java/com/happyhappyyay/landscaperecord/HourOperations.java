@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import java.util.List;
 import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
 
 public class HourOperations extends AppCompatActivity implements PopulateSpinner,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener, MultiDatabaseAccess {
 
     private final int VIEW_ID = R.id.hour_operations_spinner;
     private EditText hours;
@@ -29,6 +30,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     private int adapterPosition;
     private EditText dateText;
     private String dateString = Util.retrieveStringCurrentDate();
+    private int logActivityReference;
     public static final String DATE_STRING = "String of date";
 
     @Override
@@ -85,7 +87,8 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                 Toast.makeText(getApplicationContext(), payHours + " hours paid for " +
                                 user.getName() + ". " + user.getHours() + "remaining.",
                         Toast.LENGTH_LONG).show();
-                updateUser(3);
+                logActivityReference = 3;
+                updateUser();
             } else {
                 Toast.makeText(getApplicationContext(), "Hours paid: " + payHours + " exceeds " +
                         "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
@@ -99,7 +102,8 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
             user.setHours(user.getHours() + payHours);
             Toast.makeText(getApplicationContext(), payHours + " hours added for " +
                     user.getName(), Toast.LENGTH_LONG).show();
-            updateUser(0);
+            logActivityReference = 0;
+            updateUser();
         }
 
     }
@@ -112,7 +116,8 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                 Toast.makeText(getApplicationContext(), payHours + " hours removed for " +
                                 user.getName() + ". " + user.getHours() + "remaining.",
                         Toast.LENGTH_LONG).show();
-                updateUser(1);
+                logActivityReference = 1;
+                updateUser();
             } else {
                 Toast.makeText(getApplicationContext(), "Hours removed: " + payHours + " exceeds " +
                         "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
@@ -156,8 +161,6 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(ADAPTER_POSITION, adapterPosition);
         outState.putString(DATE_STRING, dateString);
-
-        // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 
@@ -180,47 +183,76 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     }
 
-    private void updateUser(final Integer logActivityReference) {
-        new AsyncTask<Integer, Void, Void>() {
-            @Override
-            protected Void doInBackground(Integer... integers) {
-                int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
-                int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
-                if (!integers[0].equals(payLogReference)) {
-                    boolean isNewWorkDay = false;
-                    WorkDay workDay = db.workDayDao().findWorkDayByDate(dateString);
-                    int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
-                    if (workDay == null) {
-                        isNewWorkDay = true;
-                        workDay = new WorkDay(dateString);
-                    }
-                    if (integers[0].equals(deleteLogReference)) {
-                        numberOfHours = -numberOfHours;
-                    }
+    private void updateUser() {
+        Util.enactMultipleDatabaseOperations(this);
 
-                    workDay.addUserHourReference(user.toString(), numberOfHours);
+//        new AsyncTask<Integer, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Integer... integers) {
+//                int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
+//                int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
+//                if (!integers[0].equals(payLogReference)) {
+//                    boolean isNewWorkDay = false;
+//                    WorkDay workDay = db.workDayDao().findWorkDayByDate(dateString);
+//                    int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
+//                    if (workDay == null) {
+//                        isNewWorkDay = true;
+//                        workDay = new WorkDay(dateString);
+//                    }
+//                    if (integers[0].equals(deleteLogReference)) {
+//                        numberOfHours = -numberOfHours;
+//                    }
+//
+//                    workDay.addUserHourReference(user.toString(), numberOfHours);
+//
+//                    if (isNewWorkDay) {
+//                        db.workDayDao().insert(workDay);
+//                    }
+//                    else {
+//                        db.workDayDao().updateWorkDay(workDay);
+//                    }
+//
+//                }
+//
+//                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString() + " for " + dateString, logActivityReference, 3);
+//                db.logDao().insert(log);
+//                db.userDao().updateUser(user);
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                hours.setText("");
+//
+//                }
+//        }.execute(logActivityReference);
+    }
 
-                    if (isNewWorkDay) {
-                        db.workDayDao().insert(workDay);
-                    }
-                    else {
-                        db.workDayDao().updateWorkDay(workDay);
-                    }
-
-                }
-
-                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString() + " for " + dateString, logActivityReference, 3);
-                db.logDao().insert(log);
-                db.userDao().updateUser(user);
-                return null;
+    private void updateWorkDay() {
+        int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
+        int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
+        if (logActivityReference != payLogReference) {
+            boolean isNewWorkDay = false;
+            WorkDay workDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, dateString);
+            int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
+            if (workDay == null) {
+                isNewWorkDay = true;
+                workDay = new WorkDay(dateString);
+            }
+            if (logActivityReference == deleteLogReference) {
+                numberOfHours = -numberOfHours;
             }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                hours.setText("");
+            workDay.addUserHourReference(user.toString(), numberOfHours);
 
-                }
-        }.execute(logActivityReference);
+            if (isNewWorkDay) {
+                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+            }
+            else {
+                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
+            }
+
+        }
     }
 
     @Override
@@ -232,5 +264,34 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return Util.toolbarItemSelection(this, item);
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        Util.USER_REFERENCE.updateClassInstanceFromDatabase(user, db);
+        updateWorkDay();
+
+    }
+
+    @Override
+    public void createCustomLog() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log,db);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List databaseObjects) {
+        hours.setText("");
     }
 }

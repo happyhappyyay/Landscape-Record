@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
 
-public class QuickSheet extends AppCompatActivity {
+public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Customer>{
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -156,18 +157,19 @@ public class QuickSheet extends AppCompatActivity {
     }
 
     private void getCustomers() {
-        new AsyncTask<Void, Void, List<Customer>>() {
-            @Override
-            protected List<Customer> doInBackground(Void... voids) {
-                return db.customerDao().getAllCustomers();
-            }
-
-            @Override
-            protected void onPostExecute(List<Customer> customers) {
-                allCustomers = customers;
-                updateCustomers(customers);
-            }
-        }.execute();
+        Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
+//        new AsyncTask<Void, Void, List<Customer>>() {
+//            @Override
+//            protected List<Customer> doInBackground(Void... voids) {
+//                return db.customerDao().getAllCustomers();
+//            }
+//
+//            @Override
+//            protected void onPostExecute(List<Customer> customers) {
+//                allCustomers = customers;
+//                updateCustomers(customers);
+//            }
+//        }.execute();
     }
 
     @Override
@@ -185,5 +187,21 @@ public class QuickSheet extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return Util.toolbarItemSelection(this, item);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+        allCustomers = databaseObjects;
+        updateCustomers(databaseObjects);
     }
 }

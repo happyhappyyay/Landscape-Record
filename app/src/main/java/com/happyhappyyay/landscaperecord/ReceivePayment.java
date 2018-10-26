@@ -95,7 +95,12 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     }
 
     @Override
-    public void setObjectsToAccessor(List<Customer> databaseObjects) {
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
         customers.addAll(databaseObjects);
         populateSpinner(customers);
     }

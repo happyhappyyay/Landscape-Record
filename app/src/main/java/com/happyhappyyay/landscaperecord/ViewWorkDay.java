@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewWorkDay extends AppCompatActivity {
+public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAccess<WorkDay> {
     private CalendarView calendarView;
     private static AppDatabase db;
     private WorkDay workDay;
@@ -48,7 +49,7 @@ public class ViewWorkDay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timeSpanChoice = 0;
-                findWorkDayByDate(calendarPosition);
+                findWorkDayByDate();
             }
         });
         weekButton = findViewById(R.id.view_work_day_week_button);
@@ -56,7 +57,7 @@ public class ViewWorkDay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timeSpanChoice = 1;
-                findWorkDayByDate(calendarPosition);
+                findWorkDayByDate();
             }
         });
         monthButton = findViewById(R.id.view_work_day_month_button);
@@ -64,7 +65,7 @@ public class ViewWorkDay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timeSpanChoice = 2;
-                findWorkDayByDate(calendarPosition);
+                findWorkDayByDate();
             }
         });
         recyclerView.setLayoutManager(layoutManager);
@@ -93,11 +94,11 @@ public class ViewWorkDay extends AppCompatActivity {
                     dayOfMonthString = Integer.toString(dayOfMonth);
                 }
                 String date = monthString + "/" + dayOfMonthString + "/" + year;
-                findWorkDayByDate(date);
+                findWorkDayByDate();
                 calendarPosition = date;
             }
         });
-        findWorkDayByDate(calendarPosition);
+        findWorkDayByDate();
     }
 
     public void setUsers(List<User> users) {
@@ -115,40 +116,41 @@ public class ViewWorkDay extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "No information available for this date", Toast.LENGTH_SHORT).show();
     }
 
-    private void findWorkDayByDate(String date) {
-        new AsyncTask<String, Void, Void>() {
-            @Override
-            protected Void doInBackground(String... sDate) {
-
-                switch(timeSpanChoice) {
-                    case 0:
-                        WorkDay selectedWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
-                        if (selectedWorkDay != null) {
-                            workDay = selectedWorkDay;
-                        }
-                        break;
-                    case 1:
-                        List<WorkDay> selectedWorkWeek = db.workDayDao().findWorkWeekByTime(Util.convertStringToFirstDayOfWeekMilli(sDate[0]));
-
-                        if (selectedWorkWeek != null) {
-                            workDays = selectedWorkWeek;
-                        }
-                        break;
-                    case 2:
-                        List<WorkDay> selectedWorkMonth = db.workDayDao().findWorkMonthByTime(Util.convertStringToFirstDayOfMonthMilli(sDate[0]));
-
-                        if (selectedWorkMonth != null) {
-                            workDays = selectedWorkMonth;
-                        }
-                }
-                users = db.userDao().getAllUsers();
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                setupViewWorkDayAdapter();
-            }
-        }.execute(date);
+    private void findWorkDayByDate() {
+        Util.enactMultipleDatabaseOperationsPostExecute(this);
+//        new AsyncTask<String, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(String... sDate) {
+//
+//                switch(timeSpanChoice) {
+//                    case 0:
+//                        WorkDay selectedWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
+//                        if (selectedWorkDay != null) {
+//                            workDay = selectedWorkDay;
+//                        }
+//                        break;
+//                    case 1:
+//                        List<WorkDay> selectedWorkWeek = db.workDayDao().findWorkWeekByTime(Util.convertStringToFirstDayOfWeekMilli(sDate[0]));
+//
+//                        if (selectedWorkWeek != null) {
+//                            workDays = selectedWorkWeek;
+//                        }
+//                        break;
+//                    case 2:
+//                        List<WorkDay> selectedWorkMonth = db.workDayDao().findWorkMonthByTime(Util.convertStringToFirstDayOfMonthMilli(sDate[0]));
+//
+//                        if (selectedWorkMonth != null) {
+//                            workDays = selectedWorkMonth;
+//                        }
+//                }
+//                users = db.userDao().getAllUsers();
+//                return null;
+//            }
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                setupViewWorkDayAdapter();
+//            }
+//        }.execute(date);
     }
 
     private void setupViewWorkDayAdapter() {
@@ -158,9 +160,7 @@ public class ViewWorkDay extends AppCompatActivity {
 
         if (workDay != null) {
             services = workDay.getServices();
-            if (users != null) {
-                userWithHours = createStringFromUserHourReferences(workDay);
-            }
+            userWithHours = createStringFromUserHourReferences(workDay);
             if (services != null) {
                 customerWithServices = removeCustomerServicesStopCharacters(services);
             }
@@ -257,6 +257,52 @@ public class ViewWorkDay extends AppCompatActivity {
             customerServices.add(customerService);
         }
         return customerServices;
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        switch(timeSpanChoice) {
+            case 0:
+                WorkDay selectedWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, calendarPosition);
+                if (selectedWorkDay != null) {
+                    workDay = selectedWorkDay;
+                }
+                break;
+            case 1:
+                List<WorkDay> selectedWorkWeek = Util.WORK_DAY_REFERENCE.retrieveClassInstancesFromDatabaseByWeek(db, Util.convertStringToFirstDayOfWeekMilli(calendarPosition));
+
+                if (selectedWorkWeek != null) {
+                    workDays = selectedWorkWeek;
+                }
+                break;
+            case 2:
+                List<WorkDay> selectedWorkMonth = Util.WORK_DAY_REFERENCE.retrieveClassInstancesFromDatabaseByMonth(db, Util.convertStringToFirstDayOfMonthMilli(calendarPosition));
+
+                if (selectedWorkMonth != null) {
+                    workDays = selectedWorkMonth;
+                }
+        }
+    }
+
+    @Override
+    public void createCustomLog() {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<WorkDay> databaseObjects) {
+        setupViewWorkDayAdapter();
     }
 }
 

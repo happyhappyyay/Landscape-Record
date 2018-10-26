@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -27,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class JobServices extends AppCompatActivity implements FragmentListener, AdapterView.OnItemSelectedListener {
+public class JobServices extends AppCompatActivity implements FragmentListener, AdapterView.OnItemSelectedListener, MultiDatabaseAccess<Customer> {
 
     private static final String TAG = "job button";
     private ViewPager viewPager;
@@ -91,7 +92,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             }
 
         });
-        findAllCustomers();
+        Util.findAllObjects(this,Util.CUSTOMER_REFERENCE);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -170,7 +171,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             service.setServices(services);
             service.setCustomerName(customer.getName());
             customer.addService(service);
-            updateCustomer();
+            Util.enactMultipleDatabaseOperations(this);
         }
         else {
             Toast.makeText(getApplicationContext(), "No customer selected. Please select or create a customer.", Toast.LENGTH_LONG).show();
@@ -205,51 +206,103 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         if (!allCustomers.isEmpty()) customer = sortedCustomers.get(0);
     }
 
-    private void findAllCustomers() {
-        new AsyncTask<Void, Void, List<Customer>>() {
-            @Override
-            protected List<Customer> doInBackground(Void... voids) {
-                allCustomers = db.customerDao().getAllCustomers();
-                return allCustomers;
-            }
+//    private void findAllCustomers() {
+//        new AsyncTask<Void, Void, List<Customer>>() {
+//            @Override
+//            protected List<Customer> doInBackground(Void... voids) {
+//                allCustomers = db.customerDao().getAllCustomers();
+//                return allCustomers;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(List<Customer> customers) {
+//                populateSpinner(customers);
+//            }
+//        }.execute();
+//    }
+//
+//    private void updateCustomer() {
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                db.customerDao().updateCustomer(customer);
+//                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.convertLongToStringDate(service.getStartTime()));
+//                if (tempWorkDay != null) {
+//                    workDay = tempWorkDay;
+//                }
+//                else {
+//                    workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
+//                    db.workDayDao().insert(workDay);
+//                }
+//                workDay.addServices(service);
+//                db.workDayDao().updateWorkDay(workDay);
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void AVoid) {
+//                Toast.makeText(getApplicationContext(), customer.getName() + " " + service.getServices(), Toast.LENGTH_LONG).show();
+//                finish();
+//            }
+//        }.execute();
+//    }
 
-            @Override
-            protected void onPostExecute(List<Customer> customers) {
-                populateSpinner(customers);
-            }
-        }.execute();
-    }
+    private void updateWorkDay() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.convertLongToStringDate(service.getStartTime()));
+        if (tempWorkDay != null) {
+            workDay = tempWorkDay;
+            workDay.addServices(service);
+            Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
 
-    private void updateCustomer() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.customerDao().updateCustomer(customer);
-                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.convertLongToStringDate(service.getStartTime()));
-                if (tempWorkDay != null) {
-                    workDay = tempWorkDay;
-                }
-                else {
-                    workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
-                    db.workDayDao().insert(workDay);
-                }
-                workDay.addServices(service);
-                db.workDayDao().updateWorkDay(workDay);
-                return null;
-            }
+        }
+        else {
+            workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
+            workDay.addServices(service);
+            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+        }
 
-            @Override
-            protected void onPostExecute(Void AVoid) {
-                Toast.makeText(getApplicationContext(), customer.getName() + " " + service.getServices(), Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }.execute();
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_add_contact).setEnabled(false);
         return true;
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+        if (databaseObjects != null) {
+            allCustomers = databaseObjects;
+            populateSpinner(allCustomers);
+        }
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(customer, db);
+        updateWorkDay();
+    }
+
+    @Override
+    public void createCustomLog() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Authentication authentication = Authentication.getAuthentication(this);
+        LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(), LogActivityAction.valueOf("UPDATE").ordinal(), LogActivityType.valueOf("CUSTOMER").ordinal());
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
+        Toast.makeText(getApplicationContext(), customer.getName() + " " + service.getServices(), Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private class FragmentPageAdapter extends FragmentPagerAdapter {

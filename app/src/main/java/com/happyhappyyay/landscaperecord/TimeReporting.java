@@ -25,7 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class TimeReporting extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
+public class TimeReporting extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MultiDatabaseAccess<User>,
         PopulateSpinner {
     final static double MILLISECONDS_TO_HOURS = 3600000;
     final static int MAX_NUMBER_OF_ATTEMPTED_HOURS = 16;
@@ -90,7 +90,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
         long currentTime = System.currentTimeMillis();
         double hours = (currentTime - startTime) / MILLISECONDS_TO_HOURS;
         boolean startTimeChange = false;
-        updateCheckInStatus();
         if (!checkedIn) {
             startTime = currentTime;
             user.setStartTime(startTime);
@@ -112,7 +111,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 
     public void createCheckOut(View view) {
         double currentTime = System.currentTimeMillis();
-        updateCheckInStatus();
         double hours = ((currentTime - startTime) / MILLISECONDS_TO_HOURS);
 
         if (checkedIn) {
@@ -182,6 +180,8 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
         if (users != null) {
             user = users.get(pos);
             adapterPosition = pos;
+            startTime = user.getStartTime();
+            updateCheckInStatus();
         } else {
             parent.setSelection(adapterPosition);
         }
@@ -221,37 +221,36 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 
 
     private void updateUser() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.userDao().updateUser(user);
-                Log.d(TAG, Util.retrieveStringCurrentDate());
-                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
-                if (tempWorkDay != null) {
-                    workDay = tempWorkDay;
-                    Log.d(TAG, "workday exists");
-                }
-                else {
-                    workDay = new WorkDay(Util.retrieveStringCurrentDate());
-                    db.workDayDao().insert(workDay);
-                    Log.d(TAG, "workday null");
-                }
-                workDay.addUserHourReference(user.toString(), currentHours);
-                db.workDayDao().updateWorkDay(workDay);
-                return null;
-            }
-        }.execute();
+        Util.enactMultipleDatabaseOperations(this);
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                db.userDao().updateUser(user);
+//                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
+//                if (tempWorkDay != null) {
+//                    workDay = tempWorkDay;
+//                }
+//                else {
+//                    workDay = new WorkDay(Util.retrieveStringCurrentDate());
+//                    db.workDayDao().insert(workDay);
+//                }
+//                workDay.addUserHourReference(user.toString(), currentHours);
+//                db.workDayDao().updateWorkDay(workDay);
+//                return null;
+//            }
+//        }.execute();
     }
 
     private void findAllUsers() {
-        new AsyncTask<Void, Void, List<User>>() {
-            @Override
-            protected List<User> doInBackground(Void... voids) {
-                users = db.userDao().getAllUsers();
-
-                return null;
-            }
-        }.execute();
+        Util.findAllObjects(this, Util.USER_REFERENCE);
+//        new AsyncTask<Void, Void, List<User>>() {
+//            @Override
+//            protected List<User> doInBackground(Void... voids) {
+//                users = db.userDao().getAllUsers();
+//
+//                return null;
+//            }
+//        }.execute();
     }
 
     @Override
@@ -292,6 +291,54 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return Util.toolbarItemSelection(this, item);
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Util.USER_REFERENCE.updateClassInstanceFromDatabase(user, db);
+        WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.retrieveStringCurrentDate());
+        if (tempWorkDay != null) {
+            workDay = tempWorkDay;
+        }
+        else {
+            workDay = new WorkDay(Util.retrieveStringCurrentDate());
+            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+        }
+        workDay.addUserHourReference(user.toString(), currentHours);
+        Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
+    }
+
+    @Override
+    public void createCustomLog() {
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        LogActivity log;
+        updateCheckInStatus();
+        if(checkedIn) {
+            log = new LogActivity(authentication.getUser().getName(), user.getName(),
+                    LogActivityAction.CHECKED_IN.ordinal(), LogActivityType.USER.ordinal());
+        }
+        else {
+            log = new LogActivity(authentication.getUser().getName(), user.getName(),
+                    LogActivityAction.CHECKED_OUT.ordinal(), LogActivityType.USER.ordinal());
+        }
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
+
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<User> databaseObjects) {
+        users = databaseObjects;
     }
 }
 

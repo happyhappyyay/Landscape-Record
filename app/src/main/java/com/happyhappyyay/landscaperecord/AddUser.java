@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-public class AddUser extends AppCompatActivity {
+import java.util.List;
+
+public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity implements DatabaseAccess<User> {
     private EditText firstName, lastName, password, hours, nickname;
-    private Button submit;
     private User user;
-    private AppDatabase db;
     private CheckBox admin;
+    private String logInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,7 @@ public class AddUser extends AppCompatActivity {
         nickname = findViewById(R.id.add_user_nickname);
         password = findViewById(R.id.add_user_pass);
         hours = findViewById(R.id.add_user_hours);
-        submit = findViewById(R.id.add_user_submit);
         admin = findViewById(R.id.add_user_admin_button);
-        db = AppDatabase.getAppDatabase(this);
     }
 
     @Override
@@ -87,23 +87,44 @@ public class AddUser extends AppCompatActivity {
     }
 
     private void insertUser() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                LogActivity log = new LogActivity("User", user.getName(),0, 0);
-                db.userDao().insert(user);
-                db.logDao().insert(log);
-                return null;
-            }
+        logInfo = user.getName();
+        Util.insertObject(this, Util.USER_REFERENCE, user);
+        Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
+                " created.", Toast.LENGTH_LONG).show();
+        finish();
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
-                        " created.", Toast.LENGTH_LONG).show();
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                LogActivity log = new LogActivity("User", user.getName(),0, 0);
+//                db.userDao().insert(user);
+//                db.logDao().insert(log);
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
+//                        " created.", Toast.LENGTH_LONG).show();
+//
+//
+//                finish();
+//            }
+//        }.execute();
+    }
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
 
-                finish();
-            }
-        }.execute();
+    @Override
+    public String createLogInfo() {
+        return logInfo;
+    }
+
+    @Override
+    public void onPostExecute(List databaseObjects) {
+
     }
 }

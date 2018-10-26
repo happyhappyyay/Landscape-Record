@@ -44,10 +44,12 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         String activityAction = "";
         List<String> logActivityList = Arrays.asList(LogActivityAction.ADD.toString(),
                 LogActivityAction.DELETE.toString(), LogActivityAction.UPDATE.toString(),
-                LogActivityAction.PAY.toString());
+                LogActivityAction.PAY.toString(),LogActivityAction.CHECKED_IN.toString(),
+                LogActivityAction.CHECKED_OUT.toString());
         List<String> logTypeList = Arrays.asList(LogActivityType.USER.toString(),
                 LogActivityType.CUSTOMER.toString(), LogActivityType.PAYMENT.toString(),
-                LogActivityType.HOURS.toString(), LogActivityType.JOB.toString());
+                LogActivityType.HOURS.toString(), LogActivityType.JOB.toString(),
+                LogActivityType.SERVICES.toString());
         activityAction += logActivityList.get(logActivityAction) + " ";
         activityAction += logTypeList.get(logActivityType) + " ";
         activityAction += addInfo;
@@ -114,7 +116,12 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
     }
 
     @Override
-    public LogActivity retrieveClassInstanceFromDatabase(AppDatabase db, int id) {
+    public LogActivity retrieveClassInstanceFromDatabaseID(AppDatabase db, int id) {
+        return null;
+    }
+
+    @Override
+    public LogActivity retrieveClassInstanceFromDatabaseString(AppDatabase db, String string) {
         return null;
     }
 

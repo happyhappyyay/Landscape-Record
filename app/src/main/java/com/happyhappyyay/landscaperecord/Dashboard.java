@@ -15,11 +15,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Dashboard extends AppCompatActivity {
-    private TextView userLoggedIn, checkInTime;
+    private TextView checkInTime;
     private Authentication authentication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TextView userLoggedIn;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         authentication = Authentication.getAuthentication(this);
@@ -63,14 +64,12 @@ public class Dashboard extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.items, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
         return Util.toolbarItemSelection(this, item);
     }
 
