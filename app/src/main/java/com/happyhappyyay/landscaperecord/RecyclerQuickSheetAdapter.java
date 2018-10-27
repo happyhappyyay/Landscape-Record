@@ -98,12 +98,13 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
             WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
             if (tempWorkDay != null) {
                 workDay = tempWorkDay;
+                workDay.addServices(service);
+                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
             } else {
                 workDay = new WorkDay(endDateString);
+                workDay.addServices(service);
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
             }
-            workDay.addServices(service);
-            Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
         }
     }
 

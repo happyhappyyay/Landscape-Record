@@ -81,8 +81,8 @@ public class RecyclerViewWorkDayAdapter extends Adapter {
                 Log.d(TAG, username);
             }
             if(services.size() > position) {
-                String customer = services.get(position);
-                serviceText.setText(customer);
+                String customerServices = services.get(position);
+                serviceText.setText(customerServices);
             }
         }
 

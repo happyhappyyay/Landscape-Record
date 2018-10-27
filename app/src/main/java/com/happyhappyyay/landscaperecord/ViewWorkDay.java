@@ -252,7 +252,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
             if (serviceStringWithoutSeparators.length() > 2) {
                 serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
             }
-            String customerService = s.convertEndTimeToDateString() + ": "  + s.getCustomerName() +
+            String customerService = s.getCustomerName() + ":" +
                     System.getProperty ("line.separator") + serviceStringWithoutSeparators;
             customerServices.add(customerService);
         }
@@ -282,6 +282,9 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
                 if (selectedWorkMonth != null) {
                     workDays = selectedWorkMonth;
                 }
+                break;
+            default:
+                break;
         }
     }
 

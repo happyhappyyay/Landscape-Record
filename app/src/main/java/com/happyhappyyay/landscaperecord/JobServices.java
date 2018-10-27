@@ -131,11 +131,11 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         if (customer != null) {
             long time = System.currentTimeMillis();
             LawnServices lawnServices = (LawnServices)
-                    fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LAWN_SERVICES.toString()));
+                    fragAdapter.getItem(fragAdapter.getPosition("LAWN SERVICES"));
             LandscapeServices landscapeServices = (LandscapeServices)
-                    fragAdapter.getItem(fragAdapter.getPosition(ServiceType.LANDSCAPING_SERVICES.toString()));
+                    fragAdapter.getItem(fragAdapter.getPosition("LANDSCAPING SERVICES"));
             SnowServices snowServices = (SnowServices)
-                    fragAdapter.getItem(fragAdapter.getPosition(ServiceType.SNOW_SERVICES.toString()));
+                    fragAdapter.getItem(fragAdapter.getPosition("SNOW SERVICES"));
             List<Material> materials = landscapeServices.getMaterials();
 
             if (!date.getText().toString().isEmpty()) {
@@ -301,7 +301,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         Authentication authentication = Authentication.getAuthentication(this);
         LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(), LogActivityAction.valueOf("UPDATE").ordinal(), LogActivityType.valueOf("CUSTOMER").ordinal());
         Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
-        Toast.makeText(getApplicationContext(), customer.getName() + " " + service.getServices(), Toast.LENGTH_LONG).show();
         finish();
     }
 

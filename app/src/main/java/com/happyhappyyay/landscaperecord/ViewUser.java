@@ -65,18 +65,22 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
     }
 
     private void deleteUser() {
-        Util.deleteObject(this, Util.USER_REFERENCE, user);
-//        new AsyncTask<User, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(User... params) {
-//                User user = params[0];
-//                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName(),1, 0);
-//                db.logDao().insert(log);
-//                db.userDao().deleteUser(user);
-//                finish();
-//                return null;
-//            }
-//        }.execute(user);
+            if (!user.equals(Authentication.getAuthentication(this).getUser())) {
+                Util.deleteObject(this, Util.USER_REFERENCE, user);
+                //        new AsyncTask<User, Void, Void>() {
+                //            @Override
+                //            protected Void doInBackground(User... params) {
+                //                User user = params[0];
+                //                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName(),1, 0);
+                //                db.logDao().insert(log);
+                //                db.userDao().deleteUser(user);
+                //                finish();
+                //                return null;
+                //            }
+                //        }.execute(user);
+            } else {
+                Toast.makeText(getApplicationContext(), "Cannot delete logged in Admin", Toast.LENGTH_LONG).show();
+            }
     }
 
     public void onDeleteUser(View view) {

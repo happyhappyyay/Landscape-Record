@@ -278,6 +278,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         AppDatabase db = AppDatabase.getAppDatabase(this);
         LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
         Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log,db);
+        hours.setText("");
     }
 
     @Override
@@ -292,6 +293,5 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     @Override
     public void onPostExecute(List databaseObjects) {
-        hours.setText("");
     }
 }
