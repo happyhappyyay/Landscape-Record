@@ -143,10 +143,14 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         }
     }
 
+    public void docCreate(View view) {
+        CreateDocument createDocument = new CreateDocument(this, customer, customer.getCustomerServices());
+    }
+
     private void updateCustomer() {
         logInfo = customer.getName();
         Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
-        Toast.makeText(getApplicationContext(), "Customer account for " + customer.toString() +
+        Toast.makeText(getApplicationContext(), "Customer account for " + customer.getName() +
                 " updated.", Toast.LENGTH_LONG).show();
         finish();
 //        new AsyncTask<Void, Void, Void>() {

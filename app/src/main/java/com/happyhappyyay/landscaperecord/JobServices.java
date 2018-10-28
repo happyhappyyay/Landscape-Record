@@ -45,10 +45,12 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     private EditText date, manHours;
     private Service service;
     private WorkDay workDay;
+    private int adapterPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        allCustomers = new ArrayList<>();
         service = new Service();
         setContentView(R.layout.activity_job_services);
         viewPager = findViewById(R.id.job_services_view_pager);
@@ -69,21 +71,20 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 List<Customer> customersByDay = new ArrayList<>();
-                if (position != 0) {
-                    for (Customer c : allCustomers) {
-                        if (c.getCustomerDay() != null) {
-                            if (c.getCustomerDay().equals(daySpinner.getSelectedItem().toString())) {
-                                customersByDay.add(c);
+                    if (position != 0) {
+                        for (Customer c : allCustomers) {
+                            if (c.getCustomerDay() != null) {
+                                if (c.getCustomerDay().equals(daySpinner.getSelectedItem().toString())) {
+                                    customersByDay.add(c);
+                                }
                             }
                         }
+                        populateSpinner(customersByDay);
+                        sortedCustomers = customersByDay;
+                    } else {
+                        populateSpinner(allCustomers);
+                        sortedCustomers = allCustomers;
                     }
-                    populateSpinner(customersByDay);
-                    sortedCustomers = customersByDay;
-                } else {
-                    populateSpinner(allCustomers);
-                    sortedCustomers = allCustomers;
-                }
-
             }
 
             @Override
@@ -203,7 +204,7 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        if (!allCustomers.isEmpty()) customer = sortedCustomers.get(0);
+            if (sortedCustomers.size() > 0) customer = sortedCustomers.get(0);
     }
 
 //    private void findAllCustomers() {
@@ -283,8 +284,9 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
         if (databaseObjects != null) {
-            allCustomers = databaseObjects;
-            populateSpinner(allCustomers);
+                allCustomers = databaseObjects;
+                sortedCustomers = allCustomers;
+                populateSpinner(allCustomers);
         }
     }
 

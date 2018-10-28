@@ -150,12 +150,12 @@ public class Customer implements DatabaseObjects<Customer> {
 
     @Override
     public String toString() {
-        return customerBusiness == null ? customerFirstName + customerLastName : customerBusiness;
+        return (customerBusiness == null ? customerFirstName + customerLastName : customerBusiness) + " " + concatenateFullAddress();
     }
 
     @Override
     public String getName() {
-        return toString();
+        return customerBusiness == null ? customerFirstName + customerLastName : customerBusiness;
     }
 
     @Override
@@ -191,5 +191,9 @@ public class Customer implements DatabaseObjects<Customer> {
     public String concatenateFullAddress() {
         return getCustomerAddress() + " " + getCustomerCity()
                 + ", " + getCustomerState();
+    }
+
+    public String getFullName() {
+        return customerFirstName + customerLastName;
     }
 }

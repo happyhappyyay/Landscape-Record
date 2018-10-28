@@ -88,7 +88,7 @@ public class NewContact extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Customer account for " + customer.toString() +
+                Toast.makeText(getApplicationContext(), "Customer account for " + customer.getName() +
                         " created.", Toast.LENGTH_LONG).show();
                 finish();
             }

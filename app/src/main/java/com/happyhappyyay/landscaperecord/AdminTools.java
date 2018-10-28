@@ -48,4 +48,8 @@ public class AdminTools extends AppCompatActivity {
         Intent intent = new Intent(this, ViewActivityLogs.class);
         startActivity(intent);
     }
+
+    public void startPaymentQueue(View view) {
+
+    }
 }

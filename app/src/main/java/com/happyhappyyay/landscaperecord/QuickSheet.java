@@ -43,6 +43,7 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        allCustomers = new ArrayList<>();
         setContentView(R.layout.activity_quick_sheet);
         Toolbar myToolbar = findViewById(R.id.quick_sheet_toolbar);
         setSupportActionBar(myToolbar);
