@@ -171,6 +171,7 @@
     <string name="add_user_nickname">Nickname</string>
     <string name="edit_user_title">Edit User</string>
     <string name="edit_customer_title">Edit Customer</string>
+    <string name="dashboard_notification_users_in">Users Logged In</string>
     <!---->
 
 </resources>

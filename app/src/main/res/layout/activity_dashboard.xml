@@ -7,6 +7,55 @@
     android:theme="@style/AppTheme"
     tools:context=".Dashboard">
 
+    <TextView
+        android:id="@+id/dashboard_payments_notification"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/border"
+        android:gravity="bottom|center"
+        android:text="0"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_main_menu"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_hours_notification"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_billing_notification"
+        app:layout_constraintTop_toTopOf="@+id/dashboard_hours_notification" />
+
+    <TextView
+        android:id="@+id/dashboard_payments_notification_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center_horizontal"
+        android:text="Unreceived Payments"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_hours_notification"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_billing_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_notifications_notification" />
+
+    <TextView
+        android:id="@+id/dashboard_hours_notification"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/border"
+
+        android:gravity="bottom|center"
+        android:text="0"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_main_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_payments_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_users_in_notification" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/dashboard_toolbar"
         android:layout_width="match_parent"
@@ -26,11 +75,11 @@
         android:id="@+id/dashboard_logged_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="115dp"
-        android:layout_marginLeft="115dp"
-        android:layout_marginRight="115dp"
         android:layout_marginStart="115dp"
+        android:layout_marginLeft="115dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="115dp"
+        android:layout_marginRight="115dp"
         android:text="@string/login_page_logged"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -41,11 +90,11 @@
         android:id="@+id/dashboard_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/login_page_username"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,16 +104,14 @@
     <Button
         android:id="@+id/dashboard_main_menu"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
-        android:layout_marginTop="32dp"
         android:onClick="startMainMenu"
         android:text="@string/login_page_main_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/dashboard_checked_in_time_text"
@@ -80,13 +127,152 @@
         android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:drawableTop="@drawable/ic_twotone_settings_applications_64px"
         android:onClick="startUserSettings"
         android:text="@string/user_settings_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/dashboard_notifications_notification"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/border"
+        android:gravity="bottom|center"
+        android:text="0"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_billing_notification"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_in_progress_notification"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+
+    <TextView
+        android:id="@+id/dashboard_in_progress_notification"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/border"
+        android:gravity="bottom|center"
+        android:text="1"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_payments_notification"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_users_in_notification"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_notifications_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+
+    <TextView
+        android:id="@+id/dashboard_users_in_notification"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/border"
+        android:gravity="bottom|center"
+        android:text="1"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_hours_notification"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_in_progress_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+
+    <TextView
+        android:id="@+id/dashboard_billing_notification"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/border"
+        android:gravity="bottom|center"
+        android:text="0"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_main_menu"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_payments_notification"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_notifications_notification" />
+
+    <TextView
+        android:id="@+id/dashboard_billing_notification_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center_horizontal"
+        android:text="Unsent Billing"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/dashboard_billing_notification"
+        app:layout_constraintStart_toStartOf="@+id/dashboard_billing_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_notifications_notification" />
+
+    <TextView
+        android:id="@+id/dashboard_hours_notification_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center_horizontal"
+        android:text="Hours to be Paid"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/dashboard_hours_notification"
+        app:layout_constraintStart_toStartOf="@+id/dashboard_hours_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_users_in_notification" />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:text="Jobs In-Progress"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_users_in_notification"
+        app:layout_constraintStart_toStartOf="@+id/dashboard_in_progress_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+
+    <TextView
+        android:id="@+id/textView29"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:text="Checked In"
+        app:layout_constraintEnd_toEndOf="@+id/dashboard_users_in_notification"
+        app:layout_constraintStart_toStartOf="@+id/dashboard_users_in_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+
+    <TextView
+        android:id="@+id/textView30"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:text="Notifications"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_in_progress_notification"
+        app:layout_constraintStart_toStartOf="@+id/dashboard_notifications_notification"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
 
 </android.support.constraint.ConstraintLayout>

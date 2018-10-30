@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,16 +20,12 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class SettingsFragment extends PreferenceFragment {
-
-    private AppDatabase db;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.pref_settings);
-        db = AppDatabase.getAppDatabase(getActivity());
         Preference button = findPreference(getString(R.string.pref_key_import_contacts));
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -62,17 +59,23 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void insertCustomers(Customer... customers) {
-        new AsyncTask<Customer, Void, Void>() {
-            @Override
-            protected Void doInBackground(Customer... customers) {
-
-                for(Customer c: customers) {
-                    db.customerDao().insert(c);
+        for(final Customer c: customers) {
+            DatabaseAccess<Customer> customerDatabaseAccess = new DatabaseAccess<Customer>() {
+                @Override
+                public Context getContext() {
+                    return getActivity();
                 }
-                return null;
-            }
-        }.execute(customers);
+
+                @Override
+                public String createLogInfo() {
+                    return "IMPORT " + c.getName();
+                }
+
+                @Override
+                public void onPostExecute(List<Customer> databaseObjects) {
+
+                }
+            };
+            Util.insertObject(customerDatabaseAccess,Util.CUSTOMER_REFERENCE, c);        }
     }
-
-
 }

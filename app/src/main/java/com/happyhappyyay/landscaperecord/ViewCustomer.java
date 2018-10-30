@@ -13,10 +13,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class ViewCustomer extends AppCompatActivity implements MultiDatabaseAccess<Customer> {
+public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Customer> {
     private int customerID;
-    private AppDatabase db;
-    private Authentication authentication;
     private TextView customerFullName, customerDisplayName, customerFullAddress, customerBusiness,
     customerEmail, customerPhoneNumber, customerDay, customerMileage;
     private Customer customer;
@@ -35,14 +33,13 @@ public class ViewCustomer extends AppCompatActivity implements MultiDatabaseAcce
         customerMileage = findViewById(R.id.view_customer_mileage);
         customerDay = findViewById(R.id.view_customer_day);
         customerDisplayName = findViewById(R.id.view_customer_name);
-        authentication = Authentication.getAuthentication(this);
+        Authentication authentication = Authentication.getAuthentication(this);
         Intent intent = getIntent();
         customerID = intent.getIntExtra("CUSTOMER_ID", 0);
         if (savedInstanceState != null) {
             customerID = savedInstanceState.getInt(CUSTOMER_ID);
         }
 
-        db = AppDatabase.getAppDatabase(this);
         findCustomer(customerID);
     }
 
@@ -116,7 +113,7 @@ public class ViewCustomer extends AppCompatActivity implements MultiDatabaseAcce
     }
 
     private void deleteCustomer(Customer customer) {
-        Util.enactMultipleDatabaseOperations(this);
+        Util.deleteObject(this, Util.CUSTOMER_REFERENCE, customer);
 //        new AsyncTask<Customer, Void, Void>() {
 //            @Override
 //            protected Void doInBackground(Customer... params) {
@@ -137,30 +134,22 @@ public class ViewCustomer extends AppCompatActivity implements MultiDatabaseAcce
     }
 
     @Override
-    public void accessDatabaseMultipleTimes() {
-        Util.CUSTOMER_REFERENCE.deleteClassInstanceFromDatabase(customer,db);
-    }
-
-    @Override
-    public void createCustomLog() {
-        LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),LogActivityAction.DELETE.ordinal(), LogActivityType.CUSTOMER.ordinal());
-        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
-        finish();
-    }
-
-    @Override
     public Context getContext() {
         return this;
     }
 
     @Override
     public String createLogInfo() {
-        return null;
+        return customer.getName();
     }
 
     @Override
     public void onPostExecute (List<Customer> databaseObjects) {
-        Customer customer = databaseObjects.get(0);
-        populateTextFields(customer);
+        if(databaseObjects != null) {
+            customer = databaseObjects.get(0);
+            populateTextFields(customer);
+        }else {
+            finish();
+        }
     }
 }

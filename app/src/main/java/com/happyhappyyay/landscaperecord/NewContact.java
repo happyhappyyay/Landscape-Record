@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewContact extends AppCompatActivity {
-    private static final String TAG = "Customer List";
+public class NewContact extends AppCompatActivity implements DatabaseAccess<Customer>{
     private EditText firstNameText, lastNameText, emailText, businessText, addressText, cityText,
             phoneText;
     private Spinner stateSpinner, daySpinner;
     private Customer customer;
-    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,6 @@ public class NewContact extends AppCompatActivity {
         phoneText = findViewById(R.id.contact_phone_number_text);
         stateSpinner = findViewById(R.id.contact_state_spinner);
         daySpinner = findViewById(R.id.contact_day_spinner);
-        db = AppDatabase.getAppDatabase(this);
     }
 
     public void addNewCustomer(View view) {
@@ -79,20 +77,21 @@ public class NewContact extends AppCompatActivity {
     }
 
     private void insertCustomer() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.customerDao().insert(customer);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Customer account for " + customer.getName() +
-                        " created.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }.execute();
+        Util.insertObject(this, Util.CUSTOMER_REFERENCE, customer);
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                db.customerDao().insert(customer);
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                Toast.makeText(getApplicationContext(), "Customer account for " + customer.getName() +
+//                        " created.", Toast.LENGTH_LONG).show();
+//                finish();
+//            }
+//        }.execute();
     }
 
     @Override
@@ -113,4 +112,20 @@ public class NewContact extends AppCompatActivity {
     }
 
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return customer.getName();
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+        Toast.makeText(getApplicationContext(), "Customer account for " + customer.getName() +
+                " created.", Toast.LENGTH_LONG).show();
+        finish();
+    }
 }
