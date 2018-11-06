@@ -66,7 +66,7 @@ public class RecyclerServiceAdapter extends Adapter {
             String startToEndDate = service.convertStartTimeToDateString() + " - " + service.convertEndTimeToDateString();
             String manHoursString = Double.toString(service.getManHours()) + "hrs";
             String mileageString = Double.toString(service.getMileage()) + "mi";
-            String services = removeCustomerServicesStopCharacters(service);
+            String services = service.getServices();
             customerText.setText(service.getCustomerName());
             dateText.setText(startToEndDate);
             stateText.setText(service.isPause() ? "In-Progress": "Completed");
@@ -96,7 +96,7 @@ public class RecyclerServiceAdapter extends Adapter {
                 serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
             }
 
-            return serviceStringWithoutSeparators;
+            return !serviceStringWithoutSeparators.isEmpty() ? serviceStringWithoutSeparators : serviceString;
         }
 
     }

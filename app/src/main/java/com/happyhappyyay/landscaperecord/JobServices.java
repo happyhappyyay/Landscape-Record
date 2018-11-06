@@ -98,9 +98,9 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
 
     private void setupViewPager(ViewPager viewPager) {
         fragAdapter = new FragmentPageAdapter(getSupportFragmentManager());
-        fragAdapter.addFragment(new LawnServices(), "LAWN SERVICES");
-        fragAdapter.addFragment(new LandscapeServices(), "LANDSCAPING SERVICES");
-        fragAdapter.addFragment(new SnowServices(), "SNOW SERVICES");
+        fragAdapter.addFragment(new LawnServices(), "LAWN");
+        fragAdapter.addFragment(new LandscapeServices(), "LANDSCAPING");
+        fragAdapter.addFragment(new SnowServices(), "SNOW");
         viewPager.setAdapter(fragAdapter);
 //        lawnFrag.setFragmentListener(this);
 //        landFrag.setFragmentListener(this);
@@ -132,11 +132,11 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         if (customer != null) {
             long time = System.currentTimeMillis();
             LawnServices lawnServices = (LawnServices)
-                    fragAdapter.getItem(fragAdapter.getPosition("LAWN SERVICES"));
+                    fragAdapter.getItem(fragAdapter.getPosition("LAWN"));
             LandscapeServices landscapeServices = (LandscapeServices)
-                    fragAdapter.getItem(fragAdapter.getPosition("LANDSCAPING SERVICES"));
+                    fragAdapter.getItem(fragAdapter.getPosition("LANDSCAPING"));
             SnowServices snowServices = (SnowServices)
-                    fragAdapter.getItem(fragAdapter.getPosition("SNOW SERVICES"));
+                    fragAdapter.getItem(fragAdapter.getPosition("SNOW"));
             List<Material> materials = landscapeServices.getMaterials();
 
             if (!date.getText().toString().isEmpty()) {

@@ -242,10 +242,10 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
             int startServicePosition = 0;
 
             for (int i = 0; i < serviceString.length() - 2; i++) {
-                if (serviceString.substring(i,i+3).equals("#*#")) {
+                if (serviceString.substring(i,i+1).equals("|")) {
                     endServicePosition = i;
-                    serviceStringWithoutSeparators = serviceStringWithoutSeparators + serviceString.substring(startServicePosition, endServicePosition) + ", ";
-                    startServicePosition = i+3;
+                    serviceStringWithoutSeparators += serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                    startServicePosition = i+1;
                 }
             }
 

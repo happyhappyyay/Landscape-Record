@@ -13,6 +13,11 @@ public enum MaterialType {
     SEED,
     SOD,
     EDGING,
-    DRAIN_TILE,
+    DRAIN_TILE {
+        @Override
+        public String toString() {
+            return "Drain Tile";
+        }
+    },
     OTHER,
 }

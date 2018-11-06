@@ -28,9 +28,9 @@
     <string name="main_menu_payment">Payment Reporting</string>
     <string name="main_menu_contact">New Contact</string>
     <string name="main_menu_admin">Admin Tools</string>
-    <string name="job_lawn_service">Lawn Services</string>
-    <string name="job_landscaping_services">Landscaping Services</string>
-    <string name="job_snow_services">Snow Services</string>
+    <string name="job_lawn_service">Lawn</string>
+    <string name="job_landscaping_services">Landscaping</string>
+    <string name="job_snow_services">Snow</string>
     <string name="user_options">Manage Users</string>
     <string name="add_user">Add User</string>
     <string name="delete_user">Delete User</string>

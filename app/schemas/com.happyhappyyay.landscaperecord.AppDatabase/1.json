@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3324166793c222fb997dbc7709ea8aca",
+    "identityHash": "e60ab88962d01ac5774347e05bb34f23",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hours` REAL NOT NULL, `name` TEXT, `password` TEXT, `admin` INTEGER NOT NULL, `startTime` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hours` REAL NOT NULL, `firstName` TEXT, `lastName` TEXT, `name` TEXT, `password` TEXT, `admin` INTEGER NOT NULL, `startTime` INTEGER NOT NULL, `nickname` TEXT)",
         "fields": [
           {
             "fieldPath": "userId",
@@ -19,6 +19,18 @@
             "columnName": "hours",
             "affinity": "REAL",
             "notNull": true
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "firstName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "lastName",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "name",
@@ -43,6 +55,12 @@
             "columnName": "startTime",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "nickname",
+            "columnName": "nickname",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -56,7 +74,7 @@
       },
       {
         "tableName": "Customer",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `customerFirstName` TEXT, `customerLastName` TEXT, `customerAddress` TEXT, `customerCity` TEXT, `customerPhoneNumber` TEXT, `customerEmail` TEXT, `customerBusiness` TEXT, `customerDay` TEXT, `customerState` TEXT, `customerServices` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `customerFirstName` TEXT, `customerLastName` TEXT, `customerAddress` TEXT, `customerCity` TEXT, `customerPhoneNumber` TEXT, `customerEmail` TEXT, `customerBusiness` TEXT, `customerDay` TEXT, `customerState` TEXT, `payment` TEXT, `customerServices` TEXT)",
         "fields": [
           {
             "fieldPath": "customerId",
@@ -115,6 +133,12 @@
           {
             "fieldPath": "customerState",
             "columnName": "customerState",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payment",
+            "columnName": "payment",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -186,7 +210,7 @@
       },
       {
         "tableName": "WorkDay",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workDayID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `Month` TEXT, `Year` TEXT, `currentDate` TEXT, `currentDateAsTime` INTEGER NOT NULL, `userHourReference` TEXT, `services` TEXT, `weekInMilli` INTEGER NOT NULL, `monthInMilli` INTEGER NOT NULL, `yearInMilli` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workDayID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `Month` TEXT, `Year` TEXT, `currentDate` TEXT, `currentDateAsTime` INTEGER NOT NULL, `hours` TEXT, `userReference` TEXT, `services` TEXT, `weekInMilli` INTEGER NOT NULL, `monthInMilli` INTEGER NOT NULL, `yearInMilli` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "workDayID",
@@ -225,8 +249,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "userHourReference",
-            "columnName": "userHourReference",
+            "fieldPath": "hours",
+            "columnName": "hours",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userReference",
+            "columnName": "userReference",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -267,7 +297,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3324166793c222fb997dbc7709ea8aca\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e60ab88962d01ac5774347e05bb34f23\")"
     ]
   }
 }

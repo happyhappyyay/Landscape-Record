@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,26 +13,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class LandscapeServices extends Fragment implements FragmentListener {
-    private final ServiceType SERVICE_TYPE = ServiceType.LANDSCAPING_SERVICES;
-    private RecyclerView recyclerView;
+public class LandscapeServices extends Fragment {
     private RecyclerMaterialAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
     private List<Material> materials = new ArrayList<>();
-    private FragmentListener callBack;
-    private CheckBox drain, till, edging, dump, other;
     private List<CheckBox> checkBoxes;
-    private Button addButton, removeButton;
-    private FloatingActionButton deleteButton;
-    private EditText materialName, materialQuantity, materialPrice, dumpText, otherText;
+    private EditText materialName, materialQuantity, materialPrice, dumpAmount, otherText;
     private Spinner materialTypeSpinner, materialMeasurementSpinner, dumpSpinner, dumpTypeSpinner;
-    private boolean pause;
     private int recyclerPosition = 0;
 
     public LandscapeServices() {
@@ -43,35 +35,35 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landscaping, container, false);
-        recyclerView = view.findViewById(R.id.land_services_recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView recyclerView = view.findViewById(R.id.land_services_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerMaterialAdapter();
         recyclerView.setAdapter(adapter);
         checkBoxes = new ArrayList<>();
-        drain = view.findViewById(R.id.land_services_drainage);
+        CheckBox drain = view.findViewById(R.id.land_services_drainage);
         checkBoxes.add(drain);
-        till = view.findViewById(R.id.land_services_till);
+        CheckBox till = view.findViewById(R.id.land_services_till);
         checkBoxes.add(till);
-        edging = view.findViewById(R.id.land_services_edging);
+        CheckBox edging = view.findViewById(R.id.land_services_edging);
         checkBoxes.add(edging);
-        dump = view.findViewById(R.id.land_services_dump);
+        CheckBox dump = view.findViewById(R.id.land_services_dump);
         checkBoxes.add(dump);
-        other = view.findViewById(R.id.land_services_other);
+        CheckBox other = view.findViewById(R.id.land_services_other);
         checkBoxes.add(other);
         materialName = view.findViewById(R.id.land_services_material_name_text);
         materialQuantity = view.findViewById(R.id.land_services_material_quantity_text);
         materialPrice = view.findViewById(R.id.land_services_material_price_text);
         materialTypeSpinner = view.findViewById(R.id.land_services_type_spinner);
         materialMeasurementSpinner = view.findViewById(R.id.land_services_measure_spinner);
-        dumpText = view.findViewById(R.id.land_services_dump_text);
-        dumpSpinner = view.findViewById(R.id.land_services_dump_spinner);
+        dumpAmount = view.findViewById(R.id.land_services_dump_amount);
+        dumpSpinner = view.findViewById(R.id.land_services_dump_spinner_measurement);
         otherText = view.findViewById(R.id.land_services_other_text);
         dumpTypeSpinner = view.findViewById(R.id.land_services_dump_type_spinner);
-        deleteButton = view.findViewById(R.id.land_services_delete_button);
+        FloatingActionButton deleteButton = view.findViewById(R.id.land_services_delete_button);
         deleteButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -81,7 +73,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                 }
         );
 
-        addButton = view.findViewById(R.id.land_services_add_material_button);
+        Button addButton = view.findViewById(R.id.land_services_add_material_button);
         addButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -97,7 +89,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
                 }
         );
 
-        removeButton = view.findViewById(R.id.land_services_remove_material_button);
+        Button removeButton = view.findViewById(R.id.land_services_remove_material_button);
         removeButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -125,7 +117,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
     }
 
     public void deleteMaterial() {
-        List<Material> materialsToRemove = new ArrayList<>();
+        List<Material> materialsToRemove;
         if (materials != null) {
             materialsToRemove = adapter.getSelectedMaterials();
             for (int i = 0; i < materialsToRemove.size(); i++) {
@@ -166,7 +158,7 @@ public class LandscapeServices extends Fragment implements FragmentListener {
             type = "DRAIN_TILE";
         }
 
-        if (name == "") {
+        if (name.equals("")) {
             if (!type.isEmpty()) {
                 name = type;
             }
@@ -185,44 +177,37 @@ public class LandscapeServices extends Fragment implements FragmentListener {
         return material;
     }
 
-    public void setFragmentListener(FragmentListener listener) {
-        callBack = listener;
-    }
-
     public String markedCheckBoxes() {
-        String services = "";
+        StringBuilder servicesStringBuilder = new StringBuilder();
+
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
-
-                if (c.getText().toString().toLowerCase().equals("other")) {
-                    String otherString = otherText.getText().toString();
-                    if (!otherString.isEmpty()) {
-                        services += "Other " + otherString + "#*#";
-                    }
-                } else if (c.getText().toString().toLowerCase().equals("dump")) {
-                    String dumpString = dumpText.getText().toString();
-                    if (!dumpString.isEmpty()) {
-                        services += "Dump " + dumpTypeSpinner.getSelectedItem().toString() + ": " +
-                                dumpString + dumpSpinner.getSelectedItem().toString() + "#*#";
-                    }
-                } else {
-                    services += c.getText().toString() + "#*#";
+                String checkBoxText = c.getText().toString().toLowerCase();
+                switch(checkBoxText) {
+                    case "other":
+                        String otherString = otherText.getText().toString() + Util.DELIMITER;
+                        if (!otherString.isEmpty()) {
+                            servicesStringBuilder.append(otherString);
+                        }
+                        break;
+                    case "dump":
+                        String dumpString = dumpAmount.getText().toString();
+                            String dumpAmount = "Dump " + dumpString + dumpTypeSpinner.getSelectedItem().toString()
+                                    + ": " + dumpString + dumpSpinner.getSelectedItem().toString() +
+                                    Util.DELIMITER;
+                            servicesStringBuilder.append(dumpAmount);
+                        break;
+                    default:
+                        String serviceString = c.getText().toString() + Util.DELIMITER;
+                        servicesStringBuilder.append(serviceString);
+                        break;
                 }
             }
         }
-        return services;
+        return servicesStringBuilder.toString();
     }
 
     public List<Material> getMaterials() {
         return materials;
-    }
-
-    @Override
-    public void checkBoxData(String string) {
-    }
-
-    @Override
-    public void pausedFragment(ServiceType serviceType) {
-
     }
 }

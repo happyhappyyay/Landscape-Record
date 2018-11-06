@@ -24,6 +24,7 @@ public class Util {
     public static final LogActivity LOG_REFERENCE = new LogActivity();
     public static final WorkDay WORK_DAY_REFERENCE = new WorkDay(retrieveStringCurrentDate());
     public static final User USER_REFERENCE = new User();
+    public static final String DELIMITER = "|";
 
     private static final String TAG = "selected";
 
@@ -258,7 +259,7 @@ public class Util {
                 Authentication authentication = Util.getAuthentication(access.getContext());
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
-                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
+                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
                     db.logDao().insert(log);
                 }
                 object.deleteClassInstanceFromDatabase(objectToDelete, db);
