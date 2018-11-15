@@ -6,6 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".ReceivePayment">
 
+    <Spinner
+        android:id="@+id/receive_payment_day_spinner"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:entries="@array/days_of_the_week"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receive_payment_date" />
+
+    <TextView
+        android:id="@+id/textView32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/quick_sheet_date"
+        app:layout_constraintBaseline_toBaselineOf="@+id/receive_payment_date"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/receive_payment_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:hint="@string/date_time_hint"
+        android:inputType="date"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView32"
+        app:layout_constraintTop_toBottomOf="@+id/payment_toolbar" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/payment_toolbar"
         android:layout_width="0dp"
@@ -20,97 +54,96 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/main_menu_payment" />
 
-    <TextView
-        android:id="@+id/paymentAccountText"
-        android:layout_width="76dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/accountNameText"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/payment_toolbar" />
-
     <Spinner
         android:id="@+id/receive_payment_spinner"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/paymentAccountText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/paymentAccountText"
-        app:layout_constraintTop_toTopOf="@+id/paymentAccountText" />
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/receive_payment_day_spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receive_payment_date" />
 
     <RadioGroup
-        android:id="@+id/radioGroup2"
-        android:layout_width="wrap_content"
+        android:id="@+id/receive_payment_payment_type"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paymentAccountText">
+        app:layout_constraintTop_toBottomOf="@+id/receive_payment_spinner">
 
         <RadioButton
-            android:id="@+id/paymentCheckButton"
+            android:id="@+id/receive_payment_check_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/payment_cash"
+            android:onClick="checkButtonClicked"
+            android:text="@string/payment_check"
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/paymentCashButton"
+            android:id="@+id/receive_payment_cash_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/payment_check"
+            android:onClick="cashButtonClicked"
+            android:text="@string/payment_cash"
             android:textSize="18sp" />
 
     </RadioGroup>
 
     <EditText
-        android:id="@+id/paymentCashAmount"
+        android:id="@+id/receive_payment_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="65dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/payment_cash_amount"
         android:inputType="numberDecimal"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/receive_payment_spinner" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receive_payment_payment_type" />
 
     <EditText
-        android:id="@+id/paymentCheckNumberText"
+        android:id="@+id/receive_payment_check_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/payment_check_number"
         android:inputType="number"
         android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paymentCashAmount" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receive_payment_amount" />
 
     <Button
         android:id="@+id/paymentSubmitButton"
-        style="@android:style/Widget.Button.Small"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
+        android:onClick="onSubmit"
         android:text="@string/submit_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

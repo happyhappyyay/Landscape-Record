@@ -27,13 +27,9 @@ import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
 public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Customer>{
 
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private AppDatabase db;
     private RecyclerQuickSheetAdapter adapter;
     private Spinner daySpinner;
-    private CheckBox quickSheetBox, quickSheetBox1, quickSheetBox2;
     private List<Customer> allCustomers;
-    private List<Customer> sortedCustomers;
     private EditText startDateText;
     private EditText endDateText;
     private String startDateString;
@@ -49,9 +45,8 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
         setSupportActionBar(myToolbar);
         endDateString = startDateString = Util.retrieveStringCurrentDate();
         recyclerView = findViewById(R.id.quick_sheet_recycler_view);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        db = AppDatabase.getAppDatabase(this);
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             endDateString = savedInstanceState.getString(DATE_STRING_END);
@@ -148,7 +143,6 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
         outState.putString(DATE_STRING_END, endDateString);
         outState.putString(DATE_STRING, startDateString);
 
-        // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 

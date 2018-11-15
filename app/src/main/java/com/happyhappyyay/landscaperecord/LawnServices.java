@@ -61,7 +61,7 @@ public class LawnServices extends Fragment{
     }
 
     public String markedCheckBoxes() {
-        StringBuilder servicesStringBuilder = new StringBuilder("five");
+        StringBuilder servicesStringBuilder = new StringBuilder();
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
                 String checkBoxText = c.getText().toString().toLowerCase();

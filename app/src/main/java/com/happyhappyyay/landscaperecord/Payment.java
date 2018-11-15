@@ -8,6 +8,7 @@ public class Payment {
     private List<Double> prices;
     private List<String> paymentReceiptDates;
     private List<Double> paymentReceiptAmount;
+    private List<String> checkNumbers;
     private Double amountPaid;
     private Double amountRemaining;
 
@@ -16,6 +17,7 @@ public class Payment {
     prices = new ArrayList<>();
     paymentReceiptDates = new ArrayList<>();
     paymentReceiptAmount = new ArrayList<>();
+    checkNumbers = new ArrayList<>();
     amountPaid = 0.0;
     amountRemaining = 0.0;
     }
@@ -71,6 +73,15 @@ public class Payment {
         amountRemaining -= amount;
         paymentReceiptAmount.add(amount);
         paymentReceiptDates.add(date);
+        checkNumbers.add("CASH");
+    }
+
+    public void payForServices(double amount, String date, String checkNumber) {
+        amountPaid += amount;
+        amountRemaining -= amount;
+        paymentReceiptAmount.add(amount);
+        paymentReceiptDates.add(date);
+        checkNumbers.add(checkNumber);
     }
 
     public List<String> getServices() {
@@ -79,6 +90,10 @@ public class Payment {
 
     public List<Double> getPrices() {
         return prices;
+    }
+
+    public List<String> getCheckNumbers() {
+        return checkNumbers;
     }
 
     public Double getAmountPaid() {

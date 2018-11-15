@@ -243,7 +243,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                         if (s.getServices().contains("Other ")) {
                             String otherString = "Other ";
                             int indexStart = s.getServices().indexOf(otherString) + otherString.length();
-                            int indexEnd = s.getServices().indexOf("#*#", indexStart);
+                            int indexEnd = s.getServices().indexOf(Util.DELIMITER, indexStart);
                             notes.setText(s.getServices().substring(indexStart, indexEnd));
                         }
                         else {
@@ -264,11 +264,11 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
             String servicesString = "";
             for (CheckBox c : checkBoxes) {
                 if (c.isChecked()) {
-                    servicesString += c.getText().toString() + "#*#";
+                    servicesString += c.getText().toString() + Util.DELIMITER;
                 }
             }
             if (!notes.getText().toString().isEmpty()) {
-                servicesString += "Other " + notes.getText().toString() + "#*#";
+                servicesString += "Other " + notes.getText().toString() + Util.DELIMITER;
             }
             return servicesString;
         }

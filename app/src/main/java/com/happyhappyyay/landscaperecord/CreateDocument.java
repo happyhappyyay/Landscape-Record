@@ -15,7 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import word.api.interfaces.IDocument;
 import word.w2004.Document2004;
@@ -113,18 +116,20 @@ public class CreateDocument {
         if(Environment.MEDIA_MOUNTED.equals(state)) {
             File root = Environment.getExternalStorageDirectory();
             File dir = new File(root.getAbsolutePath() + "/Billing");
-//            if (!dir.exists()) {
-//                dir.mkdir();
-//            }
-            File txtFile = new File(dir, "Billing.doc");
-
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            String monthYear = new SimpleDateFormat("MM-yy", Locale.US).format(new Date(System.currentTimeMillis()));
+            File txtFile = new File(dir, customer.getName().toUpperCase() + " " + monthYear + " Invoice.doc");
             try {
                 PrintWriter writer = new PrintWriter(txtFile);
                 writer.println(createBillingDocument(customer, services));
                 writer.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                Toast.makeText(context, "Failed to create billing document", Toast.LENGTH_LONG).show();
             }
+            Toast.makeText(context, "Billing document created for " + customer.getName(), Toast.LENGTH_LONG).show();
 
 
         }
@@ -139,7 +144,8 @@ public class CreateDocument {
         myDoc.addEle(Heading1.with(customer.getName()).withStyle().align(HeadingStyle.Align.CENTER).create());
         myDoc.addEle(Heading1.with(customer.concatenateFullAddress()).withStyle().align(HeadingStyle.Align.CENTER).create());
         if (customer.getCustomerBusiness() != null) {
-            myDoc.addEle(Heading1.with("ATTN: " + customer.getName()).withStyle().align(HeadingStyle.Align.CENTER).create());
+            myDoc.addEle(Heading1.with("ATTN: " + customer.getCustomerFirstName() + " " + customer.getCustomerLastName()).
+                    withStyle().align(HeadingStyle.Align.CENTER).create());
             myDoc.addEle(BreakLine.times(4).create());
         }
         else {

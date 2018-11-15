@@ -33,6 +33,7 @@ public class Customer implements DatabaseObjects<Customer> {
         this.customerLastName = customerLastName;
         this.customerAddress = customerAddress;
         customerServices = new ArrayList<>();
+        payment = new Payment();
     }
 
     @Ignore

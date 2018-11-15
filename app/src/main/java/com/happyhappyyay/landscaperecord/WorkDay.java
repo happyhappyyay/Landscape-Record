@@ -53,9 +53,6 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             this.hours.add(hours);
             this.userReference.add(userReference);
         }
-//        String TAG = "Size of Strings";
-//        Log.d(TAG, "number " + this.userReference.size());
-
     }
 
     public void addServices(Service service) {
@@ -82,10 +79,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             weekInMilli = cal.getTimeInMillis();
             dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
-            cal.set(Calendar.DAY_OF_MONTH, cal.getFirstDayOfWeek());
+            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
             monthInMilli = cal.getTimeInMillis();
             Month = new SimpleDateFormat("MMMM", Locale.US).format(date);
-            cal.set(Calendar.DAY_OF_YEAR, cal.getFirstDayOfWeek());
+            cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
             yearInMilli = cal.getTimeInMillis();
             Year = new SimpleDateFormat("yyyy", Locale.US).format(date);
         }
