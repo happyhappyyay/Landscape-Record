@@ -49,6 +49,16 @@ public class Customer implements DatabaseObjects<Customer> {
         customerServices.set(indexPosition, customerService);
     }
 
+    public List<String> retrieveServicesWithPrices() {
+        List<String> servicesWithPrices = new ArrayList<>();
+        for (int i = 0; i < customerServices.size(); i++) {
+            String services = customerServices.get(i).getServices();
+            Service service = customerServices.get(i);
+            servicesWithPrices.add(Util.convertLongToStringDate(service.getEndTime()) + " " + services + " $ " + payment.checkServiceForPrice(services));
+        }
+        return servicesWithPrices;
+    }
+
     public void removeService(Service customerService) {
         customerServices.remove(customerService);
     }

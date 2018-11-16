@@ -172,6 +172,7 @@
     <string name="edit_user_title">Edit User</string>
     <string name="edit_customer_title">Edit Customer</string>
     <string name="dashboard_notification_users_in">Users Logged In</string>
+    <string name="payment_queue_title">Services &amp; Payments</string>
     <!---->
 
 </resources>

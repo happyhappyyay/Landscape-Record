@@ -41,15 +41,14 @@ public class Payment {
         return servicePosition != -1;
     }
 
-    public String retrieveAllPaymentReceipts() {
-        StringBuilder paymentList = new StringBuilder();
+    public List<String> retrieveAllPaymentReceipts() {
         String paymentInformation = "";
+        List<String> strings = new ArrayList<>();
         for (int i = 0; i < paymentReceiptDates.size(); i++) {
-            paymentInformation = paymentReceiptDates.get(i) + " $" + paymentReceiptAmount.get(i) +
-                    System.getProperty ("line.separator");
-            paymentList.append(paymentInformation);
+            paymentInformation = paymentReceiptDates.get(i) + " $" + paymentReceiptAmount.get(i);
+            strings.add(paymentInformation);
         }
-        return paymentList.toString();
+        return strings;
     }
 
     public double checkServiceForPrice(String service) {
@@ -102,5 +101,13 @@ public class Payment {
 
     public Double getAmountRemaining() {
         return amountRemaining;
+    }
+
+    public List<String> getPaymentReceiptDates() {
+        return paymentReceiptDates;
+    }
+
+    public List<Double> getPaymentReceiptAmount() {
+        return paymentReceiptAmount;
     }
 }

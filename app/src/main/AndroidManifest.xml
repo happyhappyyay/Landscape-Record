@@ -61,7 +61,8 @@
         <activity android:name=".ViewContacts" />
         <activity android:name=".ViewCustomer" />
         <activity android:name=".EditCustomer" />
-        <activity android:name=".ViewUsers"></activity>
+        <activity android:name=".ViewUsers" />
+        <activity android:name=".PaymentQueue"></activity>
     </application>
 
 </manifest>

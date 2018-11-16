@@ -58,6 +58,14 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         checkNumber.setVisibility(groupPosition == 0? View.VISIBLE: View.INVISIBLE);
 
         dateStringText.setText(dateString);
+        dateStringText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    dateString = dateStringText.getText().toString();
+                }
+            }
+        });
         daySpinner = findViewById(R.id.receive_payment_day_spinner);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -216,7 +224,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public String createLogInfo() {
-        return null;
+        return customer.getName() + " PAID " + paymentAmount.getText().toString() + " " + checkNumber.getText().toString();
     }
 
     @Override
