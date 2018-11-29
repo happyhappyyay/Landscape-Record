@@ -50,7 +50,7 @@ public class AdminTools extends AppCompatActivity {
     }
 
     public void startPaymentQueue(View view) {
-        Intent intent = new Intent(this, PaymentQueue.class);
+        Intent intent = new Intent(this, ServicePricing.class);
         startActivity(intent);
     }
 }

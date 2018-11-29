@@ -20,6 +20,7 @@ public class Service {
     private long endTime;
     private int accumulatedTime;
     private boolean pause;
+    private boolean priced;
 
     public Service() {
         materials = new ArrayList<>();
@@ -31,9 +32,7 @@ public class Service {
     }
 
     public void removeMaterial(Material material) {
-        if (materials.contains(material)) {
-            materials.remove(material);
-        }
+        materials.remove(material);
     }
 
     public double calculateMaterialCost() {
@@ -160,5 +159,13 @@ public class Service {
 
     public boolean isValid() {
         return startTime > 0;
+    }
+
+    public boolean isPriced() {
+        return priced;
+    }
+
+    public void setPriced(boolean priced) {
+        this.priced = priced;
     }
 }

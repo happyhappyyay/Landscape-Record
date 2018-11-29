@@ -173,6 +173,8 @@
     <string name="edit_customer_title">Edit Customer</string>
     <string name="dashboard_notification_users_in">Users Logged In</string>
     <string name="payment_queue_title">Services &amp; Payments</string>
+    <string name="service_pricing_recycler_item_set">Confirm Price</string>
+    <string name="services_pricing_title">Services Pricing</string>
     <!---->
 
 </resources>
