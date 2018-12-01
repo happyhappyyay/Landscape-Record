@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class JobServices extends AppCompatActivity implements FragmentListener, AdapterView.OnItemSelectedListener, MultiDatabaseAccess<Customer> {
+public class JobServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MultiDatabaseAccess<Customer> {
 
     private static final String TAG = "job button";
     private ViewPager viewPager;
@@ -36,16 +36,13 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     private TabLayout tabLayout;
     private Spinner accountSpinner;
     private Spinner daySpinner;
-    private AppDatabase db;
     private String services;
-    private String pausedFragmentTitle;
     private List<Customer> allCustomers;
     private List<Customer> sortedCustomers;
     private Customer customer;
     private EditText date, manHours;
     private Service service;
     private WorkDay workDay;
-    private int adapterPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +61,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         daySpinner = findViewById(R.id.job_services_day_spinner);
         date = findViewById(R.id.job_services_date_text);
         manHours = findViewById(R.id.job_services_man_hours_text);
-        db = AppDatabase.getAppDatabase(this);
         services = "";
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -102,9 +98,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         fragAdapter.addFragment(new LandscapeServices(), "LANDSCAPING");
         fragAdapter.addFragment(new SnowServices(), "SNOW");
         viewPager.setAdapter(fragAdapter);
-//        lawnFrag.setFragmentListener(this);
-//        landFrag.setFragmentListener(this);
-//        snowFrag.setFragmentListener(this);
     }
 
     @Override
@@ -118,16 +111,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
         return Util.toolbarItemSelection(this, item);
     }
 
-    @Override
-    public void checkBoxData(String string) {
-        services = string;
-    }
-
-    @Override
-    public void pausedFragment(ServiceType serviceType) {
-        pausedFragmentTitle = serviceType.toString();
-    }
-
     public void onSubmitButton(View view) {
         if (customer != null) {
             long time = System.currentTimeMillis();
@@ -137,7 +120,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                     fragAdapter.getItem(fragAdapter.getPosition("LANDSCAPING"));
             SnowServices snowServices = (SnowServices)
                     fragAdapter.getItem(fragAdapter.getPosition("SNOW"));
-            List<Material> materials = landscapeServices.getMaterials();
 
             if (!date.getText().toString().isEmpty()) {
                 if(Util.checkDateFormat(date.getText().toString())) {
@@ -156,21 +138,21 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
                 services += lawnServices.markedCheckBoxes();
             }
 
-
             if (landscapeServices.getView() != null) {
                 services += landscapeServices.markedCheckBoxes();
-                if (materials != null) {
-                    for (int i = 0; i < materials.size(); i++) {
-                        service.addMaterial(materials.get(i));
-                    }
-                }
             }
-
             if (snowServices.getView() != null) {
                 services += snowServices.markedCheckBoxes();
             }
             service.setServices(services);
             service.setCustomerName(customer.getName());
+            try {
+                double numberOfManHours = Double.parseDouble(manHours.getText().toString());
+                service.setManHours(numberOfManHours);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             customer.addService(service);
             Util.enactMultipleDatabaseOperations(this);
         }
@@ -206,47 +188,6 @@ public class JobServices extends AppCompatActivity implements FragmentListener, 
     public void onNothingSelected(AdapterView<?> parent) {
             if (sortedCustomers.size() > 0) customer = sortedCustomers.get(0);
     }
-
-//    private void findAllCustomers() {
-//        new AsyncTask<Void, Void, List<Customer>>() {
-//            @Override
-//            protected List<Customer> doInBackground(Void... voids) {
-//                allCustomers = db.customerDao().getAllCustomers();
-//                return allCustomers;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(List<Customer> customers) {
-//                populateSpinner(customers);
-//            }
-//        }.execute();
-//    }
-//
-//    private void updateCustomer() {
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                db.customerDao().updateCustomer(customer);
-//                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.convertLongToStringDate(service.getStartTime()));
-//                if (tempWorkDay != null) {
-//                    workDay = tempWorkDay;
-//                }
-//                else {
-//                    workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
-//                    db.workDayDao().insert(workDay);
-//                }
-//                workDay.addServices(service);
-//                db.workDayDao().updateWorkDay(workDay);
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void AVoid) {
-//                Toast.makeText(getApplicationContext(), customer.getName() + " " + service.getServices(), Toast.LENGTH_LONG).show();
-//                finish();
-//            }
-//        }.execute();
-//    }
 
     private void updateWorkDay() {
         AppDatabase db = AppDatabase.getAppDatabase(this);

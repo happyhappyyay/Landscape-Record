@@ -24,8 +24,6 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
     private final int CUSTOMER = 0, SERVICE = 1;
 
     public RecyclerServicePricingAdapter(List<Customer> customers, Context context) {
-        String TAG = "Initialize";
-        Log.d(TAG, "start adapter");
         objects = createObjectList(customers);
         this.context = context;
     }

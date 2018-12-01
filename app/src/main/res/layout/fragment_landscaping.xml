@@ -1,265 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LandscapeServices">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_landscaping_tabLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@android:color/transparent"
+        app:tabIndicatorColor="@color/primary_dark_device_default_dark"
+        app:tabIndicatorHeight="8dp">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/land_services_delete_button"
+        <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            app:layout_constraintBottom_toTopOf="@+id/land_services_type_spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_twotone_delete_24px" />
+            android:text="@string/view_services_text" />
 
-        <Spinner
-            android:id="@+id/land_services_dump_type_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="4dp"
-            android:entries="@array/types_of_materials"
-            app:layout_constraintBottom_toTopOf="@+id/land_services_other_text"
-            app:layout_constraintEnd_toStartOf="@+id/land_services_dump_amount"
-            app:layout_constraintStart_toEndOf="@+id/land_services_dump"
-            app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
-
-        <TextView
-            android:id="@+id/textView16"
+        <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="@string/lawn_services_other"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/gridLayout"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="@string/fragment_landscaping_material_title" />
 
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="@string/land_services_materials"
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.design.widget.TabLayout>
 
-        <CheckBox
-            android:id="@+id/land_services_dump"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/land_services_dump"
-            android:textSize="18sp"
-            app:layout_column="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gridLayout"
-            app:layout_row="2" />
-
-        <CheckBox
-            android:id="@+id/land_services_other"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:text="@string/lawn_services_other"
-            android:textSize="18sp"
-            app:layout_column="2"
-            app:layout_constraintEnd_toStartOf="@+id/land_services_dump_amount"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_dump"
-            app:layout_row="3" />
-
-        <Button
-            android:id="@+id/land_services_remove_material_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/remove_button_material"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_material_price_text" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/land_services_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="94dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
-            android:background="@drawable/border"
-            android:scrollbars="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView14"
-            tools:listitem="@android:layout/simple_spinner_item">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <EditText
-            android:id="@+id/land_services_material_name_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/land_services_material_name"
-            android:inputType="textPersonName"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/land_services_type_spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_recycler_view" />
-
-        <EditText
-            android:id="@+id/land_services_material_quantity_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/land_services_quantity"
-            android:inputType="numberDecimal"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/land_services_measure_spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_material_name_text" />
-
-        <EditText
-            android:id="@+id/land_services_material_price_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/material_price"
-            android:inputType="numberDecimal"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/land_services_measure_spinner"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_type_spinner" />
-
-        <Spinner
-            android:id="@+id/land_services_type_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:entries="@array/types_of_materials"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_recycler_view" />
-
-        <Spinner
-            android:id="@+id/land_services_measure_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:entries="@array/measurements_for_materials"
-            app:layout_constraintEnd_toStartOf="@+id/land_services_material_price_text"
-            app:layout_constraintStart_toEndOf="@+id/land_services_material_quantity_text"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_material_name_text" />
-
-        <android.support.v7.widget.GridLayout
-            android:id="@+id/gridLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_add_material_button">
-
-            <CheckBox
-                android:id="@+id/land_services_edging"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/land_services_edging"
-                android:textSize="18sp"
-                app:layout_column="1"
-                app:layout_row="0" />
-
-            <CheckBox
-                android:id="@+id/land_services_drainage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/land_services_drainage"
-                android:textSize="18sp"
-                app:layout_column="0"
-                app:layout_row="0" />
-
-            <CheckBox
-                android:id="@+id/land_services_till"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/land_services_till"
-                android:textSize="18sp"
-                app:layout_column="2"
-                app:layout_row="0" />
-
-        </android.support.v7.widget.GridLayout>
-
-        <Button
-            android:id="@+id/land_services_add_material_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/button_add_material"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_material_price_text" />
-
-        <EditText
-            android:id="@+id/land_services_dump_amount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ems="10"
-            android:hint="@string/land_services_quantity"
-            android:inputType="numberDecimal"
-            android:textSize="12sp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/land_services_dump_spinner_measurement"
-            app:layout_constraintStart_toEndOf="@+id/land_services_dump_type_spinner"
-            app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
-
-        <EditText
-            android:id="@+id/land_services_other_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ems="10"
-            android:hint="@string/job_activity_fragment_other"
-            android:inputType="text"
-            android:textSize="12sp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/land_services_dump"
-            app:layout_constraintTop_toBottomOf="@+id/land_services_dump_amount" />
-
-        <Spinner
-            android:id="@+id/land_services_dump_spinner_measurement"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:entries="@array/measurements_for_materials"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/land_services_other_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/land_services_dump_amount"
-            app:layout_constraintTop_toTopOf="@+id/land_services_dump_amount" />
-
-    </android.support.constraint.ConstraintLayout>
-
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_landscaping_view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_landscaping_tabLayout" />
+</android.support.constraint.ConstraintLayout>
