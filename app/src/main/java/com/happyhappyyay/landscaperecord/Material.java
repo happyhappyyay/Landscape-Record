@@ -1,6 +1,9 @@
 package com.happyhappyyay.landscaperecord;
 
-public class Material {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Material implements Parcelable {
 
     private String materialName;
     private double materialPrice;
@@ -13,6 +16,25 @@ public class Material {
         this.materialName = materialName;
         this.materialType = materialType;
         this.addMaterial = addMaterial;
+    }
+
+    public static final Parcelable.Creator<Material> CREATOR = new Parcelable.Creator<Material>() {
+        public Material createFromParcel(Parcel in) {
+            return new Material(in);
+        }
+
+        public Material[] newArray(int size) {
+            return new Material[size];
+        }
+    };
+
+    public Material(Parcel in) {
+        materialName = in.readString();
+        materialPrice = in.readDouble();
+        materialType = in.readString();
+        addMaterial = in.readByte() != 0;
+        materialQuantity = in.readDouble();
+        materialMeasurement = in.readString();
     }
 
     public String getMaterialName() {
@@ -88,5 +110,20 @@ public class Material {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(materialName);
+        parcel.writeDouble(materialPrice);
+        parcel.writeString(materialType);
+        parcel.writeByte((byte) (addMaterial? 1 : 0));
+        parcel.writeDouble(materialQuantity);
+        parcel.writeString(materialMeasurement);
     }
 }

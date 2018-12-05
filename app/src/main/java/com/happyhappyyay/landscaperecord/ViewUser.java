@@ -1,23 +1,17 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
-
-import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
 
 public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> {
     private int userID;
@@ -65,7 +59,7 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
     }
 
     private void deleteUser() {
-            if (!user.equals(Authentication.getAuthentication(this).getUser())) {
+            if (!user.equals(Authentication.getAuthentication().getUser())) {
                 Util.deleteObject(this, Util.USER_REFERENCE, user);
                 //        new AsyncTask<User, Void, Void>() {
                 //            @Override

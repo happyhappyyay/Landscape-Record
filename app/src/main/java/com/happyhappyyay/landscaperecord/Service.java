@@ -1,15 +1,23 @@
 package com.happyhappyyay.landscaperecord;
 
-import java.text.SimpleDateFormat;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class Service {
+public class Service implements Parcelable {
 
+    public static final Parcelable.Creator<Service> CREATOR = new Parcelable.Creator<Service>() {
+        public Service createFromParcel(Parcel in) {
+            return new Service(in);
+        }
+
+        public Service[] newArray(int size) {
+            return new Service[size];
+        }
+    };
     private int serviceID;
-    private ServiceType serviceType;
     private String services, username, customerName;
     private double materialCost;
     private double manHours;
@@ -18,13 +26,32 @@ public class Service {
     //    TODO: get pause time, then pass time difference of pause and restart to accumulated time subtract from man hours
     private long startTime;
     private long endTime;
-    private int accumulatedTime;
-    private boolean pause;
+    private static int idCount = 0;
     private boolean priced;
+//    private int accumulatedTime;
+    private boolean pause;
 
     public Service() {
         materials = new ArrayList<>();
         pause = true;
+        serviceID = idCount++;
+    }
+
+    public Service(Parcel in) {
+        idCount = in.readInt();
+        serviceID = in.readInt();
+        services = in.readString();
+        username = in.readString();
+        customerName = in.readString();
+        materialCost = in.readDouble();
+        manHours = in.readDouble();
+        mileage = in.readDouble();
+        materials = new ArrayList<>();
+        in.readTypedList(materials, Material.CREATOR);
+        startTime = in.readLong();
+        endTime = in.readLong();
+        pause = in.readByte() != 0;
+        priced = in.readByte() != 0;
     }
 
     public void addMaterial(Material material) {
@@ -61,14 +88,6 @@ public class Service {
         return dateMessage;
     }
 
-    public ServiceType getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(ServiceType serviceType) {
-        this.serviceType = serviceType;
-    }
-
     public String getServices() {
         return services;
     }
@@ -91,14 +110,6 @@ public class Service {
 
     public void setManHours(double manHours) {
         this.manHours = manHours;
-    }
-
-    public List<Material> getMaterials() {
-        return materials;
-    }
-
-    public void setMaterials(List<Material> materials) {
-        this.materials = materials;
     }
 
     public long getStartTime() {
@@ -167,5 +178,35 @@ public class Service {
 
     public void setPriced(boolean priced) {
         this.priced = priced;
+    }
+
+    public List<Material> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(List<Material> materials) {
+        this.materials = materials;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(idCount);
+        parcel.writeInt(serviceID);
+        parcel.writeString(services);
+        parcel.writeString(username);
+        parcel.writeString(customerName);
+        parcel.writeDouble(materialCost);
+        parcel.writeDouble(manHours);
+        parcel.writeDouble(mileage);
+        parcel.writeTypedList(materials);
+        parcel.writeLong(startTime);
+        parcel.writeLong(endTime);
+        parcel.writeByte((byte) (pause? 1:0));
+        parcel.writeByte((byte) (priced? 1:0));
     }
 }

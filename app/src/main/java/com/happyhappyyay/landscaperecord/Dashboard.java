@@ -9,10 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,11 +26,11 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        User user = Authentication.getAuthentication(this).getUser();
+        User user = Authentication.getAuthentication().getUser();
         TextView userLoggedIn;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
         paymentNotification = findViewById(R.id.dashboard_payments_notification);
         paymentNotificationText = findViewById(R.id.dashboard_payments_notification_text);
@@ -100,7 +97,7 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
         else {
             checkedInNotification.setTextColor(GREEN);
         }
-        if(Authentication.getAuthentication(this).getUser().isAdmin()) {
+        if(Authentication.getAuthentication().getUser().isAdmin()) {
             hoursNotification.setText(String.format(Locale.US, "%d", anotherCounterVariable));
             if(anotherCounterVariable > 0) {
                 hoursNotification.setTextColor(RED);

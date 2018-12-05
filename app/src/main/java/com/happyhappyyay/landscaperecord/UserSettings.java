@@ -1,7 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 public class UserSettings extends AppCompatActivity {
@@ -14,7 +14,7 @@ public class UserSettings extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_settings);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         user = authentication.getUser();
         username = findViewById(R.id.user_settings_username);
         username.setText(user.getName());

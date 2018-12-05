@@ -1,12 +1,9 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,7 +107,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
 
     @Override
     public void createCustomLog() {
-        String userName = Authentication.getAuthentication(context).getUser().getName();
+        String userName = Authentication.getAuthentication().getUser().getName();
         LogActivity log = new LogActivity(userName, customer.getName(), LogActivityAction.ADD.ordinal(), LogActivityType.SERVICES.ordinal());
         Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
     }

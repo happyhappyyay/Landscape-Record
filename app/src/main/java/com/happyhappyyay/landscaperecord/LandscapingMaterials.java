@@ -23,10 +23,6 @@ public class LandscapingMaterials extends Fragment {
     private EditText materialNameEText, materialQuantityEText, materialPriceEText;
     private Spinner materialMeasurementSpinner, materialTypeSpinner;
 
-    public static LandscapingMaterials newInstance() {
-        return new LandscapingMaterials();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -34,7 +30,12 @@ public class LandscapingMaterials extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.landscaping_materials_recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerMaterialAdapter();
+        if(mViewModel != null) {
+            adapter = new RecyclerMaterialAdapter(mViewModel.getMaterials());
+        }
+        else {
+            adapter = new RecyclerMaterialAdapter();
+        }
         recyclerView.setAdapter(adapter);
         materialNameEText = view.findViewById(R.id.landscaping_materials_material_name_text);
         materialPriceEText = view.findViewById(R.id.landscaping_materials_material_price_text);
@@ -63,6 +64,11 @@ public class LandscapingMaterials extends Fragment {
                 }
             }
         });
+        List<Material> materials = ExistingService.getExistingService().getMaterials();
+        if (materials != null) {
+            adapter.setMaterials(materials);
+            ExistingService.getExistingService().clearMaterials();
+        }
         setRetainInstance(true);
         return view;
     }
@@ -119,11 +125,21 @@ public class LandscapingMaterials extends Fragment {
         return servicesStringBuilder.toString();
     }
 
+    public List<Material> getMaterials() {
+        return  adapter.getMaterials();
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LandscapingMaterialsViewModel.class);
-        // TODO: Use the ViewModel
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        mViewModel.setMaterials(adapter.getMaterials());
+        super.onSaveInstanceState(outState);
     }
 
 }

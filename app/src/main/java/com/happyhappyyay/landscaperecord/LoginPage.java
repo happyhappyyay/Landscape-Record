@@ -2,7 +2,6 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,7 +20,7 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         username = findViewById(R.id.login_page_username);
         password = findViewById(R.id.login_page_password);
     }

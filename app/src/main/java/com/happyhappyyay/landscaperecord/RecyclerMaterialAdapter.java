@@ -37,6 +37,12 @@ public class RecyclerMaterialAdapter extends RecyclerView.Adapter {
         return materials;
     }
 
+    public void setMaterials(List<Material> materials) {
+        this.materials = materials;
+        notifyDataSetChanged();
+
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -77,7 +83,7 @@ public class RecyclerMaterialAdapter extends RecyclerView.Adapter {
 
         public void bindView(final int position) {
 
-            Material material = materials.get(position);
+            final Material material = materials.get(position);
             String quantity = Double.toString(material.getMaterialQuantity()) + material.getMaterialMeasurement();
             String price = Double.toString(material.getMaterialPrice());
             nameText.setText(material.getMaterialName());

@@ -1,6 +1,9 @@
 package com.happyhappyyay.landscaperecord;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -14,9 +17,11 @@ import java.util.List;
 public class RecyclerServiceAdapter extends Adapter {
     private static final String TAG = "selected for work";
     protected List<Service> services;
+    private Context context;
 
-    public RecyclerServiceAdapter(List<Service> services) {
+    public RecyclerServiceAdapter(List<Service> services, Context context) {
         this.services = services;
+        this.context = context;
     }
 
     @NonNull
@@ -47,7 +52,7 @@ public class RecyclerServiceAdapter extends Adapter {
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
         public TextView customerText, dateText, stateText, usernameText, manHoursText, mileageText,
-        servicesText;
+        servicesText, editServices;
 
 
         public ListViewHolder(View view) {
@@ -59,10 +64,11 @@ public class RecyclerServiceAdapter extends Adapter {
             manHoursText = view.findViewById(R.id.view_services_man_hours_text);
             mileageText = view.findViewById(R.id.view_services_mileage_text);
             servicesText = view.findViewById(R.id.view_services_services_text);
+            editServices = view.findViewById(R.id.view_services_item_edit);
         }
 
         public void bindView(int position) {
-            Service service = services.get(position);
+            final Service service = services.get(position);
             String startToEndDate = service.convertStartTimeToDateString() + " - " + service.convertEndTimeToDateString();
             String manHoursString = Double.toString(service.getManHours()) + "hrs";
             String mileageString = Double.toString(service.getMileage()) + "mi";
@@ -75,6 +81,17 @@ public class RecyclerServiceAdapter extends Adapter {
             manHoursText.setText(manHoursString);
             mileageText.setText(mileageString);
             servicesText.setText(services);
+            editServices.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle b = new Bundle();
+                    b.putParcelable("SERVICE", service);
+                    Intent intent = new Intent(context, JobServices.class);
+                    intent.putExtra("bundle", b);
+                    context.startActivity(intent);
+
+                }
+            });
 
         }
 

@@ -3,13 +3,11 @@ package com.happyhappyyay.landscaperecord;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         customerMileage = findViewById(R.id.view_customer_mileage);
         customerDay = findViewById(R.id.view_customer_day);
         customerDisplayName = findViewById(R.id.view_customer_name);
-        Authentication authentication = Authentication.getAuthentication(this);
+        Authentication authentication = Authentication.getAuthentication();
         Intent intent = getIntent();
         customerID = intent.getIntExtra("CUSTOMER_ID", 0);
         if (savedInstanceState != null) {

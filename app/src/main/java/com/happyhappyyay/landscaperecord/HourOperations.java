@@ -2,11 +2,9 @@ package com.happyhappyyay.landscaperecord;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +38,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         Toolbar myToolbar = findViewById(R.id.hour_operations_toolbar);
         setSupportActionBar(myToolbar);
         hours = findViewById(R.id.hour_operations_hours_text);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         db = AppDatabase.getAppDatabase(this);
         if (savedInstanceState != null) {
             // Restore value of members from saved state
@@ -167,9 +165,6 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (users != null) {
-            Toast.makeText(parent.getContext(),
-                    "OnItemSelectedListener : " + parent.getItemAtPosition(position).toString(),
-                    Toast.LENGTH_SHORT).show();
             user = users.get(position);
             adapterPosition = position;
         }

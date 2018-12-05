@@ -1,10 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,7 +28,7 @@ public class DeleteUser extends AppCompatActivity implements AdapterView.OnItemS
         Toolbar myToolbar = findViewById(R.id.delete_user_toolbar);
         setSupportActionBar(myToolbar);
         db = AppDatabase.getAppDatabase(this);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);

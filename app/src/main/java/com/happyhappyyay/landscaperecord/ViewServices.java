@@ -1,33 +1,29 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Comparator;
+import java.util.List;
 
 import static com.happyhappyyay.landscaperecord.HourOperations.DATE_STRING;
 import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
 
 public class ViewServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatabaseAccess<Customer> {
 
-    private RecyclerView recyclerView;
     private RecyclerServiceAdapter adapter;
     private RadioButton allCheckBox, inProgressCheckBox, customerCheckBox, endDateBox,
     startDateBox;
@@ -47,14 +43,10 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        RecyclerView.LayoutManager layoutManager;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_services);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         services = new ArrayList<>();
-        recyclerView = findViewById(R.id.view_services_recycler_view);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
         allCheckBox = findViewById(R.id.view_services_all_box);
         inProgressCheckBox = findViewById(R.id.view_services_in_progress_box);
         customerCheckBox = findViewById(R.id.view_services_customer_box);
@@ -366,7 +358,10 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         else {
             services = sortServicesByStartTime(services);
         }
-        adapter = new RecyclerServiceAdapter(services);
+        RecyclerView recyclerView = findViewById(R.id.view_services_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new RecyclerServiceAdapter(services, this);
         recyclerView.setAdapter(adapter);
         populateSpinner(customers);
     }

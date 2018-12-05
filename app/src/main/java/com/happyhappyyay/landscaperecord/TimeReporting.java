@@ -3,7 +3,6 @@ package com.happyhappyyay.landscaperecord;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.cloudant.sync.documentstore.DocumentStore;
-import com.cloudant.sync.documentstore.DocumentStoreNotOpenedException;
-import com.cloudant.sync.replication.Replicator;
-import com.cloudant.sync.replication.ReplicatorBuilder;
-
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class TimeReporting extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MultiDatabaseAccess<User>,
@@ -49,7 +40,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
         Toolbar myToolbar = findViewById(R.id.time_reporting_toolbar);
         setSupportActionBar(myToolbar);
         db = AppDatabase.getAppDatabase(this);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         user = authentication.getUser();
         if (user != null) {
             if (user.getStartTime() > 0) {

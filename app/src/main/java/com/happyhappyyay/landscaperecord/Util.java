@@ -50,8 +50,8 @@ public class Util {
         }
     }
 
-    public static Authentication getAuthentication(Context context) {
-       return Authentication.getAuthentication(context);
+    public static Authentication getAuthentication() {
+       return Authentication.getAuthentication();
     }
 
     private static void goToDashboard(Context context) {
@@ -256,7 +256,7 @@ public class Util {
             @Override
             protected Void doInBackground(Void... Voids) {
                 AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                Authentication authentication = Util.getAuthentication(access.getContext());
+                Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
                     LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
@@ -279,7 +279,7 @@ public class Util {
             @Override
             protected Void doInBackground(Void... Voids) {
                 AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                Authentication authentication = Util.getAuthentication(access.getContext());
+                Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
                     LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
@@ -302,7 +302,7 @@ public class Util {
             @Override
             protected Void doInBackground(Void... Voids) {
                 AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                Authentication authentication = Util.getAuthentication(access.getContext());
+                Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
                     LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());

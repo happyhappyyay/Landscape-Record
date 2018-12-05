@@ -12,19 +12,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 public class LandscapeServices extends Fragment {
     LandscapingMaterials landscapingMaterials;
     LandscapingOther  landscapingOther;
+
 
     public LandscapeServices() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        landscapingMaterials = new LandscapingMaterials();
+        landscapingOther = new LandscapingOther();
         super.onCreate(savedInstanceState);
     }
 
@@ -40,6 +41,22 @@ public class LandscapeServices extends Fragment {
         return view;
     }
 
+    public LandscapingMaterials getLandscapingMaterials() {
+        return landscapingMaterials;
+    }
+
+    public void setLandscapingMaterials(LandscapingMaterials landscapingMaterials) {
+        this.landscapingMaterials = landscapingMaterials;
+    }
+
+    public LandscapingOther getLandscapingOther() {
+        return landscapingOther;
+    }
+
+    public void setLandscapingOther(LandscapingOther landscapingOther) {
+        this.landscapingOther = landscapingOther;
+    }
+
     public String markedCheckBoxes() {
         StringBuilder servicesStringBuilder = new StringBuilder();
 
@@ -47,18 +64,21 @@ public class LandscapeServices extends Fragment {
             servicesStringBuilder.append(landscapingOther.markedCheckBoxes());
         }
 
-        if (landscapingMaterials.getView() != null) {
+
             servicesStringBuilder.append(landscapingMaterials.markedCheckBoxes());
-        }
+
         return servicesStringBuilder.toString();
+    }
+
+    public List<Material> getMaterials() {
+        return landscapingMaterials.getMaterials();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         final int NUM_PAGES = 2;
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
-            landscapingMaterials = new LandscapingMaterials();
-            landscapingOther = new LandscapingOther();
+
         }
 
         @Override

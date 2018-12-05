@@ -28,7 +28,7 @@ public class MainMenu extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_menu);
         Toolbar myToolbar = findViewById(R.id.main_menu_toolbar);
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         user = authentication.getUser();
         setSupportActionBar(myToolbar);
         adminToolsButton = findViewById(R.id.admin_tools_button);
@@ -40,7 +40,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void checkInButtonVisibility() {
-        authentication = Authentication.getAuthentication(this);
+        authentication = Authentication.getAuthentication();
         user = authentication.getUser();
         checkedOutButton.setVisibility(user.getStartTime() <= 0 ? View.GONE : View.VISIBLE);
         checkedInButton.setVisibility(user.getStartTime() <= 0 ? View.VISIBLE : View.GONE);
