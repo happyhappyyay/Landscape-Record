@@ -3,68 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/border">
 
-    <LinearLayout
-        android:id="@+id/quick_sheet_layout"
+    <Button
+        android:id="@+id/quick_sheet_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:text="@string/quick_sheet_item_start"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_sheet_check_box3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/quick_sheet_check_box3"
+        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_address_text" />
+
+    <CheckBox
+        android:id="@+id/quick_sheet_check_box3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:gravity="top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_weight="1.2"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/quick_sheet_button"
+        app:layout_constraintStart_toEndOf="@+id/quick_sheet_check_box2"
+        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_address_text" />
+
+    <CheckBox
+        android:id="@+id/quick_sheet_check_box2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/quick_sheet_check_box3"
+        app:layout_constraintStart_toEndOf="@+id/quick_sheet_check_box1"
+        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_address_text" />
+
+    <CheckBox
+        android:id="@+id/quick_sheet_check_box1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/quick_sheet_check_box2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_address_text" />
 
-        <TextView
-            android:id="@+id/quick_sheet_address_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="12300 S aardvark  artichoke ln"
-            android:textSize="12sp" />
+    <TextView
+        android:id="@+id/quick_sheet_address_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:foreground="@drawable/border"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@tools:sample/full_names" />
 
-        <CheckBox
-            android:id="@+id/quick_sheet_check_box1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:text="Cut"
-            android:textSize="8sp" />
-
-        <CheckBox
-            android:id="@+id/quick_sheet_check_box2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:text="Spray"
-            android:textSize="8sp" />
-
-        <CheckBox
-            android:id="@+id/quick_sheet_check_box3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:text="Prune"
-            android:textSize="8sp" />
-
-        <EditText
-            android:id="@+id/quick_sheet_notes_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:ems="10"
-            android:hint="Notes"
-            android:inputType="textMultiLine"
-            android:textSize="8sp" />
-
-        <Button
-            android:id="@+id/quick_sheet_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:text="@string/quick_sheet_item_start"
-            android:textSize="8sp" />
-
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

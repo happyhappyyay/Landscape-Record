@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +28,6 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     private Customer customer;
     private Context context;
     private Service service;
-    private WorkDay workDay;
 
     public RecyclerQuickSheetAdapter (List<Customer> customers, Context context, String startDateString, String endDateString) {
         this.customers = customers;
@@ -89,6 +86,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
 
     @Override
     public void accessDatabaseMultipleTimes() {
+        WorkDay workDay;
         AppDatabase db = AppDatabase.getAppDatabase(context);
         Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(customer, db);
         if(service != null) {
@@ -113,20 +111,16 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView name;
-        public LinearLayout linearLayout;
         private Button jobActionButton;
         private CheckBox checkBox1, checkBox2, checkBox3;
         List<CheckBox> checkBoxes;
-        private EditText notes;
 
 
 
         public ListViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.quick_sheet_address_text);
-            linearLayout = view.findViewById(R.id.quick_sheet_layout);
             jobActionButton = view.findViewById(R.id.quick_sheet_button);
             jobActionButton.setOnClickListener(
                     new View.OnClickListener() {
@@ -181,7 +175,18 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                                 if (!jobActionButton.getText().toString().equals("✓")) {
                                     if (!flagDifferentEndTime) {
                                         jobActionButton.setText("✓");
-                                        tempService.setServices(servicesString);
+                                        String tempServiceString = tempService.getServices();
+                                        for(CheckBox c: checkBoxes) {
+                                            String checkBoxText = c.getText().toString();
+                                            int startIndex = tempServiceString.indexOf(checkBoxText);
+                                            if(startIndex != -1) {
+                                                int endIndex = startIndex + checkBoxText.length() + Util.DELIMITER.length();
+                                                String tempServicePreString = tempServiceString.substring(0, startIndex);
+                                                String tempServicePostString = tempServiceString.substring(endIndex, tempServiceString.length());
+                                                tempServiceString = tempServicePreString + tempServicePostString;
+                                            }
+                                        }
+                                        tempService.setServices(servicesString + tempServiceString);
                                         tempService.setEndTime(endTime);
                                         tempService.setManHours((tempService.getStartTime() - tempService.getEndTime()) / TimeReporting.MILLISECONDS_TO_HOURS );
                                         tempService.setPause(false);
@@ -209,7 +214,6 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
             checkBox2.setText(quickSheetItem1);
             checkBox3 = view.findViewById(R.id.quick_sheet_check_box3);
             checkBox3.setText(quickSheetItem2);
-            notes = view.findViewById(R.id.quick_sheet_notes_text);
             checkBoxes = new ArrayList<>(Arrays.asList(checkBox1, checkBox2, checkBox3));
         }
 
@@ -237,37 +241,25 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                                 c.setChecked(false);
                             }
                         }
-                        if (s.getServices().contains("Other ")) {
-                            String otherString = "Other ";
-                            int indexStart = s.getServices().indexOf(otherString) + otherString.length();
-                            int indexEnd = s.getServices().indexOf(Util.DELIMITER, indexStart);
-                            notes.setText(s.getServices().substring(indexStart, indexEnd));
-                        }
-                        else {
-                            notes.setText("");
-                        }
                     }
                     if (!existingService) {
                         jobActionButton.setText("Start");
                         for (CheckBox c : checkBoxes) {
                             c.setChecked(false);
                         }
-                        notes.setText("");
                     }
                 }
             }
         }
         private String updateCheckBoxes() {
-            String servicesString = "";
+            StringBuilder stringBuilder = new StringBuilder();
             for (CheckBox c : checkBoxes) {
                 if (c.isChecked()) {
-                    servicesString += c.getText().toString() + Util.DELIMITER;
+                    String checkBoxTextForService = c.getText().toString() + Util.DELIMITER;
+                    stringBuilder.append(checkBoxTextForService);
                 }
             }
-            if (!notes.getText().toString().isEmpty()) {
-                servicesString += "Other " + notes.getText().toString() + Util.DELIMITER;
-            }
-            return servicesString;
+            return stringBuilder.toString();
         }
     }
 
@@ -275,28 +267,5 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
 
     private void updateCustomer() {
         Util.enactMultipleDatabaseOperations(this);
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                db.customerDao().updateCustomer(customer);
-//                if(service != null) {
-//                    WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(endDateString);
-//                    if (tempWorkDay != null) {
-//                        workDay = tempWorkDay;
-//                    } else {
-//                        workDay = new WorkDay(endDateString);
-//                        db.workDayDao().insert(workDay);
-//                    }
-//                    workDay.addServices(service);
-//                    db.workDayDao().updateWorkDay(workDay);
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//            }
-//        }.execute();
     }
 }

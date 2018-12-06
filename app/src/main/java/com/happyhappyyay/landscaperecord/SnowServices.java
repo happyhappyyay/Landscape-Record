@@ -58,7 +58,6 @@ public class SnowServices extends Fragment {
         final String SPACE = " ";
         final String TYPE = "Snow";
         final String OTHER_SEPARATOR = ": ";
-        otherText.setText(existingServices);
         for (CheckBox c : checkBoxes) {
             String checkBoxText = c.getText().toString();
             if (existingServices.toLowerCase().contains(checkBoxText.toLowerCase())) {
