@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="76" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,9 +33,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="C:\Users\King Denis\Downloads\res-drawable (2)\app_launch.xml" />
+                                      <entry key="foregroundImage" value="C:\Users\King Denis\Downloads\res-drawable (3)\drawing.xml" />
                                       <entry key="generateRoundIcon" value="false" />
-                                      <entry key="legacyIconShape" value="HRECT" />
+                                      <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="outputName" value="first_launcher" />
                                       <entry key="previewDensity" value="MEDIUM" />
                                       <entry key="webIconShape" value="NONE" />

@@ -24,8 +24,35 @@
         android:id="@+id/service_pricing_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/service_pricing_months_spinner" />
+
+    <Spinner
+        android:id="@+id/service_pricing_months_spinner"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:entries="@array/months_of_the_year"
+        android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/service_pricing_customer_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/admin_tools_toolbar2" />
+
+    <Spinner
+        android:id="@+id/service_pricing_customer_spinner"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/service_pricing_months_spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/admin_tools_toolbar2" />
 </android.support.constraint.ConstraintLayout>

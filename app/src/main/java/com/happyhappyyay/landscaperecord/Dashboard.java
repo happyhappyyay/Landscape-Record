@@ -20,7 +20,6 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
     private TextView checkInTime, paymentNotification, paymentNotificationText, billingNotification,
             billingNotificationText, hoursNotification, hoursNotificationText,
             notificationNotification, checkedInNotification, inProgressNotification;
-    private Authentication authentication;
     private List<User> users;
     private List<Customer> customers;
 
@@ -30,7 +29,6 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
         TextView userLoggedIn;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        authentication = Authentication.getAuthentication();
         checkInTime = findViewById(R.id.dashboard_checked_in_time_text);
         paymentNotification = findViewById(R.id.dashboard_payments_notification);
         paymentNotificationText = findViewById(R.id.dashboard_payments_notification_text);
@@ -48,7 +46,7 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
         checkedInNotification = findViewById(R.id.dashboard_users_in_notification);
         inProgressNotification = findViewById(R.id.dashboard_in_progress_notification);
         userLoggedIn = findViewById(R.id.dashboard_username);
-        userLoggedIn.setText(authentication.getUser().toString());
+        userLoggedIn.setText(Authentication.getAuthentication().getUser().toString());
         Toolbar myToolbar = findViewById(R.id.dashboard_toolbar);
         setSupportActionBar(myToolbar);
         Util.enactMultipleDatabaseOperationsPostExecute(this);
@@ -70,8 +68,8 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
     }
 
     private void setNotifications(){
-        String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDateTime(authentication.getUser().getStartTime());
-        if (authentication.getUser().getStartTime() != 0) {
+        String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDateTime(Authentication.getAuthentication().getUser().getStartTime());
+        if (Authentication.getAuthentication().getUser().getStartTime() != 0) {
             checkInTime.setText(checkedInDateTime);
         }
         else {

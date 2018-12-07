@@ -1,8 +1,9 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,8 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,8 +29,9 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     private List<Customer> allCustomers;
     private List<Customer> sortedCustomers;
     private EditText checkNumber, paymentAmount;
-    private Spinner daySpinner;
+    private Spinner daySpinner, serviceSpinner;
     private Customer customer;
+    private List<Service> payableServices;
 
     public static final String DAY_POSITION = "Day Adapter Position";
     public static final String GROUP_POSITION = "Radio Group Position";
@@ -42,7 +42,16 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_receive_payment);
         checkNumber = findViewById(R.id.receive_payment_check_number);
         paymentAmount = findViewById(R.id.receive_payment_amount);
+        paymentAmount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!b) {
+                    populateSpinner(customer);
+                }
+            }
+        });
         allCustomers = new ArrayList<>();
+        payableServices = new ArrayList<>();
         dateStringText = findViewById(R.id.receive_payment_date);
         dateString = Util.retrieveStringCurrentDate();
         Toolbar myToolbar = findViewById(R.id.payment_toolbar);
@@ -66,6 +75,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                 }
             }
         });
+        serviceSpinner = findViewById(R.id.receive_payment_service_spinner);
         daySpinner = findViewById(R.id.receive_payment_day_spinner);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -112,6 +122,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void onSubmit(View view) {
+        boolean checkType = groupPosition == 0;
         String payment = paymentAmount.getText().toString();
         if (!payment.isEmpty()) {
             Double amount = Double.parseDouble(payment);
@@ -122,16 +133,17 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                         if(!checkNumberText.isEmpty()) {
                             customer.getPayment().payForServices(amount, dateString, checkNumberText);
                             Toast.makeText(this, customer.getName() +  " " + amount, Toast.LENGTH_LONG).show();
-                            Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
+                            checkForPaymentMatch(checkType);
                         }
                         Toast.makeText(this, "The check number is blank. Please reenter " +
                                 "the check number.", Toast.LENGTH_LONG).show();
+
+
                     }
                     else if(groupPosition == 1){
-                        customer.getPayment().payForServices(amount,dateString);
+                        customer.getPayment().payForServices(amount, dateString);
                         Toast.makeText(this, customer.getName() +  " " + amount, Toast.LENGTH_LONG).show();
-                        Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
-
+                        checkForPaymentMatch(checkType);
                     }
                 }
             }
@@ -143,6 +155,54 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
             Toast.makeText(this, "Please enter in an amount for the payment.", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void checkForPaymentMatch(final boolean checkType) {
+        final int ZERO_POSITION = 1;
+        final Service service = payableServices.get(serviceSpinner.getSelectedItemPosition() - ZERO_POSITION);
+        double priceOfService = customer.getPayment().checkServiceForPrice(service.getServices());
+        if(priceOfService == Double.parseDouble(paymentAmount.getText().toString()) & priceOfService != -1) {
+            service.setPaid(true);
+            if(checkType) {
+                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
+            }
+            else {
+                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
+            }
+            customer.updateService(service);
+            Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
+        }
+        else {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            if(checkType) {
+                                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
+                            }
+                            else {
+                                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
+                            }
+                            Toast.makeText(getApplicationContext(), "Have admin apply paid status to " +
+                                    "service.", Toast.LENGTH_LONG).show();
+                            Util.updateObject(ReceivePayment.this, Util.CUSTOMER_REFERENCE, customer);
+
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            Toast.makeText(getApplicationContext(), "Apply payment to the correct service " +
+                                    "or apply to general account.", Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("The payment amount does not match the selected service. Amount will be applied to the " +
+                    "general account. Proceed with payment?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
     }
 
     @Override
@@ -169,17 +229,55 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
         s.setOnItemSelectedListener(this);
-        s.setSelection(pos);
+    }
+
+    private void populateSpinner(Customer customer) {
+        List<Service> services = customer.getCustomerServices();
+        payableServices = new ArrayList<>();
+        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        };
+        final int ZERO_POSITION = 1;
+        final String GENERAL_PAY = "General Payment";
+        for(Service s: services) {
+            if(s.isPriced() & !s.isPaid()) {
+                payableServices.add(s);
+            }
+        }
+        String[] arraySpinner = new String[payableServices.size() + ZERO_POSITION];
+        for (int i = 0; i < payableServices.size()+ZERO_POSITION; i++) {
+            if(i != 0) {
+                arraySpinner[i] = payableServices.get(i-ZERO_POSITION).getServiceID() + " " +
+                        Util.convertLongToStringDate(payableServices.get(i-ZERO_POSITION).getEndTime()) + " " +
+                        payableServices.get(i-ZERO_POSITION).getServices();
+            }
+            else {
+                arraySpinner[i] = GENERAL_PAY;
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        serviceSpinner.setAdapter(adapter);
+        serviceSpinner.setOnItemSelectedListener(listener);
+        serviceSpinner.setSelection(-1);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
         if (sortedCustomers != null) {
             if(sortedCustomers.size() > 0) {
-                Toast.makeText(adapterView.getContext(),
-                        "OnItemSelectedListener : " + adapterView.getItemAtPosition(pos).toString(),
-                        Toast.LENGTH_SHORT).show();
                 customer = sortedCustomers.get(pos);
+                populateSpinner(customer);
                 adapterPosition = pos;
             }
             else {

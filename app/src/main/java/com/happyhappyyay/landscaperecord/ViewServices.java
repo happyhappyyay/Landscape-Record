@@ -46,7 +46,6 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_services);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        services = new ArrayList<>();
         allCheckBox = findViewById(R.id.view_services_all_box);
         inProgressCheckBox = findViewById(R.id.view_services_in_progress_box);
         customerCheckBox = findViewById(R.id.view_services_customer_box);
@@ -311,29 +310,6 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
 
     private void getCustomers() {
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
-//        new AsyncTask<Void, Void, List<Customer>>() {
-//            @Override
-//            protected List<Customer> doInBackground(Void... voids) {
-//                return db.customerDao().getAllCustomers();
-//            }
-//
-//            @Override
-//            protected void onPostExecute(List<Customer> allCustomers) {
-//                customers = allCustomers;
-//                for(Customer c: customers) {
-//                    services.addAll(c.getCustomerServices());
-//                }
-//                if(viewByPosition == 1) {
-//                    services = sortServicesByEndTime(services);
-//                }
-//                else {
-//                    services = sortServicesByStartTime(services);
-//                    }
-//                adapter = new RecyclerServiceAdapter(services);
-//                recyclerView.setAdapter(adapter);
-//                populateSpinner(customers);
-//            }
-//        }.execute();
     }
 
     @Override
@@ -349,20 +325,34 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
         customers = databaseObjects;
-        for(Customer c: customers) {
+        services = new ArrayList<>();
+        for (Customer c : customers) {
             services.addAll(c.getCustomerServices());
         }
-        if(viewByPosition == 1) {
+        if (viewByPosition == 1) {
             services = sortServicesByEndTime(services);
-        }
-        else {
+        } else {
             services = sortServicesByStartTime(services);
         }
-        RecyclerView recyclerView = findViewById(R.id.view_services_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerServiceAdapter(services, this);
-        recyclerView.setAdapter(adapter);
-        populateSpinner(customers);
+        if(adapter == null) {
+            RecyclerView recyclerView = findViewById(R.id.view_services_recycler_view);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            adapter = new RecyclerServiceAdapter(services, this);
+            recyclerView.setAdapter(adapter);
+            populateSpinner(customers);
+        } else {
+            adapter.setServices(services);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(adapter != null) {
+            Util.findAllObjects(this,Util.CUSTOMER_REFERENCE);
+        }
+
     }
 }

@@ -175,6 +175,12 @@ public class Util {
         return dateFormat.format(new Date(time));
     }
 
+    public static int retrieveMonthFromLong(Long time) {
+        DateFormat dateFormat = new SimpleDateFormat("MM", Locale.US);
+        String monthString = dateFormat.format(new Date(time));
+        return Integer.parseInt(monthString);
+    }
+
     public static String convertLongToStringDateTime(long time) {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
         return dateFormat.format(new Date(time));
@@ -259,8 +265,11 @@ public class Util {
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
-                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
-                    db.logDao().insert(log);
+                    if(access.createLogInfo() != null) {
+                        LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
+                        db.logDao().insert(log);
+                    }
+
                 }
                 object.deleteClassInstanceFromDatabase(objectToDelete, db);
                 return null;
@@ -282,8 +291,10 @@ public class Util {
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
-                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
-                    db.logDao().insert(log);
+                    if(access.createLogInfo() != null) {
+                        LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
+                        db.logDao().insert(log);
+                    }
                 }
                 object.updateClassInstanceFromDatabase(objectToUpdate, db);
                 return null;
@@ -305,8 +316,10 @@ public class Util {
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 if(!(object instanceof WorkDay)){
-                    LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
-                    db.logDao().insert(log);
+                    if(access.createLogInfo() != null) {
+                        LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
+                        db.logDao().insert(log);
+                    }
                 }
                 object.insertClassInstanceFromDatabase(objectToInsert, db);
                 return null;

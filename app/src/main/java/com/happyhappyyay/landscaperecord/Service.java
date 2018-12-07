@@ -30,6 +30,7 @@ public class Service implements Parcelable {
     private boolean priced;
 //    private int accumulatedTime;
     private boolean pause;
+    private boolean paid;
 
     public Service() {
         materials = new ArrayList<>();
@@ -52,6 +53,7 @@ public class Service implements Parcelable {
         endTime = in.readLong();
         pause = in.readByte() != 0;
         priced = in.readByte() != 0;
+        paid = in.readByte() != 0;
     }
 
     public void addMaterial(Material material) {
@@ -188,6 +190,14 @@ public class Service implements Parcelable {
         this.materials = materials;
     }
 
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -208,5 +218,6 @@ public class Service implements Parcelable {
         parcel.writeLong(endTime);
         parcel.writeByte((byte) (pause? 1:0));
         parcel.writeByte((byte) (priced? 1:0));
+        parcel.writeByte((byte) (paid? 1:0));
     }
 }

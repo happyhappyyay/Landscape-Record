@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,6 +77,11 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void createCheckIn(View view) {
+        boolean authenticatedUser = false;
+        if(user.getUserId() == authentication.getUser().getUserId()) {
+            Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
+            authenticatedUser = true;
+        }
         long currentTime = System.currentTimeMillis();
         double hours = (currentTime - startTime) / MILLISECONDS_TO_HOURS;
         boolean startTimeChange = false;
@@ -95,12 +99,17 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             }
         }
         if (startTimeChange) {
-            updateUser();
+            updateUser(authenticatedUser);
         }
 
     }
 
     public void createCheckOut(View view) {
+        boolean authenticatedUser = false;
+        if(user.getUserId() == authentication.getUser().getUserId()) {
+            authenticatedUser = true;
+            Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
+        }
         double currentTime = System.currentTimeMillis();
         double hours = ((currentTime - startTime) / MILLISECONDS_TO_HOURS);
 
@@ -132,7 +141,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
                 Toast.makeText(getApplicationContext(), "Checked out! " + (hours) + user.toString(), Toast.LENGTH_LONG).show();
             }
             resetStartTime();
-            updateUser();
+            updateUser(authenticatedUser);
 
         }
     }
@@ -211,7 +220,10 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 //    }
 
 
-    private void updateUser() {
+    private void updateUser(boolean authenticatedUser) {
+        if(authenticatedUser) {
+            Authentication.getAuthentication().setUser(user);
+        }
         Util.enactMultipleDatabaseOperations(this);
 //        new AsyncTask<Void, Void, Void>() {
 //            @Override
@@ -247,9 +259,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(ADAPTER_POSITION, adapterPosition);
-        Log.d(TAG, Integer.toString(adapterPosition));
-
-        // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 

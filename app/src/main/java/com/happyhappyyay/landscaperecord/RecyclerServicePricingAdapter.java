@@ -2,10 +2,8 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +20,43 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
     protected List<Object> objects;
     protected Context context;
     private final int CUSTOMER = 0, SERVICE = 1;
+    List<Customer> customers;
+    private int monthSelection;
 
-    public RecyclerServicePricingAdapter(List<Customer> customers, Context context) {
-        objects = createObjectList(customers);
+    public RecyclerServicePricingAdapter(List<Customer> customers, Context context, int monthSelection) {
+        this.customers = customers;
         this.context = context;
+        this.monthSelection = monthSelection;
+        objects = createObjectList(customers);
     }
 
     private List<Object> createObjectList(List<Customer> customers) {
         List<Object> objects = new ArrayList<>();
         for(int i = 0; i < customers.size(); i++) {
-            objects.add(customers.get(i));
             List<Service> services = customers.get(i).getCustomerServices();
-            for(int j = 0; j < services.size(); j++) {
-                if(!services.get(j).isPriced()) {
-                    objects.add(services.get(j));
+            List<Service> tempServices = new ArrayList<>();
+            for (Service s: services) {
+                if (s.getEndTime() > 0) {
+                    tempServices.add(s);
+                }
+            }
+            services = tempServices;
+            if(monthSelection != 0) {
+                List<Service>monthSelectionServices = new ArrayList<>();
+                for(Service s: services) {
+                    if(Util.retrieveMonthFromLong(s.getEndTime()) == monthSelection) {
+                        monthSelectionServices.add(s);
+                    }
+                }
+                services = monthSelectionServices;
+            }
+            if(services.size() > 0) {
+                objects.add(customers.get(i));
+
+                for (Service s: services) {
+                    if (!s.isPriced()) {
+                        objects.add(s);
+                    }
                 }
             }
         }
@@ -61,6 +82,18 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
             }
         }
         objects = newObjects;
+    }
+
+    public void updateMonthSelection(int monthSelection) {
+        this.monthSelection = monthSelection;
+        objects = createObjectList(customers);
+        notifyDataSetChanged();
+    }
+
+    public void updateCustomersSelection(List<Customer> customers) {
+        this.customers = customers;
+        objects = createObjectList(this.customers);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -123,7 +156,7 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
 
     @Override
     public String createLogInfo() {
-        return "PRICE SET";
+        return null;
     }
 
     @Override

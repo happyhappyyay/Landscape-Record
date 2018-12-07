@@ -12,7 +12,6 @@ import android.widget.TextView;
 public class MainMenu extends AppCompatActivity {
 
     private TextView checkedInButton, checkedOutButton;
-    private Authentication authentication;
     private User user;
 
     static final String SETTINGS_USER = "pref_key_username";
@@ -28,20 +27,17 @@ public class MainMenu extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_menu);
         Toolbar myToolbar = findViewById(R.id.main_menu_toolbar);
-        authentication = Authentication.getAuthentication();
-        user = authentication.getUser();
+        user = Authentication.getAuthentication().getUser();
         setSupportActionBar(myToolbar);
         adminToolsButton = findViewById(R.id.admin_tools_button);
         adminToolsButton.setVisibility(!user.isAdmin() ? View.GONE : View.VISIBLE);
         checkedInButton = findViewById(R.id.main_menu_full);
         checkedOutButton = findViewById(R.id.main_menu_empty);
-
         checkInButtonVisibility();
     }
 
     private void checkInButtonVisibility() {
-        authentication = Authentication.getAuthentication();
-        user = authentication.getUser();
+        user = Authentication.getAuthentication().getUser();
         checkedOutButton.setVisibility(user.getStartTime() <= 0 ? View.GONE : View.VISIBLE);
         checkedInButton.setVisibility(user.getStartTime() <= 0 ? View.VISIBLE : View.GONE);
     }

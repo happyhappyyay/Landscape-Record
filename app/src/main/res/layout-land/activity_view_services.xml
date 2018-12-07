@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewServices">
+
+    <Spinner
+        android:id="@+id/view_services_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/days_of_the_week"
+        android:visibility="invisible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/view_services_date_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_services_search_button" />
+
+    <EditText
+        android:id="@+id/view_services_date_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/date_time_hint"
+        android:inputType="date"
+        android:textSize="12sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/view_services_date_text_label"
+        app:layout_constraintEnd_toStartOf="@+id/view_services_search_button"
+        app:layout_constraintStart_toEndOf="@+id/view_services_date_text_label"
+        app:layout_constraintTop_toTopOf="@+id/view_services_date_text_label"
+        app:layout_constraintVertical_bias="0.466" />
+
+    <TextView
+        android:id="@+id/view_services_date_text_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/quick_sheet_date"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/textView12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_services_toolbar" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/view_services_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/AppTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/view_services_text" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup4"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:checkedButton="@+id/view_services_all_box"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup3"
+        app:layout_constraintTop_toBottomOf="@+id/textView15">
+
+        <RadioButton
+            android:id="@+id/view_services_all_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="radioButtonOptionClick"
+            android:text="@string/view_services_all"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/view_services_in_progress_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="radioButtonOptionClick"
+            android:text="@string/view_services_in_progress"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/view_services_completed_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="radioButtonOptionClick"
+            android:text="@string/view_services_completed"
+            android:textSize="12sp" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroup3"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:checkedButton="@+id/view_services_start_date_box"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textView12"
+        app:layout_constraintStart_toStartOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+        <RadioButton
+            android:id="@+id/view_services_start_date_box"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:onClick="radioButtonOptionClick"
+            android:text="@string/view_services_start_date"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/view_services_end_date_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="radioButtonOptionClick"
+            android:text="@string/view_services_end_date"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/view_services_customer_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="radioButtonOptionClick"
+            android:text="@string/view_services_customer"
+            android:textSize="12sp" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/view_services_sort_by"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_services_date_edit_text" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/view_services_view_by"
+        app:layout_constraintEnd_toEndOf="@+id/radioGroup4"
+        app:layout_constraintStart_toStartOf="@+id/radioGroup4"
+        app:layout_constraintTop_toBottomOf="@+id/view_services_search_button" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/view_services_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_services_search_button"
+        app:layout_constraintTop_toBottomOf="@+id/view_services_spinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/view_services_search_button"
+        android:layout_width="71dp"
+        android:layout_height="0dp"
+        android:onClick="checkSearchClick"
+        android:text="@string/view_services_search"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_services_date_edit_text"
+        app:layout_constraintEnd_toEndOf="@+id/radioGroup4"
+        app:layout_constraintStart_toEndOf="@+id/view_services_date_edit_text"
+        app:layout_constraintTop_toTopOf="@+id/view_services_date_edit_text" />
+
+</android.support.constraint.ConstraintLayout>
