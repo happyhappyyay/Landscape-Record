@@ -54,6 +54,7 @@
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"
+        android:inputType="textPassword"
         android:key="pref_key_dbname"
         android:selectAllOnFocus="true"
         android:singleLine="true"
@@ -62,6 +63,7 @@
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"
+        android:inputType="textPassword"
         android:key="pref_key_username"
         android:selectAllOnFocus="true"
         android:singleLine="true"
@@ -70,16 +72,18 @@
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"
-        android:key="pref_key_api_key"
+        android:inputType="textPassword"
+        android:key="pref_key_database_uri"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="@string/pref_settings_database_api_key_summary"
-        android:title="@string/pref_settings_database_api_key_title" />
+        android:summary="@string/pref_settings_database_uri_summary"
+        android:title="@string/pref_settings_database_uri_title" />
 
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"
-        android:key="pref_key_api_password"
+        android:inputType="textPassword"
+        android:key="pref_key_username_password"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/pref_settings_database_api_password_summary"

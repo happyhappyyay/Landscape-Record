@@ -255,8 +255,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         String[] arraySpinner = new String[payableServices.size() + ZERO_POSITION];
         for (int i = 0; i < payableServices.size()+ZERO_POSITION; i++) {
             if(i != 0) {
-                arraySpinner[i] = payableServices.get(i-ZERO_POSITION).getServiceID() + " " +
-                        Util.convertLongToStringDate(payableServices.get(i-ZERO_POSITION).getEndTime()) + " " +
+                arraySpinner[i] = Util.convertLongToStringDate(payableServices.get(i-ZERO_POSITION).getEndTime()) + ": " +
                         payableServices.get(i-ZERO_POSITION).getServices();
             }
             else {

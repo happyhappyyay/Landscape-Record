@@ -36,6 +36,11 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
         startActivity(intent);
     }
 
+    public void testDatabase(View view) {
+        Intent intent = new Intent(getApplicationContext(), testDatabase.class);
+        startActivity(intent);
+    }
+
     private void loginUser() {
         AppDatabase db = AppDatabase.getAppDatabase(this);
         Util.findObjectByString(this, Util.USER_REFERENCE, username.getText().toString());

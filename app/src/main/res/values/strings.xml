@@ -141,10 +141,13 @@
     <string name="pref_settings_database_username_summary">The username for the database. </string>
     <string name="pref_settings_title">Application Settings</string>
     <string name="pref_settings_database_usage_title">Online Database</string>
-    <string name="pref_settings_database_usage_summary">Enable/Disable database usage. When enabled, default setting is blank, where data is persisted to the device.</string>
-    <string name="pref_settings_database_api_key_title">Database API Key</string>
-    <string name="pref_settings_database_api_key_summary">The API key for the database.</string>
-    <string name="pref_settings_database_api_password_title">Database API Password</string>
+    <string name="pref_settings_database_usage_summary">Enable/Disable online database(mongoDB) usage.
+        When disabled, all data is saved to the device. When enabled, data is saved to the device and online
+        database.</string>
+    <string name="pref_settings_database_uri_title">Database URI</string>
+    <string name="pref_settings_database_uri_summary">The URI for the database.
+        Example: mongodb://databaseUser:databaseUserPassword@host:port/databaseName</string>
+    <string name="pref_settings_database_api_password_title">Database User Password</string>
     <string name="pref_settings_database_api_password_summary">The API password for the database.</string>
     <string name="pref_settings_datebase_name_title">Database Name</string>
     <string name="pref_settings_database_name_summary">The name of the database.</string>

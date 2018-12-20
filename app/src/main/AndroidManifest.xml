@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -63,7 +64,8 @@
         <activity android:name=".EditCustomer" />
         <activity android:name=".ViewUsers" />
         <activity android:name=".PaymentQueue" />
-        <activity android:name=".ServicePricing"></activity>
+        <activity android:name=".ServicePricing" />
+        <activity android:name=".testDatabase"></activity>
     </application>
 
 </manifest>
