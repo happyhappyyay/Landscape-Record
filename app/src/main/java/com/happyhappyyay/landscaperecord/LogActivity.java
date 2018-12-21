@@ -4,11 +4,18 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.mongodb.client.MongoDatabase;
+
+import org.bson.Document;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.mongodb.client.model.Filters.eq;
 
 //log actions performed by user
 @Entity
@@ -111,32 +118,56 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
     }
 
     @Override
-    public List<LogActivity> retrieveAllClassInstancesFromDatabase(AppDatabase db) {
-        return db.logDao().getAllLogs();
+    public List<LogActivity> retrieveAllClassInstancesFromDatabase(DatabaseOperator db) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getAllLogs();
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.LOG).find().into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 
     @Override
-    public LogActivity retrieveClassInstanceFromDatabaseID(AppDatabase db, int id) {
+    public LogActivity retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int id) {
         return null;
     }
 
     @Override
-    public LogActivity retrieveClassInstanceFromDatabaseString(AppDatabase db, String string) {
+    public LogActivity retrieveClassInstanceFromDatabaseString(DatabaseOperator db, String string) {
         return null;
     }
 
     @Override
-    public void deleteClassInstanceFromDatabase(LogActivity objectToDelete, AppDatabase db) {
-        db.logDao().deleteLog(objectToDelete);
+    public void deleteClassInstanceFromDatabase(DatabaseOperator db, LogActivity objectToDelete) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.logDao().deleteLog(objectToDelete);
+        }
+        else {
+            int idToDelete = objectToDelete.getLogID();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.LOG).deleteOne(eq("logID", idToDelete));
+        }
     }
 
     @Override
-    public void updateClassInstanceFromDatabase(LogActivity objectToUpdate, AppDatabase db) {
+    public void updateClassInstanceFromDatabase(DatabaseOperator db, LogActivity objectToUpdate) {
     }
 
     @Override
-    public void insertClassInstanceFromDatabase(LogActivity objectToInsert, AppDatabase db) {
-        db.logDao().insert(objectToInsert);
+    public void insertClassInstanceFromDatabase(DatabaseOperator db, LogActivity objectToInsert) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.logDao().insert(objectToInsert);
+        }
+        else {
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.LOG).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
+        }
     }
 
 

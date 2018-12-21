@@ -24,7 +24,6 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     private String startDateString;
     private String endDateString;
     private List<Customer> customers;
-    private AppDatabase db;
     private Customer customer;
     private Context context;
     private Service service;
@@ -34,7 +33,6 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
         if (this.customers == null) {
             this.customers = new ArrayList<>();
         }
-        db = AppDatabase.getAppDatabase(context);
         this.context = context;
         this.startDateString = startDateString;
         this.endDateString = endDateString;
@@ -86,19 +84,30 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
 
     @Override
     public void accessDatabaseMultipleTimes() {
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
+            databaseAccessMethod(db);
+
+        } catch(Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(context);
+            databaseAccessMethod(db);
+        }
+
+    }
+
+    private void databaseAccessMethod(DatabaseOperator db) {
         WorkDay workDay;
-        AppDatabase db = AppDatabase.getAppDatabase(context);
-        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(customer, db);
+        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
         if(service != null) {
             WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
             if (tempWorkDay != null) {
                 workDay = tempWorkDay;
                 workDay.addServices(service);
-                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
+                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
             } else {
                 workDay = new WorkDay(endDateString);
                 workDay.addServices(service);
-                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
             }
         }
     }
@@ -107,7 +116,14 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     public void createCustomLog() {
         String userName = Authentication.getAuthentication().getUser().getName();
         LogActivity log = new LogActivity(userName, customer.getName(), LogActivityAction.ADD.ordinal(), LogActivityType.SERVICES.ordinal());
-        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+        } catch (Exception e){
+            AppDatabase db = AppDatabase.getAppDatabase(context);
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+
+        }
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {

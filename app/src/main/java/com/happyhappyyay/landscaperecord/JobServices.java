@@ -259,19 +259,18 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
             }
     }
 
-    private void updateWorkDay() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
+    private void updateWorkDay(DatabaseOperator db) {
         WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.convertLongToStringDate(service.getStartTime()));
         if (tempWorkDay != null) {
             workDay = tempWorkDay;
             workDay.addServices(service);
-            Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
+            Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
 
         }
         else {
             workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
             workDay.addServices(service);
-            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
         }
 
     }
@@ -315,18 +314,30 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
-        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(customer, db);
-        updateWorkDay();
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+            Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
+            updateWorkDay(db);
+        } catch(Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
+            updateWorkDay(db);
+        }
     }
 
     @Override
     public void createCustomLog() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
         Authentication authentication = Authentication.getAuthentication();
         LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(), LogActivityAction.valueOf("UPDATE").ordinal(), LogActivityType.valueOf("CUSTOMER").ordinal());
-        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
-        finish();
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            finish();
+        } catch (Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            finish();
+        }
     }
 
     @Override

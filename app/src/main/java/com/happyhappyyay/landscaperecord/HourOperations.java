@@ -24,7 +24,6 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     private Authentication authentication;
     private List<User> users;
     private User user;
-    private AppDatabase db;
     private int adapterPosition;
     private EditText dateText;
     private String dateString = Util.retrieveStringCurrentDate();
@@ -39,7 +38,6 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         setSupportActionBar(myToolbar);
         hours = findViewById(R.id.hour_operations_hours_text);
         authentication = Authentication.getAuthentication();
-        db = AppDatabase.getAppDatabase(this);
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
@@ -223,7 +221,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 //        }.execute(logActivityReference);
     }
 
-    private void updateWorkDay() {
+    private void updateWorkDay(DatabaseOperator db) {
         int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
         int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
         if (logActivityReference != payLogReference) {
@@ -241,14 +239,16 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
             workDay.addUserHourReference(user.toString(), numberOfHours);
 
             if (isNewWorkDay) {
-                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
             }
             else {
-                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
+                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
             }
 
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -263,17 +263,30 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        Util.USER_REFERENCE.updateClassInstanceFromDatabase(user, db);
-        updateWorkDay();
-
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+            Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
+            updateWorkDay(db);
+        }catch (Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
+            updateWorkDay(db);
+        }
     }
 
     @Override
     public void createCustomLog() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
-        LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
-        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log,db);
-        hours.setText("");
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+            LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            hours.setText("");
+        } catch (Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            hours.setText("");
+        }
     }
 
     @Override

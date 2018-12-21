@@ -3,7 +3,9 @@ package com.happyhappyyay.landscaperecord;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+import static com.happyhappyyay.landscaperecord.OnlineDatabase.LOG;
+import static com.happyhappyyay.landscaperecord.OnlineDatabase.convertFromObjectToDocument;
 
 public class Util {
     public static final Customer CUSTOMER_REFERENCE = new Customer();
@@ -52,6 +57,11 @@ public class Util {
 
     public static Authentication getAuthentication() {
        return Authentication.getAuthentication();
+    }
+
+    private static boolean hasOnlineDatabaseEnabled(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getBoolean("pref_settings_database_usage", false);
     }
 
     private static void goToDashboard(Context context) {
@@ -243,10 +253,22 @@ public class Util {
     public static <T extends DatabaseObjects<T>> void findAllObjects(final DatabaseAccess<T> access, final DatabaseObjects<T> object)
     {
         new AsyncTask<Void, Void, List<T>>() {
+            List<T> dbObjs;
             @Override
             protected List<T> doInBackground(Void... Voids) {
-                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                return object.retrieveAllClassInstancesFromDatabase(db);
+                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                    try {
+                        OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                        dbObjs = object.retrieveAllClassInstancesFromDatabase(db);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(dbObjs == null) {
+                    AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                    dbObjs = object.retrieveAllClassInstancesFromDatabase(db);
+                }
+                return dbObjs;
             }
 
             @Override
@@ -261,17 +283,29 @@ public class Util {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... Voids) {
-                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
+                LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
+                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                    try {
+                        OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                        object.deleteClassInstanceFromDatabase(db, objectToDelete);
+                        if(!(object instanceof WorkDay)){
+                            if(access.createLogInfo() != null) {
+                                db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
                 if(!(object instanceof WorkDay)){
                     if(access.createLogInfo() != null) {
-                        LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
                         db.logDao().insert(log);
                     }
-
                 }
-                object.deleteClassInstanceFromDatabase(objectToDelete, db);
+                object.deleteClassInstanceFromDatabase(db, objectToDelete);
                 return null;
             }
 
@@ -287,16 +321,30 @@ public class Util {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... Voids) {
-                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
+                LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
+                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                    try {
+                        OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                        object.updateClassInstanceFromDatabase(db, objectToUpdate);
+                        if(!(object instanceof WorkDay)){
+                            if(access.createLogInfo() != null) {
+                                db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
+                            }
+                        }
+
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
                 if(!(object instanceof WorkDay)){
                     if(access.createLogInfo() != null) {
-                        LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
                         db.logDao().insert(log);
                     }
                 }
-                object.updateClassInstanceFromDatabase(objectToUpdate, db);
+                object.updateClassInstanceFromDatabase(db, objectToUpdate);
                 return null;
             }
             @Override
@@ -312,16 +360,31 @@ public class Util {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... Voids) {
-                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
+                LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
+                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                    try {
+                        OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                        object.insertClassInstanceFromDatabase(db, objectToInsert);
+                        if(!(object instanceof WorkDay)){
+                            if(access.createLogInfo() != null) {
+                                db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                object.insertClassInstanceFromDatabase(db, objectToInsert);
                 if(!(object instanceof WorkDay)){
                     if(access.createLogInfo() != null) {
-                        LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
                         db.logDao().insert(log);
                     }
                 }
-                object.insertClassInstanceFromDatabase(objectToInsert, db);
+
                 return null;
             }
             @Override
@@ -334,10 +397,23 @@ public class Util {
     public static <T extends DatabaseObjects<T>> void findObjectByID(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final int IDToFind)
     {
         new AsyncTask<Void, Void, T>() {
+            T dbObj;
             @Override
             protected T doInBackground(Void... Voids) {
-                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                return object.retrieveClassInstanceFromDatabaseID(db, IDToFind);
+                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                    try {
+                        OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                        dbObj = object.retrieveClassInstanceFromDatabaseID(db, IDToFind);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (dbObj == null) {
+                    AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                    dbObj = object.retrieveClassInstanceFromDatabaseID(db, IDToFind);
+                }
+                return dbObj;
             }
             @Override
             protected void onPostExecute(T object) {
@@ -351,10 +427,22 @@ public class Util {
     public static <T extends DatabaseObjects<T>> void findObjectByString(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final String stringToFind)
     {
         new AsyncTask<Void, Void, T>() {
+            T dbObj;
             @Override
             protected T doInBackground(Void... Voids) {
-                AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                return object.retrieveClassInstanceFromDatabaseString(db, stringToFind);
+                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                    try {
+                        OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                        dbObj = object.retrieveClassInstanceFromDatabaseString(db, stringToFind);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(dbObj == null) {
+                    AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                    dbObj = object.retrieveClassInstanceFromDatabaseString(db, stringToFind);
+                }
+                return dbObj;
             }
             @Override
             protected void onPostExecute(T object) {
@@ -402,14 +490,12 @@ public class Util {
         else if (access instanceof ReceivePayment) {
             logType = LogActivityType.PAYMENT;
         }
-        else {
-//                        if(access instanceof EditServices) {
-//                            logType = 5;
-//                    }
+
         if (object instanceof Customer) {
                 logType = LogActivityType.CUSTOMER;
             }
-        }
         return logType;
     }
+
+
 }

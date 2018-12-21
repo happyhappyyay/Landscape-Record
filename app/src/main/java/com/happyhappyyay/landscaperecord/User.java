@@ -1,10 +1,16 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.app.Activity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.mongodb.client.MongoDatabase;
+
+import org.bson.Document;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Entity
 public class User implements DatabaseObjects<User> {
@@ -103,32 +109,80 @@ public class User implements DatabaseObjects<User> {
     }
 
     @Override
-    public List<User> retrieveAllClassInstancesFromDatabase(AppDatabase db) {
-        return db.userDao().getAllUsers();
+    public List<User> retrieveAllClassInstancesFromDatabase(DatabaseOperator db) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.userDao().getAllUsers();
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.USER).find().into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, User.class);
     }
 
     @Override
-    public User retrieveClassInstanceFromDatabaseID(AppDatabase db, int id) {
-        return db.userDao().findUserByID(id);
+    public User retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int id) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.userDao().findUserByID(id);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.USER).find(eq("customerId", id)).first();
+        return OnlineDatabase.convertDocumentsToObjects(document, User.class);
     }
 
     @Override
-    public User retrieveClassInstanceFromDatabaseString(AppDatabase db, String string) {
-        return db.userDao().findUserByName(string);
+    public User retrieveClassInstanceFromDatabaseString(DatabaseOperator db, String string) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.userDao().findUserByName(string);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.USER).find(eq("name", string)).first();
+        return OnlineDatabase.convertDocumentsToObjects(document, User.class);
     }
 
     @Override
-    public void deleteClassInstanceFromDatabase(User objectToDelete, AppDatabase db) {
-        db.userDao().deleteUser(objectToDelete);
+    public void deleteClassInstanceFromDatabase(DatabaseOperator db, User objectToDelete) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.userDao().deleteUser(objectToDelete);
+        }
+        else {
+            int idToDelete = objectToDelete.getUserId();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.USER).deleteOne(eq("userId", idToDelete));
+        }
     }
 
     @Override
-    public void updateClassInstanceFromDatabase(User objectToUpdate, AppDatabase db) {
-        db.userDao().updateUser(objectToUpdate);
+    public void updateClassInstanceFromDatabase(DatabaseOperator db, User objectToUpdate) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.userDao().updateUser(objectToUpdate);
+        }
+        else {
+            int idToUpdate = objectToUpdate.getUserId();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.USER).replaceOne(eq("userId", idToUpdate),
+                    OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
+        }
     }
 
     @Override
-    public void insertClassInstanceFromDatabase(User objectToInsert, AppDatabase db) {
-        db.userDao().insert(objectToInsert);
+    public void insertClassInstanceFromDatabase(DatabaseOperator db, User objectToInsert) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.userDao().insert(objectToInsert);
+        }
+        else {
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.USER).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
+        }
     }
 }

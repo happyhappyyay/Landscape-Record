@@ -295,23 +295,40 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
-        Util.USER_REFERENCE.updateClassInstanceFromDatabase(user, db);
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+            databaseAccessMethod(db);
+        } catch (Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            databaseAccessMethod(db);
+        }
+    }
+
+    private void databaseAccessMethod(DatabaseOperator db) {
+        Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
         WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.retrieveStringCurrentDate());
         if (tempWorkDay != null) {
             workDay = tempWorkDay;
-        }
-        else {
+        } else {
             workDay = new WorkDay(Util.retrieveStringCurrentDate());
-            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(workDay, db);
+            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
         }
         workDay.addUserHourReference(user.toString(), currentHours);
-        Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(workDay, db);
-    }
+        Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
+        }
 
     @Override
     public void createCustomLog() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
+        try {
+            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+            customerLogMethod(db);
+        } catch(Exception e) {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            customerLogMethod(db);
+        }
+    }
+
+    private void customerLogMethod(DatabaseOperator db) {
         LogActivity log;
         updateCheckInStatus();
         if(checkedIn) {
@@ -322,8 +339,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             log = new LogActivity(authentication.getUser().getName(), user.getName(),
                     LogActivityAction.CHECKED_OUT.ordinal(), LogActivityType.USER.ordinal());
         }
-        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(log, db);
-
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
     }
 
     @Override

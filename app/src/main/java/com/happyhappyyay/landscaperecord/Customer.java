@@ -5,8 +5,14 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
+import com.mongodb.client.MongoDatabase;
+
+import org.bson.Document;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Entity
 public class Customer implements DatabaseObjects<Customer> {
@@ -180,33 +186,75 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     @Override
-    public List<Customer> retrieveAllClassInstancesFromDatabase(AppDatabase db) {
-        return db.customerDao().getAllCustomers();
+    public List<Customer> retrieveAllClassInstancesFromDatabase(DatabaseOperator db) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.customerDao().getAllCustomers();
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find().into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
     @Override
-    public Customer retrieveClassInstanceFromDatabaseID(AppDatabase db, int id) {
-        return db.customerDao().findCustomerByID(id);
+    public Customer retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int id) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.customerDao().findCustomerByID(id);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id)).first();
+        return OnlineDatabase.convertDocumentsToObjects(document, Customer.class);
+
     }
 
     @Override
-    public Customer retrieveClassInstanceFromDatabaseString(AppDatabase db, String string) {
+    public Customer retrieveClassInstanceFromDatabaseString(DatabaseOperator db, String string) {
         return null;
     }
 
     @Override
-    public void deleteClassInstanceFromDatabase(Customer objectToDelete, AppDatabase db) {
-        db.customerDao().deleteCustomer(objectToDelete);
+    public void deleteClassInstanceFromDatabase(DatabaseOperator db, Customer objectToDelete) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.customerDao().deleteCustomer(objectToDelete);
+        }
+        else {
+            int idToDelete = objectToDelete.getCustomerId();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.CUSTOMER).deleteOne(eq("customerId", idToDelete));
+        }
     }
 
     @Override
-    public void updateClassInstanceFromDatabase(Customer objectToUpdate, AppDatabase db) {
-        db.customerDao().updateCustomer(objectToUpdate);
+    public void updateClassInstanceFromDatabase(DatabaseOperator db, Customer objectToUpdate) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.customerDao().updateCustomer(objectToUpdate);
+        }
+        else {
+            int idToUpdate = objectToUpdate.getCustomerId();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.CUSTOMER).replaceOne(eq("customerId", idToUpdate),
+                    OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
+        }
     }
 
     @Override
-    public void insertClassInstanceFromDatabase(Customer objectToInsert, AppDatabase db) {
-        db.customerDao().insert(objectToInsert);
+    public void insertClassInstanceFromDatabase(DatabaseOperator db, Customer objectToInsert) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.customerDao().insert(objectToInsert);
+        }
+        else {
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.CUSTOMER).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
+        }
     }
 
     public String concatenateFullAddress() {

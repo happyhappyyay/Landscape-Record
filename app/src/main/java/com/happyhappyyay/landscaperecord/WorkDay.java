@@ -3,9 +3,10 @@ package com.happyhappyyay.landscaperecord;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import com.mongodb.client.MongoDatabase;
+
+import org.bson.Document;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Entity
 public class WorkDay implements DatabaseObjects<WorkDay> {
@@ -197,41 +200,103 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     }
 
     @Override
-    public List<WorkDay> retrieveAllClassInstancesFromDatabase(AppDatabase db) {
-        return db.workDayDao().getAllWorkDays();
+    public List<WorkDay> retrieveAllClassInstancesFromDatabase(DatabaseOperator db) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().getAllWorkDays();
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find().into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
     @Override
-    public WorkDay retrieveClassInstanceFromDatabaseID(AppDatabase db, int time) {
-        return db.workDayDao().findWorkDayByTime(time);
+    public WorkDay retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int time) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().findWorkDayByTime(time);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDateAsTime", time)).first();
+        return OnlineDatabase.convertDocumentsToObjects(document, WorkDay.class);
     }
 
     @Override
-    public WorkDay retrieveClassInstanceFromDatabaseString(AppDatabase db, String date) {
-        return db.workDayDao().findWorkDayByDate(date);
+    public WorkDay retrieveClassInstanceFromDatabaseString(DatabaseOperator db, String date) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().findWorkDayByDate(date);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDate", date)).first();
+        return OnlineDatabase.convertDocumentsToObjects(document, WorkDay.class);
     }
 
     @Override
-    public void deleteClassInstanceFromDatabase(WorkDay objectToDelete, AppDatabase db) {
-        db.workDayDao().deleteWorkDay(objectToDelete);
+    public void deleteClassInstanceFromDatabase(DatabaseOperator db, WorkDay objectToDelete) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.workDayDao().deleteWorkDay(objectToDelete);
+        }
+        else {
+            int idToDelete = objectToDelete.getWorkDayID();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.WORK_DAY).deleteOne(eq("workDayID", idToDelete));
+        }
     }
 
     @Override
-    public void updateClassInstanceFromDatabase(WorkDay objectToUpdate, AppDatabase db) {
-        db.workDayDao().updateWorkDay(objectToUpdate);
+    public void updateClassInstanceFromDatabase(DatabaseOperator db, WorkDay objectToUpdate) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.workDayDao().updateWorkDay(objectToUpdate);
+        }
+        else {
+            int idToUpdate = objectToUpdate.getWorkDayID();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.WORK_DAY).replaceOne(eq("workDayID", idToUpdate),
+                    OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
+        }
     }
 
     @Override
-    public void insertClassInstanceFromDatabase(WorkDay objectToInsert, AppDatabase db) {
-        db.workDayDao().insert(objectToInsert);
+    public void insertClassInstanceFromDatabase(DatabaseOperator db, WorkDay objectToInsert) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            ad.workDayDao().insert(objectToInsert);
+        }
+        else {
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.WORK_DAY).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
+        }
     }
 
-    public List<WorkDay> retrieveClassInstancesFromDatabaseByWeek(AppDatabase db, long weekInMilli) {
-        return db.workDayDao().findWorkWeekByTime(weekInMilli);
+    public List<WorkDay> retrieveClassInstancesFromDatabaseByWeek(DatabaseOperator db, long weekInMilli) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().findWorkWeekByTime(weekInMilli);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("weekInMilli", weekInMilli)).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
-    public List<WorkDay> retrieveClassInstancesFromDatabaseByMonth(AppDatabase db, long monthInMilli) {
-        return db.workDayDao().findWorkMonthByTime(monthInMilli);
+    public List<WorkDay> retrieveClassInstancesFromDatabaseByMonth(DatabaseOperator db, long monthInMilli) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().findWorkMonthByTime(monthInMilli);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("monthInMilli", monthInMilli)).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
 }
