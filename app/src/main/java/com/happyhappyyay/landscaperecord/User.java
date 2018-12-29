@@ -2,6 +2,7 @@ package com.happyhappyyay.landscaperecord;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.mongodb.client.MongoDatabase;
 
@@ -9,13 +10,15 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gt;
 
 @Entity
 public class User implements DatabaseObjects<User> {
-    @PrimaryKey(autoGenerate = true)
-    private int userId;
+    @PrimaryKey @NonNull
+    private String userId = UUID.randomUUID().toString();
     private double hours;
     private String firstName;
     private String lastName;
@@ -24,6 +27,7 @@ public class User implements DatabaseObjects<User> {
     private boolean admin;
     private long startTime;
     private String nickname;
+    private long modifiedTime;
 
     public User() {
         nickname = "";
@@ -37,11 +41,11 @@ public class User implements DatabaseObjects<User> {
         this.admin = admin;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -98,6 +102,16 @@ public class User implements DatabaseObjects<User> {
     }
 
     @Override
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    @Override
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    @Override
     public String toString() {
         return !getNickname().isEmpty() ? nickname : name;
 
@@ -121,14 +135,26 @@ public class User implements DatabaseObjects<User> {
     }
 
     @Override
-    public User retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int id) {
+    public List<User> retrieveClassInstancesAfterModifiedTime(DatabaseOperator db, long modifiedTime) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.userDao().getNewlyModifiedUsers(modifiedTime);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.USER).find(gt("modifiedTime", modifiedTime)).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, User.class);
+    }
+
+    @Override
+    public User retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
         if(db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
             return ad.userDao().findUserByID(id);
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.USER).find(eq("customerId", id)).first();
+        Document document = od.getCollection(OnlineDatabase.USER).find(eq("userId", id)).first();
         return OnlineDatabase.convertDocumentsToObjects(document, User.class);
     }
 
@@ -151,7 +177,7 @@ public class User implements DatabaseObjects<User> {
             ad.userDao().deleteUser(objectToDelete);
         }
         else {
-            int idToDelete = objectToDelete.getUserId();
+            String idToDelete = objectToDelete.getUserId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.USER).deleteOne(eq("userId", idToDelete));
@@ -165,7 +191,7 @@ public class User implements DatabaseObjects<User> {
             ad.userDao().updateUser(objectToUpdate);
         }
         else {
-            int idToUpdate = objectToUpdate.getUserId();
+            String idToUpdate = objectToUpdate.getUserId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.USER).replaceOne(eq("userId", idToUpdate),
@@ -184,5 +210,10 @@ public class User implements DatabaseObjects<User> {
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.USER).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
         }
+    }
+
+    @Override
+    public String getId() {
+        return userId;
     }
 }

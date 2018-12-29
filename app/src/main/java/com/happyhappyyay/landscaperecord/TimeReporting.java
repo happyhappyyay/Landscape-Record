@@ -191,69 +191,15 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-//    private void updateDatabase() {
-//        File path = getApplicationContext().getDir("documentstores", Context.MODE_PRIVATE);
-//        URI uri = null;
-//        try {
-////            URI("https", apiKey + ":" + apiSecret, host, 443, "/" + dbName, null, null)
-////                    .username("yourAPIKey")
-////                    .password("yourAPIKeyPassphrase")
-////                    .build();
-//            uri = new URI("https://" + MainMenu.SETTINGS_API_KEY +":" + MainMenu.SETTINGS_API_SECRET
-//                    + "@" + MainMenu.SETTINGS_USER + ".cloudant.com/" + MainMenu.SETTINGS_DB);
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//        DocumentStore ds = null;
-//        try {
-//            ds = DocumentStore.getInstance(new File(path, "my_datastore"));
-//        } catch (DocumentStoreNotOpenedException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//// Replicate from the local to remote database
-//        Replicator replicator = ReplicatorBuilder.push().from(ds).to(uri).build();
-//
-//// Fire-and-forget (there are easy ways to monitor the state too)
-//        replicator.start();
-//    }
-
-
     private void updateUser(boolean authenticatedUser) {
         if(authenticatedUser) {
             Authentication.getAuthentication().setUser(user);
         }
         Util.enactMultipleDatabaseOperations(this);
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                db.userDao().updateUser(user);
-//                WorkDay tempWorkDay = db.workDayDao().findWorkDayByDate(Util.retrieveStringCurrentDate());
-//                if (tempWorkDay != null) {
-//                    workDay = tempWorkDay;
-//                }
-//                else {
-//                    workDay = new WorkDay(Util.retrieveStringCurrentDate());
-//                    db.workDayDao().insert(workDay);
-//                }
-//                workDay.addUserHourReference(user.toString(), currentHours);
-//                db.workDayDao().updateWorkDay(workDay);
-//                return null;
-//            }
-//        }.execute();
     }
 
     private void findAllUsers() {
         Util.findAllObjects(this, Util.USER_REFERENCE);
-//        new AsyncTask<Void, Void, List<User>>() {
-//            @Override
-//            protected List<User> doInBackground(Void... voids) {
-//                users = db.userDao().getAllUsers();
-//
-//                return null;
-//            }
-//        }.execute();
     }
 
     @Override
@@ -321,14 +267,14 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     public void createCustomLog() {
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            customerLogMethod(db);
+            customLogMethod(db);
         } catch(Exception e) {
             AppDatabase db = AppDatabase.getAppDatabase(this);
-            customerLogMethod(db);
+            customLogMethod(db);
         }
     }
 
-    private void customerLogMethod(DatabaseOperator db) {
+    private void customLogMethod(DatabaseOperator db) {
         LogActivity log;
         updateCheckInStatus();
         if(checkedIn) {

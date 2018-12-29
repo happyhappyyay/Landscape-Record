@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Customer> {
-    private int customerID;
+    private String customerID;
     private TextView customerFullName, customerDisplayName, customerFullAddress, customerBusiness,
     customerEmail, customerPhoneNumber, customerDay, customerMileage;
     private Customer customer;
@@ -33,9 +33,9 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         customerDisplayName = findViewById(R.id.view_customer_name);
         Authentication authentication = Authentication.getAuthentication();
         Intent intent = getIntent();
-        customerID = intent.getIntExtra("CUSTOMER_ID", 0);
+        customerID = intent.getStringExtra("CUSTOMER_ID");
         if (savedInstanceState != null) {
-            customerID = savedInstanceState.getInt(CUSTOMER_ID);
+            customerID = savedInstanceState.getString(CUSTOMER_ID);
         }
 
         findCustomer(customerID);
@@ -43,7 +43,7 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(CUSTOMER_ID, customerID);
+        outState.putString(CUSTOMER_ID, customerID);
         super.onSaveInstanceState(outState);
     }
 
@@ -74,7 +74,7 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
                     .setNegativeButton("No", dialogClickListener).show();
         }
 
-    private void findCustomer(Integer customerID) {
+    private void findCustomer(String customerID) {
         Util.findObjectByID(this, Util.CUSTOMER_REFERENCE,customerID);
 //        new AsyncTask<Integer, Void, Customer>() {
 //            @Override

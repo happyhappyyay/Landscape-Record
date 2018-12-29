@@ -52,7 +52,7 @@ public class RecyclerViewUsersAdapter extends Adapter {
     private class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView username, userHours, userCheckIn;
         private ConstraintLayout constraintLayout;
-        int userIDToPass;
+        String userIDToPass;
 
         public ListViewHolder(View view) {
             super(view);

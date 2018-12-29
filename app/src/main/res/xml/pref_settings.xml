@@ -38,13 +38,6 @@
             android:singleLine="true"
             android:summary="@string/pref_settings_company_name_summary"
             android:title="@string/billing_item_company_name" />
-        <ListPreference
-            android:defaultValue="6"
-            android:entries="@array/only_days_of_the_week"
-            android:entryValues="@array/only_days_of_the_week_values"
-            android:key="pref_key_day_of_week"
-            android:summary="@string/pref_settings_first_day_of_week_summary"
-            android:title="@string/pref_settings_first_day_of_week" />
     </PreferenceCategory>
     <SwitchPreference
             android:defaultValue="false"
@@ -59,16 +52,7 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/pref_settings_database_name_summary"
-        android:title="@string/pref_settings_datebase_name_title" />
-    <EditTextPreference
-        android:defaultValue=" "
-        android:dependency="pref_settings_database_usage"
-        android:inputType="textPassword"
-        android:key="pref_key_username"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/pref_settings_database_username_summary"
-        android:title="@string/pref_settings_database_username_title" />
+        android:title="@string/pref_settings_database_name_title" />
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"
@@ -79,15 +63,6 @@
         android:summary="@string/pref_settings_database_uri_summary"
         android:title="@string/pref_settings_database_uri_title" />
 
-    <EditTextPreference
-        android:defaultValue=" "
-        android:dependency="pref_settings_database_usage"
-        android:inputType="textPassword"
-        android:key="pref_key_username_password"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/pref_settings_database_api_password_summary"
-        android:title="@string/pref_settings_database_api_password_title" />
     <Preference
         android:key="@string/pref_key_import_contacts"
         android:summary="Upload a Comma-seperated Values(.csv) file to import contacts. Headers needed: First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."

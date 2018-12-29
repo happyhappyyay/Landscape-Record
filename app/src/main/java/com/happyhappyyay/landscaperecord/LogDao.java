@@ -16,6 +16,15 @@ public interface LogDao {
     @Query("SELECT * FROM LogActivity")
     List<LogActivity> getAllLogs();
 
+    @Query("SELECT * FROM LogActivity WHERE modifiedTime > :modifiedTime & logActivityAction == :logActivityAction")
+    List<LogActivity> getNewlyModifiedActionLogs(long modifiedTime, int logActivityAction);
+
+    @Query("SELECT * FROM LogActivity WHERE modifiedTime > :modifiedTime & logActivityType == :logActivityType")
+    List<LogActivity> getNewlyModifiedTypeLogs(long modifiedTime, int logActivityType);
+
+    @Query("SELECT * FROM LogActivity WHERE modifiedTime > :modifiedTime")
+    List<LogActivity> getNewlyModifiedLogs(long modifiedTime);
+
     @Delete
     void deleteLog(LogActivity log);
 

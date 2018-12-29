@@ -329,6 +329,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     public void createCustomLog() {
         Authentication authentication = Authentication.getAuthentication();
         LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(), LogActivityAction.valueOf("UPDATE").ordinal(), LogActivityType.valueOf("CUSTOMER").ordinal());
+        log.setObjId(customer.getId());
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);

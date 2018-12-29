@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> {
-    private int userID;
+    private String userID;
     private TextView name, password, hours;
     private User user;
     private final String USER_ID = "User ID";
@@ -27,51 +27,21 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
         password = findViewById(R.id.view_user_password);
         hours = findViewById(R.id.view_user_hours);
         Intent intent = getIntent();
-        userID = intent.getIntExtra("USER_ID", 0);
+        userID = intent.getStringExtra("USER_ID");
         if (savedInstanceState != null) {
             // Restore value of members from saved state
-            userID = savedInstanceState.getInt(USER_ID);
+            userID = savedInstanceState.getString(USER_ID);
         }
         findUser(userID);
     }
 
-    private void findUser(Integer userId) {
+    private void findUser(String userId) {
         Util.findObjectByID(this, Util.USER_REFERENCE, userId);
-//        new AsyncTask<Integer, Void, User>() {
-//            @Override
-//            protected User doInBackground(Integer... integers) {
-//
-//                return db.userDao().findUserByID(integers[0]);
-//            }
-//
-//            @Override
-//            protected void onPostExecute(User user) {
-//                if (user != null) {
-//                    name.setText(user.getName());
-//                    password.setText(user.getPassword());
-//                    hours.setText(Double.toString(user.getHours()));
-//                    ViewUser.this.user = user;
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "Could not find user", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        }.execute(userId);
     }
 
     private void deleteUser() {
             if (!user.equals(Authentication.getAuthentication().getUser())) {
                 Util.deleteObject(this, Util.USER_REFERENCE, user);
-                //        new AsyncTask<User, Void, Void>() {
-                //            @Override
-                //            protected Void doInBackground(User... params) {
-                //                User user = params[0];
-                //                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName(),1, 0);
-                //                db.logDao().insert(log);
-                //                db.userDao().deleteUser(user);
-                //                finish();
-                //                return null;
-                //            }
-                //        }.execute(user);
             } else {
                 Toast.makeText(getApplicationContext(), "Cannot delete logged in Admin", Toast.LENGTH_LONG).show();
             }
@@ -108,7 +78,7 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(USER_ID, userID);
+        outState.putString(USER_ID, userID);
         super.onSaveInstanceState(outState);
     }
 

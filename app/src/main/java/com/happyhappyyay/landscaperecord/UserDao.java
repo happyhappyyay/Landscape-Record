@@ -20,8 +20,11 @@ public interface UserDao {
     @Query("SELECT * FROM User WHERE name = :username")
     User findUserByName(String username);
 
-    @Query("SELECT * FROM User WHERE userId = :userID")
-    User findUserByID(int userID);
+    @Query("SELECT * FROM User WHERE userId = :userId")
+    User findUserByID(String userId);
+
+    @Query("SELECT * FROM User WHERE modifiedTime > :modifiedTime")
+    List<User> getNewlyModifiedUsers(long modifiedTime);
 
     @Update
     void updateUser(User user);

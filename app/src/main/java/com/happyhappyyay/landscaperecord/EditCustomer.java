@@ -1,11 +1,9 @@
 package com.happyhappyyay.landscaperecord;
 
-import android.arch.persistence.room.Database;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,7 +22,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int customerID;
+        String customerID;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_customer);
         Toolbar myToolbar = findViewById(R.id.new_contact_toolbar);
@@ -40,7 +38,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         stateSpinner = findViewById(R.id.contact_state_spinner);
         daySpinner = findViewById(R.id.contact_day_spinner);
         Intent intent = getIntent();
-        customerID = intent.getIntExtra("CUSTOMER_ID", 0);
+        customerID = intent.getStringExtra("CUSTOMER_ID");
         findCustomer(customerID);
     }
 
@@ -77,7 +75,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         updateCustomer();
     }
 
-    private void findCustomer(int customerID) {
+    private void findCustomer(String customerID) {
         Util.findObjectByID(this, Util.CUSTOMER_REFERENCE, customerID);
 //        new AsyncTask<Integer, Void, Customer>() {
 //            @Override

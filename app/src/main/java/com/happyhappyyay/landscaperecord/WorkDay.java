@@ -3,6 +3,7 @@ package com.happyhappyyay.landscaperecord;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.mongodb.client.MongoDatabase;
 
@@ -15,13 +16,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gt;
 
 @Entity
 public class WorkDay implements DatabaseObjects<WorkDay> {
-    @PrimaryKey (autoGenerate = true)
-    private int workDayID;
+    @PrimaryKey @NonNull
+    private String workDayId = UUID.randomUUID().toString();
     private String dayOfWeek;
     private String Month;
     private String Year;
@@ -35,6 +38,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     private long weekInMilli;
     private long monthInMilli;
     private long yearInMilli;
+    private long modifiedTime;
 
     public WorkDay (String currentDate) {
         services = new ArrayList<>();
@@ -122,12 +126,12 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         return dayOfWeek;
     }
 
-    public int getWorkDayID() {
-        return workDayID;
+    public String getWorkDayId() {
+        return workDayId;
     }
 
-    public void setWorkDayID(int workDayID) {
-        this.workDayID = workDayID;
+    public void setWorkDayId(String workDayId) {
+        this.workDayId = workDayId;
     }
 
     public long getCurrentDateAsTime() {
@@ -195,6 +199,16 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     }
 
     @Override
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    @Override
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    @Override
     public String getName() {
         return null;
     }
@@ -212,14 +226,26 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     }
 
     @Override
-    public WorkDay retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int time) {
+    public List<WorkDay> retrieveClassInstancesAfterModifiedTime(DatabaseOperator db, long modifiedTime) {
         if(db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
-            return ad.workDayDao().findWorkDayByTime(time);
+            return ad.workDayDao().getNewlyModifiedWorkDays(modifiedTime);
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDateAsTime", time)).first();
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(gt("modifiedTime", modifiedTime)).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
+    }
+
+    @Override
+    public WorkDay retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().findWorkDayById(id);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("workDayId", id)).first();
         return OnlineDatabase.convertDocumentsToObjects(document, WorkDay.class);
     }
 
@@ -242,10 +268,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             ad.workDayDao().deleteWorkDay(objectToDelete);
         }
         else {
-            int idToDelete = objectToDelete.getWorkDayID();
+            String idToDelete = objectToDelete.getWorkDayId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.WORK_DAY).deleteOne(eq("workDayID", idToDelete));
+            od.getCollection(OnlineDatabase.WORK_DAY).deleteOne(eq("workDayId", idToDelete));
         }
     }
 
@@ -256,10 +282,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             ad.workDayDao().updateWorkDay(objectToUpdate);
         }
         else {
-            int idToUpdate = objectToUpdate.getWorkDayID();
+            String idToUpdate = objectToUpdate.getWorkDayId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.WORK_DAY).replaceOne(eq("workDayID", idToUpdate),
+            od.getCollection(OnlineDatabase.WORK_DAY).replaceOne(eq("workDayId", idToUpdate),
                     OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
         }
     }
@@ -275,6 +301,22 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.WORK_DAY).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
         }
+    }
+
+    @Override
+    public String getId() {
+        return workDayId;
+    }
+
+    public WorkDay retrieveClassInstancesFromDatabaseByDay(DatabaseOperator db, long dateTime) {
+        if (db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.workDayDao().findWorkDayByTime(dateTime);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDateAsTime", dateTime)).first();
+        return OnlineDatabase.convertDocumentsToObjects(document, WorkDay.class);
     }
 
     public List<WorkDay> retrieveClassInstancesFromDatabaseByWeek(DatabaseOperator db, long weekInMilli) {

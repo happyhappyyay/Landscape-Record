@@ -20,8 +20,11 @@ public interface CustomerDao {
     @Query("SELECT * FROM Customer WHERE customerFirstName + ' ' + customerLastName OR customerBusiness = :customerName")
     Customer findCustomerByName(String customerName);
 
-    @Query("SELECT * FROM Customer WHERE customerId = :customerID")
-    Customer findCustomerByID(int customerID);
+    @Query("SELECT * FROM Customer WHERE customerId = :customerId")
+    Customer findCustomerById(String customerId);
+
+    @Query("SELECT * FROM Customer WHERE modifiedTime > :modifiedTime")
+    List<Customer> getNewlyModifiedCustomers(long modifiedTime);
 
     @Update
     void updateCustomer(Customer customer);

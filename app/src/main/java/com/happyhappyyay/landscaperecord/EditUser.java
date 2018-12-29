@@ -2,15 +2,12 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -31,28 +28,12 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
         nickname = findViewById(R.id.edit_user_nickname);
         adminBox = findViewById(R.id.edit_user_admin_box);
         Intent intent = getIntent();
-        int intExtra = intent.getIntExtra("USER_ID", 0);
-        findUser(intExtra);
+        String stringExtra = intent.getStringExtra("USER_ID");
+        findUser(stringExtra);
     }
 
-    private void findUser(int userID) {
+    private void findUser(String userID) {
         Util.findObjectByID(this, Util.USER_REFERENCE, userID);
-//        new AsyncTask<String, Void, User>() {
-//            @Override
-//            protected User doInBackground(String... string) {
-//
-//                return db.userDao().findUserByName(string[0]);
-//            }
-//
-//            @Override
-//            protected void onPostExecute(User user) {
-//                EditUser.this.user = user;
-//                usernameText.setText(user.getName());
-//                if(user.isAdmin()) {
-//                    adminBox.setChecked(true);
-//                }
-//            }
-//        }.execute(username);
     }
 
     public void onSubmit(View view) {

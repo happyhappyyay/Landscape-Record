@@ -6,7 +6,9 @@ public enum LogActivityType {
     PAYMENT,
     HOURS,
     JOB,
-    SERVICES
+    SERVICES,
+    DATABASE,
+    WORKDAY
 
     
 

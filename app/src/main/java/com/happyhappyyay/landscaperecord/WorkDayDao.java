@@ -17,6 +17,9 @@ public interface WorkDayDao {
     @Query("SELECT * FROM workDay")
     List<WorkDay> getAllWorkDays();
 
+    @Query("SELECT * FROM WorkDay WHERE workDayId = :workDayId")
+    WorkDay findWorkDayById(String workDayId);
+
     @Query("SELECT * FROM WorkDay WHERE currentDate = :date")
     WorkDay findWorkDayByDate(String date);
 
@@ -28,6 +31,9 @@ public interface WorkDayDao {
 
     @Query("SELECT * FROM workDay WHERE monthInMilli = :time")
     List<WorkDay> findWorkMonthByTime(long time);
+
+    @Query("SELECT * FROM WorkDay WHERE modifiedTime > :modifiedTime")
+    List<WorkDay> getNewlyModifiedWorkDays(long modifiedTime);
 
     @Update
     void updateWorkDay(WorkDay workDay);

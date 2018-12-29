@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.mongodb.client.MongoDatabase;
 
@@ -11,13 +12,15 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gt;
 
 @Entity
 public class Customer implements DatabaseObjects<Customer> {
-    @PrimaryKey(autoGenerate = true)
-    private int customerId;
+    @PrimaryKey @NonNull
+    private String customerId = UUID.randomUUID().toString();
     private String customerFirstName;
     private String customerLastName;
     private String customerAddress;
@@ -27,6 +30,7 @@ public class Customer implements DatabaseObjects<Customer> {
     private String customerBusiness;
     private String customerDay;
     private String customerState;
+    private long modifiedTime;
 
     @TypeConverters(PaymentTypeConverter.class)
     private Payment payment;
@@ -131,11 +135,11 @@ public class Customer implements DatabaseObjects<Customer> {
         this.customerServices = customerServices;
     }
 
-    public int getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
@@ -176,6 +180,16 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     @Override
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    @Override
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    @Override
     public String toString() {
         return (customerBusiness == null ? customerFirstName + customerLastName : customerBusiness) + " " + concatenateFullAddress();
     }
@@ -198,10 +212,22 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     @Override
-    public Customer retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int id) {
+    public List<Customer> retrieveClassInstancesAfterModifiedTime(DatabaseOperator db, long modifiedTime) {
         if(db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
-            return ad.customerDao().findCustomerByID(id);
+            return ad.customerDao().getNewlyModifiedCustomers(modifiedTime);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime)).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
+    }
+
+    @Override
+    public Customer retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.customerDao().findCustomerById(id);
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
@@ -222,7 +248,7 @@ public class Customer implements DatabaseObjects<Customer> {
             ad.customerDao().deleteCustomer(objectToDelete);
         }
         else {
-            int idToDelete = objectToDelete.getCustomerId();
+            String idToDelete = objectToDelete.getCustomerId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.CUSTOMER).deleteOne(eq("customerId", idToDelete));
@@ -236,7 +262,7 @@ public class Customer implements DatabaseObjects<Customer> {
             ad.customerDao().updateCustomer(objectToUpdate);
         }
         else {
-            int idToUpdate = objectToUpdate.getCustomerId();
+            String idToUpdate = objectToUpdate.getCustomerId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.CUSTOMER).replaceOne(eq("customerId", idToUpdate),
@@ -255,6 +281,11 @@ public class Customer implements DatabaseObjects<Customer> {
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.CUSTOMER).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
         }
+    }
+
+    @Override
+    public String getId() {
+        return customerId;
     }
 
     public String concatenateFullAddress() {

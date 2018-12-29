@@ -3,6 +3,7 @@ package com.happyhappyyay.landscaperecord;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.mongodb.client.MongoDatabase;
 
@@ -14,34 +15,39 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gt;
 
 //log actions performed by user
 @Entity
 public class LogActivity implements DatabaseObjects<LogActivity> {
-    @PrimaryKey(autoGenerate = true)
-    private int logID;
-    private long time;
-    private String username, addInfo;
+    @PrimaryKey @NonNull
+    private String logId = UUID.randomUUID().toString();
+    private String addInfo;
     private int logActivityAction, logActivityType;
+    private long modifiedTime;
+    private String username;
+    private String objId;
 
     public LogActivity(String username, String addInfo, int logActivityAction, int logActivityType) {
-        time = System.currentTimeMillis();
-        this.username = username;
+        modifiedTime = System.currentTimeMillis();
         this.addInfo = addInfo;
         this.logActivityAction = logActivityAction;
         this.logActivityType = logActivityType;
+        this.username = username;
     }
 
     @Ignore
     public LogActivity() {
-        time = System.currentTimeMillis();
+        modifiedTime = System.currentTimeMillis();
     }
 
     @Override
     public String toString() {
-        Date date = new Date(time);
+        Date date = new Date(modifiedTime);
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
         String dateMessage = formatter.format(date);
         return dateMessage + ": " + username + " " + convertActivityToString();
@@ -56,7 +62,8 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         List<String> logTypeList = Arrays.asList(LogActivityType.USER.toString(),
                 LogActivityType.CUSTOMER.toString(), LogActivityType.PAYMENT.toString(),
                 LogActivityType.HOURS.toString(), LogActivityType.JOB.toString(),
-                LogActivityType.SERVICES.toString());
+                LogActivityType.SERVICES.toString(), LogActivityType.DATABASE.toString(),
+                LogActivityType.WORKDAY.toString());
         activityAction += logActivityList.get(logActivityAction) + " ";
         activityAction += logTypeList.get(logActivityType) + " ";
         activityAction += addInfo;
@@ -64,20 +71,20 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         return activityAction;
     }
 
-    public int getLogID() {
-        return logID;
+    public String getObjId() {
+        return objId;
     }
 
-    public void setLogID(int logID) {
-        this.logID = logID;
+    public void setObjId(String objId) {
+        this.objId = objId;
     }
 
-    public long getTime() {
-        return time;
+    public @NonNull String getLogId() {
+        return logId;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setLogId(@NonNull String logId) {
+        this.logId = logId;
     }
 
     public String getUsername() {
@@ -113,6 +120,16 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
     }
 
     @Override
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    @Override
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    @Override
     public String getName() {
         return null;
     }
@@ -130,7 +147,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
     }
 
     @Override
-    public LogActivity retrieveClassInstanceFromDatabaseID(DatabaseOperator db, int id) {
+    public LogActivity retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
         return null;
     }
 
@@ -146,10 +163,10 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
             ad.logDao().deleteLog(objectToDelete);
         }
         else {
-            int idToDelete = objectToDelete.getLogID();
+            String idToDelete = objectToDelete.getLogId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.LOG).deleteOne(eq("logID", idToDelete));
+            od.getCollection(OnlineDatabase.LOG).deleteOne(eq("logId", idToDelete));
         }
     }
 
@@ -168,6 +185,46 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.LOG).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
         }
+    }
+
+    public List<LogActivity> retrieveClassInstancesAfterModifiedTimeWithAction(DatabaseOperator db, long modifiedTime, int logActivityAction) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getNewlyModifiedActionLogs(modifiedTime, logActivityAction);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.LOG).find(and(gt("modifiedTime", modifiedTime), eq("logActivityAction", logActivityAction))).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
+    }
+
+    public List<LogActivity> retrieveClassInstancesAfterModifiedTimeWithType(DatabaseOperator db, long modifiedTime, int logActivityType) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getNewlyModifiedActionLogs(modifiedTime, logActivityType);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.LOG).find(and(gt("modifiedTime", modifiedTime), eq("logActivityType", logActivityType))).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
+    }
+
+    @Override
+    public List<LogActivity> retrieveClassInstancesAfterModifiedTime(DatabaseOperator db, long modifiedTime) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getNewlyModifiedLogs(modifiedTime);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        List<Document> documents = od.getCollection(OnlineDatabase.LOG).find(gt("modifiedTime", modifiedTime)).into(new ArrayList<Document>());
+        return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
+    }
+
+
+    @Override
+    public String getId() {
+        return logId;
     }
 
 

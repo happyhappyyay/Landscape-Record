@@ -159,49 +159,49 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
 
     private void checkForPaymentMatch(final boolean checkType) {
         final int ZERO_POSITION = 1;
-        final Service service = payableServices.get(serviceSpinner.getSelectedItemPosition() - ZERO_POSITION);
-        double priceOfService = customer.getPayment().checkServiceForPrice(service.getServices());
-        if(priceOfService == Double.parseDouble(paymentAmount.getText().toString()) & priceOfService != -1) {
-            service.setPaid(true);
-            if(checkType) {
-                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
-            }
-            else {
-                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
-            }
-            customer.updateService(service);
-            Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
-        }
-        else {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            if(checkType) {
-                                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
-                            }
-                            else {
-                                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
-                            }
-                            Toast.makeText(getApplicationContext(), "Have admin apply paid status to " +
-                                    "service.", Toast.LENGTH_LONG).show();
-                            Util.updateObject(ReceivePayment.this, Util.CUSTOMER_REFERENCE, customer);
+        if(payableServices.size() > 0) {
+            final Service service = payableServices.get(serviceSpinner.getSelectedItemPosition() - ZERO_POSITION);
 
-                            break;
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            Toast.makeText(getApplicationContext(), "Apply payment to the correct service " +
-                                    "or apply to general account.", Toast.LENGTH_LONG).show();
-                            break;
-                    }
+            double priceOfService = customer.getPayment().checkServiceForPrice(service.getServices());
+            if (priceOfService == Double.parseDouble(paymentAmount.getText().toString()) & priceOfService != -1) {
+                service.setPaid(true);
+                if (checkType) {
+                    customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
+                } else {
+                    customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
                 }
-            };
+                customer.updateService(service);
+                Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
+            } else {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                if (checkType) {
+                                    customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
+                                } else {
+                                    customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
+                                }
+                                Toast.makeText(getApplicationContext(), "Have admin apply paid status to " +
+                                        "service.", Toast.LENGTH_LONG).show();
+                                Util.updateObject(ReceivePayment.this, Util.CUSTOMER_REFERENCE, customer);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("The payment amount does not match the selected service. Amount will be applied to the " +
-                    "general account. Proceed with payment?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                Toast.makeText(getApplicationContext(), "Apply payment to the correct service " +
+                                        "or apply to general account.", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("The payment amount does not match the selected service. Amount will be applied to the " +
+                        "general account. Proceed with payment?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            }
         }
     }
 

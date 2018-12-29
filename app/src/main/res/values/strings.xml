@@ -137,8 +137,6 @@
     <string name="pre_settings_quick_sheet_selections_summary">A selection of three items used to
     quickly start and finish jobs. Selections appear as checkboxes on the Quick Sheets screen. The
         default selection is cut, prune, and spray.</string>
-    <string name="pref_settings_database_username_title">Database Username</string>
-    <string name="pref_settings_database_username_summary">The username for the database. </string>
     <string name="pref_settings_title">Application Settings</string>
     <string name="pref_settings_database_usage_title">Online Database</string>
     <string name="pref_settings_database_usage_summary">Enable/Disable online database(mongoDB) usage.
@@ -147,9 +145,9 @@
     <string name="pref_settings_database_uri_title">Database URI</string>
     <string name="pref_settings_database_uri_summary">The URI for the database.
         Example: mongodb://databaseUser:databaseUserPassword@host:port/databaseName</string>
-    <string name="pref_settings_database_api_password_title">Database User Password</string>
-    <string name="pref_settings_database_api_password_summary">The API password for the database.</string>
-    <string name="pref_settings_datebase_name_title">Database Name</string>
+    <string name="pref_settings_database_connections_title">Database Connections</string>
+    <string name="pref_settings_database_connections_summary">The number of devices reading and writing to the database.</string>
+    <string name="pref_settings_database_name_title">Database Name</string>
     <string name="pref_settings_database_name_summary">The name of the database.</string>
     <string name="pref_settings_quick_sheet_items_selection_title1">Check Box 1</string>
     <string name="pref_settings_quick_sheet_items_selection_title2">Check Box 2</string>

@@ -279,11 +279,13 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
             LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+            log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             hours.setText("");
         } catch (Exception e) {
             AppDatabase db = AppDatabase.getAppDatabase(this);
             LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+            log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             hours.setText("");
         }

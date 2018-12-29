@@ -2,7 +2,6 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -53,7 +52,7 @@ public class RecyclerViewCustomersAdapter extends Adapter {
     private class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView customerName, customerAddress, customerDay;
         private ConstraintLayout constraintLayout;
-        int customerIDToPass;
+        String customerIDToPass;
 
         public ListViewHolder(View view) {
             super(view);
