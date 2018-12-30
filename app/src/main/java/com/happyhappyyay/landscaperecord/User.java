@@ -31,6 +31,7 @@ public class User implements DatabaseObjects<User> {
 
     public User() {
         nickname = "";
+        modifiedTime = System.currentTimeMillis();
     }
 
     public boolean isAdmin() {

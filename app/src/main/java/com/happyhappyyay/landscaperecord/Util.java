@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,7 +30,6 @@ public class Util {
     public static final LogActivity LOG_REFERENCE = new LogActivity();
     public static final WorkDay WORK_DAY_REFERENCE = new WorkDay(retrieveStringCurrentDate());
     public static final User USER_REFERENCE = new User();
-    public static final DatabaseUpdaterObject DATABASE_UPDATER_OBJECT = new DatabaseUpdaterObject();
     public static final String DELIMITER = "|";
     public static final String INSERT = "Insert";
     public static final String UPDATE = "Update";
@@ -66,11 +66,6 @@ public class Util {
     private static boolean hasOnlineDatabaseEnabled(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getBoolean("pref_settings_database_usage", false);
-    }
-
-    public static int retrieveNumberOfConnections(Context context) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getInt("pref_settings_database_connections", 1);
     }
 
     private static void goToDashboard(Context context) {
@@ -298,7 +293,7 @@ public class Util {
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
-                log.setObjId(object.getId());
+                log.setObjId(objectToDelete.getId());
                 if(hasOnlineDatabaseEnabled(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
@@ -339,7 +334,7 @@ public class Util {
                 Authentication authentication = Util.getAuthentication();
                 LogActivityType logType = findLogTypeInt(access,object);
                 LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
-                log.setObjId(object.getId());
+                log.setObjId(objectToUpdate.getId());
                 if(hasOnlineDatabaseEnabled(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
@@ -382,7 +377,7 @@ public class Util {
                     Authentication authentication = Util.getAuthentication();
                     LogActivityType logType = findLogTypeInt(access, object);
                     log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
-                    log.setObjId(object.getId());
+                    log.setObjId(objectToInsert.getId());
                 }
                 if(hasOnlineDatabaseEnabled(access.getContext())) {
                     try {
@@ -519,92 +514,90 @@ public class Util {
     }
 
     public static void updateDatabases(Context context) {
-        try {
             OnlineDatabase od = OnlineDatabase.getOnlineDatabase(context);
             AppDatabase ad = AppDatabase.getAppDatabase(context);
             updateDatabase(context, od, ad);
             updateDatabase(context, ad, od);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
-    public static void updateDatabase(Context context, DatabaseOperator originalDB, DatabaseOperator updatingDB){
+    public static void updateDatabase(Context context, DatabaseOperator originalDB, DatabaseOperator updatingDB) {
         int deleteCount = 0;
         int insertCount = 0;
         int updateCount = 0;
         int logCount = 0;
         List<LogActivity> logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTimeWithType(originalDB, 0, LogActivityType.DATABASE.ordinal());
         long newestLogTime = 0;
-        for(int i = 0; i < logs.size(); i++) {
+        for (int i = 0; i < logs.size(); i++) {
             long logModifiedTime = logs.get(i).getModifiedTime();
-            if(logModifiedTime > newestLogTime){
+            if (logModifiedTime > newestLogTime) {
                 newestLogTime = logModifiedTime;
             }
         }
 
-        logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTimeWithAction(originalDB, newestLogTime, LogActivityAction.ADD.ordinal());
+        logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
 
-        for(int i = 0; i < logs.size(); i++) {
+
+        for (int i = 0; i < logs.size(); i++) {
             String logObjId = logs.get(i).getObjId();
-            switch (logs.get(i).getLogActivityType()) {
-                case 0:
-                    User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                    if(user != null) {
-                        USER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, user);
-                        insertCount++;
-                    }
-                    break;
-                case 1:
-                    Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                    if(customer != null) {
-                        CUSTOMER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, customer);
-                        insertCount++;
-                    }
-                    break;
-                case 7:
-                    WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                    if(workDay != null) {
-                        WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(updatingDB, workDay);
-                        insertCount++;
-                    }
-                    break;
+            if (logs.get(i).getLogActivityAction() == 0) {
+                switch (logs.get(i).getLogActivityType()) {
+                    case 0:
+                        User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        if (user != null) {
+                            USER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, user);
+                            insertCount++;
+                        }
+                        break;
+                    case 1:
+                        Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        Log.d("DATABASE", "updateDatabase: customer add");
+                        if (customer != null) {
+                            CUSTOMER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, customer);
+                            insertCount++;
+                        }
+                        break;
+                    case 7:
+                        WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        if (workDay != null) {
+                            WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(updatingDB, workDay);
+                            insertCount++;
+                        }
+                        break;
+                }
+            } else if (logs.get(i).getLogActivityAction() == 1) {
+                switch (logs.get(i).getLogActivityType()) {
+                    case 0:
+                        User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        if (user != null) {
+                            USER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, user);
+                            deleteCount++;
+                        }
+                        break;
+                    case 1:
+                        Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        if (customer != null) {
+                            CUSTOMER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, customer);
+                            deleteCount++;
+                            Log.d("DATABASE", "updateDatabase: customer delete");
+                        }
+                        break;
+                    case 7:
+                        WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        if (workDay != null) {
+                            WORK_DAY_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, workDay);
+                            deleteCount++;
+                        }
+                        break;
+                }
             }
         }
 
-        logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTimeWithAction(originalDB, newestLogTime, LogActivityAction.DELETE.ordinal());
-
-        for(int i = 0; i < logs.size(); i++) {
-            String logObjId = logs.get(i).getObjId();
-            switch (logs.get(i).getLogActivityType()) {
-                case 0:
-                    User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                    if(user != null) {
-                        USER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, user);
-                        deleteCount++;
-                    }
-                    break;
-                case 1:
-                    Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                    if(customer != null) {
-                        CUSTOMER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, customer);
-                        deleteCount++;
-                    }
-                    break;
-                case 7:
-                    WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                    if(workDay != null) {
-                        WORK_DAY_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, workDay);
-                        deleteCount++;
-                    }
-                    break;
-            }
-        }
         List<DatabaseObjects> databaseObjects = new ArrayList<>();
         List<User> users = USER_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         List<Customer> customers = CUSTOMER_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         List<WorkDay> workDays = WORK_DAY_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
+        Log.d(TAG, "updateDatabase: 10292922" +users.size() + " " + customers.size() + " " + workDays.size());
         databaseObjects.addAll(users);
         databaseObjects.addAll(customers);
         databaseObjects.addAll(workDays);

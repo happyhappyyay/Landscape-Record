@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
@@ -44,6 +45,7 @@ public class Customer implements DatabaseObjects<Customer> {
         this.customerAddress = customerAddress;
         customerServices = new ArrayList<>();
         payment = new Payment();
+        modifiedTime = System.currentTimeMillis();
     }
 
     @Ignore
@@ -207,7 +209,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        List<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find().into(new ArrayList<Document>());
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find();
         return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
@@ -219,7 +221,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        List<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime)).into(new ArrayList<Document>());
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime));
         return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
@@ -231,8 +233,8 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id)).first();
-        return OnlineDatabase.convertDocumentsToObjects(document, Customer.class);
+        FindIterable<Document> document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id));
+        return OnlineDatabase.convertDocumentToObject(document, Customer.class);
 
     }
 

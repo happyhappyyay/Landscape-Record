@@ -49,4 +49,7 @@ dependencies {
     implementation 'au.com.bytecode:opencsv:2.4'
     implementation files('libs/java2word-3.3.jar')
 //    implementation 'org.mongodb:mongodb-driver-sync:3.9.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.5'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
 }

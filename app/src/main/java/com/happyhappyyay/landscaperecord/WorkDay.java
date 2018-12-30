@@ -45,6 +45,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         hours = new ArrayList<>();
         userReference = new ArrayList<>();
         findCalendarInformation(currentDate);
+        modifiedTime = System.currentTimeMillis();
     }
 
     public void addUserHourReference (String userReference, int hours) {
