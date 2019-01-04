@@ -25,7 +25,7 @@ public class UserSettings extends AppCompatActivity implements MultiDatabaseAcce
     }
 
     public void onClick(View view) {
-        Util.enactMultipleDatabaseOperations(this);
+//        Util.enactMultipleDatabaseOperations(this);
     }
 
     @Override

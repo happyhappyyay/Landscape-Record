@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     private User user;
     private WorkDay workDay;
     private int currentHours;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
         }
+        progressBar = findViewById(R.id.time_reporting_progress_bar);
 
         //TODO: implement interface to remove on post execute?
         Util.UserAccountsSpinner task = new Util.UserAccountsSpinner() {
@@ -77,72 +80,74 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void createCheckIn(View view) {
-        boolean authenticatedUser = false;
-        if(user.getUserId() == authentication.getUser().getUserId()) {
-            Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
-            authenticatedUser = true;
-        }
-        long currentTime = System.currentTimeMillis();
-        double hours = (currentTime - startTime) / MILLISECONDS_TO_HOURS;
-        boolean startTimeChange = false;
-        if (!checkedIn) {
-            startTime = currentTime;
-            user.setStartTime(startTime);
-            Toast.makeText(getApplicationContext(), "Checked in!", Toast.LENGTH_LONG).show();
-            startTimeChange = true;
-        } else {
-            if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
-                Toast.makeText(getApplicationContext(), "User never checked out. Notify admin" +
-                        " account to manually add hours.", Toast.LENGTH_LONG).show();
-                resetStartTime();
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            boolean authenticatedUser = false;
+            if (user.getUserId().equals(authentication.getUser().getUserId())) {
+                Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
+                authenticatedUser = true;
+            }
+            long currentTime = System.currentTimeMillis();
+            double hours = (currentTime - startTime) / MILLISECONDS_TO_HOURS;
+            boolean startTimeChange = false;
+            if (!checkedIn) {
+                startTime = currentTime;
+                user.setStartTime(startTime);
+                Toast.makeText(getApplicationContext(), "Checked in!", Toast.LENGTH_LONG).show();
                 startTimeChange = true;
+            } else {
+                if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
+                    Toast.makeText(getApplicationContext(), "User never checked out. Notify admin" +
+                            " account to manually add hours.", Toast.LENGTH_LONG).show();
+                    resetStartTime();
+                    startTimeChange = true;
+                }
+            }
+            if (startTimeChange) {
+                updateUser(authenticatedUser);
             }
         }
-        if (startTimeChange) {
-            updateUser(authenticatedUser);
-        }
-
     }
 
     public void createCheckOut(View view) {
-        boolean authenticatedUser = false;
-        if(user.getUserId() == authentication.getUser().getUserId()) {
-            authenticatedUser = true;
-            Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
-        }
-        double currentTime = System.currentTimeMillis();
-        double hours = ((currentTime - startTime) / MILLISECONDS_TO_HOURS);
-
-        if (checkedIn) {
-            if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
-
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                addAccumulatedHours();
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                Toast.makeText(getApplicationContext(), "Notify admin" +
-                                        " account to manually add hours.", Toast.LENGTH_LONG).show();
-                                break;
-                        }
-                    }
-                };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("The number of hours reported exceeds the likely amount. Is " +
-                        hours + " hours correct?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
-            } else {
-                addAccumulatedHours();
-                Toast.makeText(getApplicationContext(), "Checked out! " + (hours) + user.toString(), Toast.LENGTH_LONG).show();
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            boolean authenticatedUser = false;
+            if (user.getUserId().equals(authentication.getUser().getUserId())) {
+                authenticatedUser = true;
+                Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
             }
-            resetStartTime();
-            updateUser(authenticatedUser);
+            double currentTime = System.currentTimeMillis();
+            double hours = ((currentTime - startTime) / MILLISECONDS_TO_HOURS);
 
+            if (checkedIn) {
+                if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
+
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    addAccumulatedHours();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    Toast.makeText(getApplicationContext(), "Notify admin" +
+                                            " account to manually add hours.", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("The number of hours reported exceeds the likely amount. Is " +
+                            hours + " hours correct?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                } else {
+                    addAccumulatedHours();
+                    Toast.makeText(getApplicationContext(), "Checked out! " + (hours) + user.toString(), Toast.LENGTH_LONG).show();
+                }
+                resetStartTime();
+                updateUser(authenticatedUser);
+            }
         }
     }
 
@@ -195,10 +200,12 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
         if(authenticatedUser) {
             Authentication.getAuthentication().setUser(user);
         }
+        progressBar.setVisibility(View.VISIBLE);
         Util.enactMultipleDatabaseOperations(this);
     }
 
     private void findAllUsers() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.USER_REFERENCE);
     }
 
@@ -272,6 +279,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             AppDatabase db = AppDatabase.getAppDatabase(this);
             customLogMethod(db);
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void customLogMethod(DatabaseOperator db) {
@@ -301,6 +309,7 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onPostExecute(List<User> databaseObjects) {
         users = databaseObjects;
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
 

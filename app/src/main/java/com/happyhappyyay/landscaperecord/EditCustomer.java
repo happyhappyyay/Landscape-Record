@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
     private Spinner stateSpinner, daySpinner;
     private Customer customer;
     private String logInfo;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,45 +39,49 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         customerPhoneNumber = findViewById(R.id.contact_phone_number_text);
         stateSpinner = findViewById(R.id.contact_state_spinner);
         daySpinner = findViewById(R.id.contact_day_spinner);
+        progressBar = findViewById(R.id.add_user_progress_bar);
         Intent intent = getIntent();
         customerID = intent.getStringExtra("CUSTOMER_ID");
         findCustomer(customerID);
     }
 
     public void onSubmitCustomerUpdate(View view) {
-        if (!customerFirstName.getText().toString().isEmpty() & !customerLastName.getText().toString().isEmpty()
-                & !customerAddress.getText().toString().isEmpty()) {
-            customer.setCustomerFirstName(customerFirstName.getText().toString());
-            customer.setCustomerLastName(customerLastName.getText().toString());
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            if (!customerFirstName.getText().toString().isEmpty() & !customerLastName.getText().toString().isEmpty()
+                    & !customerAddress.getText().toString().isEmpty()) {
+                customer.setCustomerFirstName(customerFirstName.getText().toString());
+                customer.setCustomerLastName(customerLastName.getText().toString());
 
-            if (!customerEmail.getText().toString().isEmpty()) {
-                customer.setCustomerEmail(customerEmail.getText().toString());
-            }
+                if (!customerEmail.getText().toString().isEmpty()) {
+                    customer.setCustomerEmail(customerEmail.getText().toString());
+                }
 
-            if (!customerBusiness.getText().toString().isEmpty()) {
-                customer.setCustomerBusiness(customerBusiness.getText().toString());
-            }
+                if (!customerBusiness.getText().toString().isEmpty()) {
+                    customer.setCustomerBusiness(customerBusiness.getText().toString());
+                }
 
-            if (!customerCity.getText().toString().isEmpty()) {
-                customer.setCustomerCity(customerCity.getText().toString());
-            }
+                if (!customerCity.getText().toString().isEmpty()) {
+                    customer.setCustomerCity(customerCity.getText().toString());
+                }
 
-            if (!customerPhoneNumber.getText().toString().isEmpty()) {
-                customer.setCustomerPhoneNumber(customerPhoneNumber.getText().toString());
-            }
+                if (!customerPhoneNumber.getText().toString().isEmpty()) {
+                    customer.setCustomerPhoneNumber(customerPhoneNumber.getText().toString());
+                }
 
-            if (daySpinner.getSelectedItem() != null) {
-                customer.setCustomerDay(daySpinner.getSelectedItem().toString());
-            }
+                if (daySpinner.getSelectedItem() != null) {
+                    customer.setCustomerDay(daySpinner.getSelectedItem().toString());
+                }
 
-            if (stateSpinner.getSelectedItem() != null) {
-                customer.setCustomerState(stateSpinner.getSelectedItem().toString());
+                if (stateSpinner.getSelectedItem() != null) {
+                    customer.setCustomerState(stateSpinner.getSelectedItem().toString());
+                }
             }
+            updateCustomer();
         }
-        updateCustomer();
     }
 
     private void findCustomer(String customerID) {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findObjectByID(this, Util.CUSTOMER_REFERENCE, customerID);
 //        new AsyncTask<Integer, Void, Customer>() {
 //            @Override

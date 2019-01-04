@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     private Spinner daySpinner, serviceSpinner;
     private Customer customer;
     private List<Service> payableServices;
+    private ProgressBar progressBar;
 
     public static final String DAY_POSITION = "Day Adapter Position";
     public static final String GROUP_POSITION = "Radio Group Position";
@@ -106,6 +108,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
             }
 
         });
+        progressBar = findViewById(R.id.payment_reporting_progress_bar);
         findAllCustomers();
 
     }
@@ -122,39 +125,37 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void onSubmit(View view) {
-        boolean checkType = groupPosition == 0;
-        String payment = paymentAmount.getText().toString();
-        if (!payment.isEmpty()) {
-            Double amount = Double.parseDouble(payment);
-            if(amount > 0) {
-                if (groupPosition != -1) {
-                    if(groupPosition == 0) {
-                        String checkNumberText = checkNumber.getText().toString();
-                        if(!checkNumberText.isEmpty()) {
-                            customer.getPayment().payForServices(amount, dateString, checkNumberText);
-                            Toast.makeText(this, customer.getName() +  " " + amount, Toast.LENGTH_LONG).show();
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            boolean checkType = groupPosition == 0;
+            String payment = paymentAmount.getText().toString();
+            if (!payment.isEmpty()) {
+                Double amount = Double.parseDouble(payment);
+                if (amount > 0) {
+                    if (groupPosition != -1) {
+                        if (groupPosition == 0) {
+                            String checkNumberText = checkNumber.getText().toString();
+                            if (!checkNumberText.isEmpty()) {
+                                customer.getPayment().payForServices(amount, dateString, checkNumberText);
+                                Toast.makeText(this, customer.getName() + " " + amount, Toast.LENGTH_LONG).show();
+                                checkForPaymentMatch(checkType);
+                            }
+                            Toast.makeText(this, "The check number is blank. Please reenter " +
+                                    "the check number.", Toast.LENGTH_LONG).show();
+
+
+                        } else if (groupPosition == 1) {
+                            customer.getPayment().payForServices(amount, dateString);
+                            Toast.makeText(this, customer.getName() + " " + amount, Toast.LENGTH_LONG).show();
                             checkForPaymentMatch(checkType);
                         }
-                        Toast.makeText(this, "The check number is blank. Please reenter " +
-                                "the check number.", Toast.LENGTH_LONG).show();
-
-
                     }
-                    else if(groupPosition == 1){
-                        customer.getPayment().payForServices(amount, dateString);
-                        Toast.makeText(this, customer.getName() +  " " + amount, Toast.LENGTH_LONG).show();
-                        checkForPaymentMatch(checkType);
-                    }
+                } else {
+                    Toast.makeText(this, "Please enter an amount greater than 0.", Toast.LENGTH_LONG).show();
                 }
-            }
-            else {
-                Toast.makeText(this, "Please enter an amount greater than 0.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Please enter in an amount for the payment.", Toast.LENGTH_LONG).show();
             }
         }
-        else {
-            Toast.makeText(this, "Please enter in an amount for the payment.", Toast.LENGTH_LONG).show();
-        }
-
     }
 
     private void checkForPaymentMatch(final boolean checkType) {
@@ -301,6 +302,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
 ////                return null;
 ////            }
 ////        }.execute();
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }
 
@@ -334,5 +336,6 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         else {
             finish();
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

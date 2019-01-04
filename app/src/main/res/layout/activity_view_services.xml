@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".ViewServices">
 
+    <ProgressBar
+        android:id="@+id/view_services_progress_bar"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Spinner
         android:id="@+id/view_services_spinner"
         android:layout_width="0dp"
@@ -36,8 +49,8 @@
         android:id="@+id/view_services_date_text_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/quick_sheet_date"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/textView12"
@@ -139,9 +152,9 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="31dp"
         android:text="@string/view_services_sort_by"
         app:layout_constraintEnd_toStartOf="@+id/radioGroup3"
         app:layout_constraintStart_toStartOf="parent"

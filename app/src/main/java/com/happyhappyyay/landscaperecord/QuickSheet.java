@@ -1,21 +1,17 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,6 +30,7 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
     private EditText endDateText;
     private String startDateString;
     private String endDateString;
+    private ProgressBar progressBar;
     private final String DATE_STRING_END = "End date string";
 
     @Override
@@ -52,6 +49,7 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
             endDateString = savedInstanceState.getString(DATE_STRING_END);
             startDateString = savedInstanceState.getString(DATE_STRING);
         }
+        progressBar = findViewById(R.id.quick_sheet_progress_bar);
         daySpinner = findViewById(R.id.quick_sheet_day_spinner);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -152,6 +150,7 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
     }
 
     private void getCustomers() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
 //        new AsyncTask<Void, Void, List<Customer>>() {
 //            @Override
@@ -198,5 +197,6 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
     public void onPostExecute(List<Customer> databaseObjects) {
         allCustomers = databaseObjects;
         updateCustomers(databaseObjects);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

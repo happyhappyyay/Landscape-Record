@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
     private User user;
     private CheckBox admin;
     private String logInfo;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
         password = findViewById(R.id.add_user_pass);
         hours = findViewById(R.id.add_user_hours);
         admin = findViewById(R.id.add_user_admin_button);
+        progressBar = findViewById(R.id.add_user_progress_bar);
     }
 
     @Override
@@ -46,44 +49,46 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
 
     public void addNewUser(View view) {
         boolean error = false;
-        if (!firstName.getText().toString().isEmpty() & !lastName.getText().toString().isEmpty()) {
-            user = new User();
-            user.setName(firstName.getText().toString() + " " + lastName.getText().toString());
-            if (password.getText().toString().length() > 5) {
-                user.setPassword(password.getText().toString());
-            } else {
-                Toast.makeText(getApplicationContext(), "Password must be at least 6 characters" +
-                        " long", Toast.LENGTH_LONG).show();
-                error = true;
-                password.setText("");
-            }
-            if (hours.getText().toString().isEmpty()) {
-                user.setHours(0);
-            } else {
-                if (!error) {
-                    try {
-                        user.setHours(Double.parseDouble(hours.getText().toString()));
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            if (!firstName.getText().toString().isEmpty() & !lastName.getText().toString().isEmpty()) {
+                user = new User();
+                user.setName(firstName.getText().toString() + " " + lastName.getText().toString());
+                if (password.getText().toString().length() > 5) {
+                    user.setPassword(password.getText().toString());
+                } else {
+                    Toast.makeText(getApplicationContext(), "Password must be at least 6 characters" +
+                            " long", Toast.LENGTH_LONG).show();
+                    error = true;
+                    password.setText("");
+                }
+                if (hours.getText().toString().isEmpty()) {
+                    user.setHours(0);
+                } else {
+                    if (!error) {
+                        try {
+                            user.setHours(Double.parseDouble(hours.getText().toString()));
 
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "Hours must be entered as whole" +
-                                " (e.g., 5) or real (e.g., 5.0) numbers", Toast.LENGTH_LONG).show();
-                        hours.setText("");
-                        error = true;
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Hours must be entered as whole" +
+                                    " (e.g., 5) or real (e.g., 5.0) numbers", Toast.LENGTH_LONG).show();
+                            hours.setText("");
+                            error = true;
+                        }
                     }
+
+                }
+                user.setAdmin(admin.isChecked());
+                user.setNickname(nickname.getText().toString());
+                if (!error) {
+                    insertUser();
                 }
 
             }
-            user.setAdmin(admin.isChecked());
-            user.setNickname(nickname.getText().toString());
-            if (!error) {
-                insertUser();
-            }
-
         }
-
     }
 
     private void insertUser() {
+        progressBar.setVisibility(View.VISIBLE);
         logInfo = user.getName();
         Util.insertObject(this, Util.USER_REFERENCE, user);
         Toast.makeText(getApplicationContext(), "User account for " + user.getName() +

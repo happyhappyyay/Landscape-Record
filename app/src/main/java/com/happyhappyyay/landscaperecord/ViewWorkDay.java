@@ -1,15 +1,15 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +31,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     private RadioButton dayButton, weekButton, monthButton;
     private String calendarPosition = Util.retrieveStringCurrentDate();
     private int timeSpanChoice;
+    private ProgressBar progressBar;
     final static String TIME_SPAN_CHOICE = "time span choice";
     final static String CALENDAR_POSITION = "calendar position";
 
@@ -98,6 +99,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
                 calendarPosition = date;
             }
         });
+        progressBar = findViewById(R.id.view_work_day_progress_bar);
         findWorkDayByDate();
     }
 
@@ -117,6 +119,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     }
 
     private void findWorkDayByDate() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.enactMultipleDatabaseOperationsPostExecute(this);
 //        new AsyncTask<String, Void, Void>() {
 //            @Override
@@ -306,6 +309,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     @Override
     public void onPostExecute(List<WorkDay> databaseObjects) {
         setupViewWorkDayAdapter();
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
 

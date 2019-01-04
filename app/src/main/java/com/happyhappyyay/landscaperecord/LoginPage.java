@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
     private EditText username;
     private EditText password;
     private Authentication authentication;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +25,14 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
         authentication = Authentication.getAuthentication();
         username = findViewById(R.id.login_page_username);
         password = findViewById(R.id.login_page_password);
+        progressBar = findViewById(R.id.login_page_progress_bar);
     }
 
     public void attemptLogin(View view) {
-        if (!username.getText().toString().isEmpty()) {
-            loginUser();
+        if (progressBar.getVisibility() == View.INVISIBLE) {
+            if (!username.getText().toString().isEmpty()) {
+                loginUser();
+            }
         }
     }
 
@@ -42,6 +47,7 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
     }
 
     private void loginUser() {
+        progressBar.setVisibility(View.VISIBLE);
         AppDatabase db = AppDatabase.getAppDatabase(this);
         Util.findObjectByString(this, Util.USER_REFERENCE, username.getText().toString());
 //        new AsyncTask<Void, Void, User>() {

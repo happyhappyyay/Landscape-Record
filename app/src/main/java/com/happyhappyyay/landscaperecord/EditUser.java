@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
     private EditText firstName, lastName, nickname;
     private CheckBox adminBox;
     private String logInfo;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
         lastName = findViewById(R.id.edit_user_last_name);
         nickname = findViewById(R.id.edit_user_nickname);
         adminBox = findViewById(R.id.edit_user_admin_box);
+        progressBar = findViewById(R.id.edit_user_progress_bar);
         Intent intent = getIntent();
         String stringExtra = intent.getStringExtra("USER_ID");
         findUser(stringExtra);
@@ -37,22 +40,23 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
     }
 
     public void onSubmit(View view) {
-        String firstName = this.firstName.getText().toString();
-        String lastName = this.lastName.getText().toString();
-        String nickname = this.nickname.getText().toString();
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            String firstName = this.firstName.getText().toString();
+            String lastName = this.lastName.getText().toString();
+            String nickname = this.nickname.getText().toString();
 
-        if (!firstName.isEmpty() & !lastName.isEmpty())
-        {
-            user.setName(firstName + " " + lastName);
-            user.setAdmin(adminBox.isChecked());
+            if (!firstName.isEmpty() & !lastName.isEmpty()) {
+                user.setName(firstName + " " + lastName);
+                user.setAdmin(adminBox.isChecked());
+            }
+            if (!nickname.isEmpty()) {
+                user.setNickname(nickname);
+            }
+            logInfo = user.getName();
+            progressBar.setVisibility(View.VISIBLE);
+            Util.updateObject(this, Util.USER_REFERENCE, user);
+            finish();
         }
-        if(!nickname.isEmpty()) {
-            user.setNickname(nickname);
-        }
-        logInfo = user.getName();
-
-        Util.updateObject(this, Util.USER_REFERENCE, user);
-        finish();
     }
 
     @Override

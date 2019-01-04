@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
     List<Customer> customers;
     private int monthSelectionPosition;
     private int customerSelectionPosition;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +39,14 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
         recyclerView = findViewById(R.id.service_pricing_recycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        progressBar = findViewById(R.id.services_pricing_progress_bar);
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                monthSelectionPosition = i;
-                adapter.updateMonthSelection(monthSelectionPosition);
+                if(adapter != null) {
+                    monthSelectionPosition = i;
+                    adapter.updateMonthSelection(monthSelectionPosition);
+                }
             }
 
             @Override
@@ -49,6 +54,11 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
 
             }
         });
+        findAllCustomers();
+    }
+
+    private void findAllCustomers() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }
 
@@ -126,6 +136,7 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
         populateSpinner(customers);
         adapter = new RecyclerServicePricingAdapter(databaseObjects, this, monthSelectionPosition);
         recyclerView.setAdapter(adapter);
+        progressBar.setVisibility(View.INVISIBLE);
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {

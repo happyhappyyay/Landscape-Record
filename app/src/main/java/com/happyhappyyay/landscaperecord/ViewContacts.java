@@ -2,15 +2,15 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     private RecyclerView recyclerView;
     private RecyclerViewCustomersAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +29,17 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
         recyclerView = findViewById(R.id.view_customers_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        progressBar = findViewById(R.id.view_contacts_progress_bar);
         getCustomers();
     }
 
     public void onAddClick(View view) {
-        Intent intent = new Intent(this, NewContact.class);
-        startActivity(intent);
+            Intent intent = new Intent(this, NewContact.class);
+            startActivity(intent);
     }
 
     private void getCustomers() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
         //        new AsyncTask<Void, Void, List<Customer>>() {
 //            @Override
@@ -93,6 +96,7 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     public void onPostExecute(List<Customer> databaseObjects) {
         adapter = new RecyclerViewCustomersAdapter(ViewContacts.this, databaseObjects);
         recyclerView.setAdapter(adapter);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 }

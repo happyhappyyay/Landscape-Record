@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     private EditText dateText;
     private String dateString = Util.retrieveStringCurrentDate();
     private int logActivityReference;
+    private ProgressBar progressBar;
     public static final String DATE_STRING = "String of date";
 
     @Override
@@ -38,6 +40,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         setSupportActionBar(myToolbar);
         hours = findViewById(R.id.hour_operations_hours_text);
         authentication = Authentication.getAuthentication();
+        progressBar = findViewById(R.id.hour_operations_progress_bar);
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
@@ -75,48 +78,57 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         task.execute(this);
     }
 
+    private boolean progressBarIsInvisible() {
+        return progressBar.getVisibility() == View.INVISIBLE;
+    }
+
     public void payHours(View view) {
-        double payHours = hourCheck();
-        if (payHours > 0) {
-            if (user.getHours() - payHours >= 0) {
-                user.setHours(user.getHours() - payHours);
-                Toast.makeText(getApplicationContext(), payHours + " hours paid for " +
-                                user.getName() + ". " + user.getHours() + "remaining.",
-                        Toast.LENGTH_LONG).show();
-                logActivityReference = 3;
-                updateUser();
-            } else {
-                Toast.makeText(getApplicationContext(), "Hours paid: " + payHours + " exceeds " +
-                        "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
+        if(progressBarIsInvisible()) {
+            double payHours = hourCheck();
+            if (payHours > 0) {
+                if (user.getHours() - payHours >= 0) {
+                    user.setHours(user.getHours() - payHours);
+                    Toast.makeText(getApplicationContext(), payHours + " hours paid for " +
+                                    user.getName() + ". " + user.getHours() + "remaining.",
+                            Toast.LENGTH_LONG).show();
+                    logActivityReference = 3;
+                    updateUser();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Hours paid: " + payHours + " exceeds " +
+                            "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
 
     public void addHours(View view) {
-        double payHours = hourCheck();
-        if (payHours > 0) {
-            user.setHours(user.getHours() + payHours);
-            Toast.makeText(getApplicationContext(), payHours + " hours added for " +
-                    user.getName(), Toast.LENGTH_LONG).show();
-            logActivityReference = 0;
-            updateUser();
+        if(progressBarIsInvisible()) {
+            double payHours = hourCheck();
+            if (payHours > 0) {
+                user.setHours(user.getHours() + payHours);
+                Toast.makeText(getApplicationContext(), payHours + " hours added for " +
+                        user.getName(), Toast.LENGTH_LONG).show();
+                logActivityReference = 0;
+                updateUser();
+            }
         }
-
     }
 
     public void removeHours(View view) {
-        double payHours = hourCheck();
-        if (payHours > 0) {
-            if (user.getHours() - payHours >= 0) {
-                user.setHours(user.getHours() - payHours);
-                Toast.makeText(getApplicationContext(), payHours + " hours removed for " +
-                                user.getName() + ". " + user.getHours() + "remaining.",
-                        Toast.LENGTH_LONG).show();
-                logActivityReference = 1;
-                updateUser();
-            } else {
-                Toast.makeText(getApplicationContext(), "Hours removed: " + payHours + " exceeds " +
-                        "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
+        if(progressBarIsInvisible()) {
+            double payHours = hourCheck();
+            if (payHours > 0) {
+                if (user.getHours() - payHours >= 0) {
+                    user.setHours(user.getHours() - payHours);
+                    Toast.makeText(getApplicationContext(), payHours + " hours removed for " +
+                                    user.getName() + ". " + user.getHours() + "remaining.",
+                            Toast.LENGTH_LONG).show();
+                    logActivityReference = 1;
+                    updateUser();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Hours removed: " + payHours + " exceeds " +
+                            "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -177,6 +189,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     }
 
     private void updateUser() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.enactMultipleDatabaseOperations(this);
 
 //        new AsyncTask<Integer, Void, Void>() {
@@ -289,6 +302,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             hours.setText("");
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -303,5 +317,6 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     @Override
     public void onPostExecute(List databaseObjects) {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

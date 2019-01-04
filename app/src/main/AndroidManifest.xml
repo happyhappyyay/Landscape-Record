@@ -46,7 +46,6 @@
             android:name=".AddUser"
             android:theme="@style/AppTheme" />
         <activity android:name=".ViewUser" />
-        <activity android:name=".DeleteUser" />
         <activity android:name=".Dashboard" />
         <activity android:name=".Settings" />
         <activity android:name=".HourOperations" />

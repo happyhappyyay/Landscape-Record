@@ -1,17 +1,19 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
 public class ViewActivityLogs extends AppCompatActivity implements DatabaseAccess<LogActivity> {
 
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +23,12 @@ public class ViewActivityLogs extends AppCompatActivity implements DatabaseAcces
         recyclerView = findViewById(R.id.view_logs_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        progressBar = findViewById(R.id.view_logs_progress_bar);
         getLogs();
     }
 
     private void getLogs() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.LOG_REFERENCE);
 //        new AsyncTask<Void, Void, List<LogActivity>>() {
 //            @Override
@@ -55,5 +59,6 @@ public class ViewActivityLogs extends AppCompatActivity implements DatabaseAcces
         RecyclerLogAdapter adapter;
         adapter = new RecyclerLogAdapter(databaseObjects);
         recyclerView.setAdapter(adapter);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

@@ -18,6 +18,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -39,13 +40,14 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     private List<Customer> sortedCustomers;
     private Customer customer;
     private EditText date, manHours;
+    public static final String MAN_HOURS = "Man Hours";
     private Service service;
     private WorkDay workDay;
-    public static final String MAN_HOURS = "Man Hours";
     private LawnServices lawnServices;
     private LandscapeServices landscapeServices;
     private SnowServices snowServices;
     private int adapterPosition = Adapter.NO_SELECTION;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         date.setText(dateString);
         manHours = findViewById(R.id.job_services_man_hours_text);
         manHours.setText(manHoursString);
+        progressBar = findViewById(R.id.job_services_progress_bar);
         services = "";
         if(service != null) {
             ExistingService.getExistingService().setServices(service.getServices());
@@ -121,7 +124,8 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
             }
 
         });
-            Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
+        progressBar.setVisibility(View.VISIBLE);
+        Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -162,55 +166,56 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     }
 
     public void onSubmitButton(View view) {
-        if (service == null) {
-            service = new Service();
-        }
-        if (customer != null) {
-            if(Util.checkDateFormat(date.getText().toString())) {
-                long time = System.currentTimeMillis();
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            if (service == null) {
+                service = new Service();
+            }
+            if (customer != null) {
+                if (Util.checkDateFormat(date.getText().toString())) {
+                    long time = System.currentTimeMillis();
 
-                if (!date.getText().toString().isEmpty()) {
-                    if (Util.checkDateFormat(date.getText().toString())) {
-                        time = Util.convertStringDateToMilliseconds(date.getText().toString());
+                    if (!date.getText().toString().isEmpty()) {
+                        if (Util.checkDateFormat(date.getText().toString())) {
+                            time = Util.convertStringDateToMilliseconds(date.getText().toString());
+                        }
                     }
-                }
 
-                if (lawnServices.getView() != null) {
-                    services += lawnServices.markedCheckBoxes();
-                }
+                    if (lawnServices.getView() != null) {
+                        services += lawnServices.markedCheckBoxes();
+                    }
 
-                if (landscapeServices.getView() != null) {
-                    services += landscapeServices.markedCheckBoxes();
-                    service.setMaterials(landscapeServices.getMaterials());
-                }
-                if (snowServices.getView() != null) {
-                    services += snowServices.markedCheckBoxes();
-                }
-                service.setServices(services);
-                service.setCustomerName(customer.getName());
-                try {
-                    double numberOfManHours = Double.parseDouble(manHours.getText().toString());
-                    service.setManHours(numberOfManHours);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (service.getStartTime() == 0) {
-                    service.setStartTime(time);
-                    customer.addService(service);
+                    if (landscapeServices.getView() != null) {
+                        services += landscapeServices.markedCheckBoxes();
+                        service.setMaterials(landscapeServices.getMaterials());
+                    }
+                    if (snowServices.getView() != null) {
+                        services += snowServices.markedCheckBoxes();
+                    }
+                    service.setServices(services);
+                    service.setCustomerName(customer.getName());
+                    try {
+                        double numberOfManHours = Double.parseDouble(manHours.getText().toString());
+                        service.setManHours(numberOfManHours);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (service.getStartTime() == 0) {
+                        service.setStartTime(time);
+                        customer.addService(service);
+                    } else {
+                        service.setEndTime(time);
+                        service.setPause(false);
+                        customer.updateService(service);
+                    }
+                    progressBar.setVisibility(View.VISIBLE);
+                    Util.enactMultipleDatabaseOperations(this);
+
                 } else {
-                    service.setEndTime(time);
-                    service.setPause(false);
-                    customer.updateService(service);
+                    Toast.makeText(getApplicationContext(), "Incorrect date format please use mm/dd/yyyy.", Toast.LENGTH_LONG).show();
                 }
-                Util.enactMultipleDatabaseOperations(this);
-
+            } else {
+                Toast.makeText(getApplicationContext(), "No customer selected. Please select or create a customer.", Toast.LENGTH_LONG).show();
             }
-            else {
-                Toast.makeText(getApplicationContext(), "Incorrect date format please use mm/dd/yyyy.", Toast.LENGTH_LONG).show();
-            }
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "No customer selected. Please select or create a customer.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -310,6 +315,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 //                    }
 //                }
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

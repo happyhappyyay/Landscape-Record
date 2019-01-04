@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
     private String userID;
     private TextView name, password, hours;
     private User user;
+    private ProgressBar progressBar;
     private final String USER_ID = "User ID";
 
     @Override
@@ -32,19 +34,24 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
             // Restore value of members from saved state
             userID = savedInstanceState.getString(USER_ID);
         }
+        progressBar = findViewById(R.id.view_user_progress_bar);
         findUser(userID);
     }
 
     private void findUser(String userId) {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findObjectByID(this, Util.USER_REFERENCE, userId);
     }
 
     private void deleteUser() {
+        if(progressBar.getVisibility() == View.INVISIBLE) {
             if (!user.equals(Authentication.getAuthentication().getUser())) {
+                progressBar.setVisibility(View.VISIBLE);
                 Util.deleteObject(this, Util.USER_REFERENCE, user);
             } else {
                 Toast.makeText(getApplicationContext(), "Cannot delete logged in Admin", Toast.LENGTH_LONG).show();
             }
+        }
     }
 
     public void onDeleteUser(View view) {
@@ -71,9 +78,11 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
     }
 
     public void onEditUser(View view) {
-        Intent intent = new Intent(this, EditUser.class);
-        intent.putExtra("USER_ID", user.getUserId());
-        startActivity(intent);
+        if(progressBar.getVisibility() == View.INVISIBLE) {
+            Intent intent = new Intent(this, EditUser.class);
+            intent.putExtra("USER_ID", user.getUserId());
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -107,5 +116,6 @@ public class ViewUser extends AppCompatActivity implements DatabaseAccess<User> 
         else {
             finish();
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

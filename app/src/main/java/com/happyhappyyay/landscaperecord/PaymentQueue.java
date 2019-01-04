@@ -1,14 +1,15 @@
 package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class PaymentQueue extends AppCompatActivity implements AdapterView.OnIte
     private RecyclerServicePaymentAdapter adapter;
     private List<Customer> customers;
     private int adapterPosition;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +35,11 @@ public class PaymentQueue extends AppCompatActivity implements AdapterView.OnIte
         recyclerView = findViewById(R.id.payment_queue_recyclerview);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
+        progressBar = findViewById(R.id.payment_queue_progress_bar);
         if(savedInstanceState != null) {
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
         }
-
+        progressBar.setVisibility(View.VISIBLE);
         findAllUsers();
     }
 
@@ -59,6 +61,7 @@ public class PaymentQueue extends AppCompatActivity implements AdapterView.OnIte
     public void onPostExecute(List<Customer> databaseObjects) {
         customers = databaseObjects;
         populateSpinner(customers);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void populateSpinner(List<Customer> customers) {

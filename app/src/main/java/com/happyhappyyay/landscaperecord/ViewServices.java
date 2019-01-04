@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     private int adapterPosition;
     private int sortByPosition;
     private int viewByPosition;
+    private ProgressBar progressBar;
     private final String DATE_SEARCH = "Searched for date ";
     private final String SORT_SEARCH = "Sorted by ";
     private final String VIEW_SEARCH = "Viewed by ";
@@ -82,6 +84,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         spinner = findViewById(R.id.view_services_spinner);
+        progressBar = findViewById(R.id.view_services_progress_bar);
         getCustomers();
     }
 
@@ -146,21 +149,22 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void checkSearchClick(View view) {
-        if (!Util.checkDateFormat(dateString)) {
-            if (!dateString.equals("") || !dateString.equals(" ")) {
-                dateText.setText("");
-                Toast.makeText(this,
-                        "Date format incorrect. Please reenter the date.",
-                        Toast.LENGTH_SHORT).show();
+        if(progressBar.getVisibility() == View.VISIBLE) {
+            if (!Util.checkDateFormat(dateString)) {
+                if (!dateString.equals("") || !dateString.equals(" ")) {
+                    dateText.setText("");
+                    Toast.makeText(this,
+                            "Date format incorrect. Please reenter the date.",
+                            Toast.LENGTH_SHORT).show();
+                }
+                searchByDate = false;
+            } else {
+                searchByDate = true;
             }
-            searchByDate = false;
-        }
-        else {
-            searchByDate = true;
-        }
-        if (searchByDate) {
-            adapter.setServices(getSortedServicesList());
-            adapter.notifyDataSetChanged();
+            if (searchByDate) {
+                adapter.setServices(getSortedServicesList());
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -309,6 +313,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void getCustomers() {
+        progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }
 
@@ -345,13 +350,14 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
             adapter.setServices(services);
             adapter.notifyDataSetChanged();
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if(adapter != null) {
-            Util.findAllObjects(this,Util.CUSTOMER_REFERENCE);
+            getCustomers();
         }
 
     }

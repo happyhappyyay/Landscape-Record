@@ -8,6 +8,19 @@
     android:focusableInTouchMode="true"
     tools:context=".QuickSheet">
 
+    <ProgressBar
+        android:id="@+id/quick_sheet_progress_bar"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/quick_sheet_start_date_text"
         android:layout_width="0dp"
@@ -56,8 +69,10 @@
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_day_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/quick_sheet_day_spinner"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
         android:id="@+id/quick_sheet_day_spinner"
