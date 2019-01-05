@@ -178,5 +178,13 @@
     <string name="services_pricing_title">Services Pricing</string>
 
     <string name="fragment_landscaping_material_title"> Materials </string>
+    <string name="first_glance_title">First User</string>
+    <string name="first_glance_preexisting">Access preexisting MongoDB database</string>
+    <string name="first_glance_database">MongoDB Database Access</string>
+    <string name="first_glance_test">Test</string>
+    <string name="first_glance_user">Back to creating first user</string>
+    <string name="first_glance_logo">Landscape Record logo</string>
+    <string name="first_glance_start">Get Started</string>
+    <string name="pref_key_after_first_time" />
 
 </resources>

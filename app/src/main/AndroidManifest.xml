@@ -64,7 +64,8 @@
         <activity android:name=".ViewUsers" />
         <activity android:name=".PaymentQueue" />
         <activity android:name=".ServicePricing" />
-        <activity android:name=".testDatabase"></activity>
+        <activity android:name=".testDatabase" />
+        <activity android:name=".FirstGlance"></activity>
     </application>
 
 </manifest>

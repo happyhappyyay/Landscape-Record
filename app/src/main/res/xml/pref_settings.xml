@@ -8,7 +8,8 @@
             android:title="@string/pref_settings_quick_sheet_items_title">
             <PreferenceCategory
                 android:key="pref_key_quick_sheet_items_title"
-                android:title="@string/pref_settings_quick_sheet_items_title"></PreferenceCategory>
+                android:title="@string/pref_settings_quick_sheet_items_title">
+            </PreferenceCategory>
             <ListPreference
                 android:defaultValue="@string/lawn_services_prune"
                 android:entries="@array/work_activities"
@@ -40,10 +41,9 @@
             android:title="@string/billing_item_company_name" />
     </PreferenceCategory>
     <SwitchPreference
-            android:defaultValue="false"
-            android:key="pref_settings_database_usage"
-            android:summary="@string/pref_settings_database_usage_summary"
-            android:title="@string/pref_settings_database_usage_title" />
+        android:key="pref_settings_database_usage"
+        android:summary="@string/pref_settings_database_usage_summary"
+        android:title="@string/pref_settings_database_usage_title" />
     <EditTextPreference
         android:defaultValue=" "
         android:dependency="pref_settings_database_usage"

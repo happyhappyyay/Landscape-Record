@@ -2,7 +2,9 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -21,11 +23,25 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean afterFirstTime = sharedPref.getBoolean(getString(R.string.pref_key_after_first_time), false);
+        if(!afterFirstTime) {
+            boolean afterFirst = getIntent().getBooleanExtra("after_first_time", false);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.pref_key_after_first_time), afterFirst);
+            editor.apply();
+            boolean afterFirstTimeInside = sharedPref.getBoolean(getString(R.string.pref_key_after_first_time), false);
+            if(!afterFirstTimeInside) {
+                Intent intent = new Intent(this, FirstGlance.class);
+                startActivity(intent);
+            }
+        }
         setContentView(R.layout.activity_login_page);
         authentication = Authentication.getAuthentication();
         username = findViewById(R.id.login_page_username);
         password = findViewById(R.id.login_page_password);
         progressBar = findViewById(R.id.login_page_progress_bar);
+
     }
 
     public void attemptLogin(View view) {
@@ -48,7 +64,6 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
 
     private void loginUser() {
         progressBar.setVisibility(View.VISIBLE);
-        AppDatabase db = AppDatabase.getAppDatabase(this);
         Util.findObjectByString(this, Util.USER_REFERENCE, username.getText().toString());
 //        new AsyncTask<Void, Void, User>() {
 //            @Override
@@ -102,8 +117,14 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
         if (!authorized) {
             username.setText("");
             password.setText("");
-            Toast.makeText(getApplicationContext(), "Could not login with the provided " +
+            Toast.makeText(getApplicationContext(), "Could not log in with the provided " +
                     "credentials", Toast.LENGTH_LONG).show();
         }
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
     }
 }
