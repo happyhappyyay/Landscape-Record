@@ -18,7 +18,7 @@
         android:textSize="36sp"
         android:textStyle="bold"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/dashboard_main_menu"
+        app:layout_constraintBottom_toBottomOf="@+id/dashboard_billing_notification"
         app:layout_constraintEnd_toStartOf="@+id/dashboard_hours_notification"
         app:layout_constraintStart_toEndOf="@+id/dashboard_billing_notification"
         app:layout_constraintTop_toTopOf="@+id/dashboard_hours_notification" />
@@ -28,7 +28,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="1dp"
         android:gravity="center_horizontal"
         android:text="Unreceived Payments"
@@ -42,8 +41,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_layout"
 
+        android:background="@drawable/rounded_layout"
         android:gravity="bottom|center"
         android:text="0"
         android:textColor="@color/colorPrimary"
@@ -74,14 +73,8 @@
         android:id="@+id/dashboard_logged_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="115dp"
-        android:layout_marginLeft="115dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginRight="115dp"
+        android:layout_marginStart="8dp"
         android:text="@string/login_page_logged"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_toolbar" />
 
@@ -89,37 +82,24 @@
         android:id="@+id/dashboard_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:text="@string/login_page_username"
         android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_logged_in" />
-
-    <Button
-        android:id="@+id/dashboard_main_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="startMainMenu"
-        android:text="@string/login_page_main_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView24" />
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_toolbar" />
 
     <TextView
         android:id="@+id/dashboard_checked_in_time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_username" />
+        app:layout_constraintStart_toEndOf="@+id/dashboard_username"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_toolbar" />
 
     <TextView
         android:id="@+id/textView24"
@@ -164,7 +144,7 @@
         android:textSize="36sp"
         android:textStyle="bold"
         android:typeface="normal"
-        app:layout_constraintBottom_toTopOf="@+id/dashboard_payments_notification"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_payments_notification_text"
         app:layout_constraintEnd_toStartOf="@+id/dashboard_users_in_notification"
         app:layout_constraintStart_toEndOf="@+id/dashboard_notifications_notification"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
@@ -208,7 +188,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="1dp"
         android:gravity="center_horizontal"
         android:text="Unsent Billing"
@@ -222,7 +201,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="1dp"
         android:gravity="center_horizontal"
         android:text="Hours to be Paid"
@@ -269,5 +247,16 @@
         app:layout_constraintEnd_toStartOf="@+id/dashboard_in_progress_notification"
         app:layout_constraintStart_toStartOf="@+id/dashboard_notifications_notification"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_checked_in_time_text" />
+
+    <Button
+        android:id="@+id/dashboard_main_menu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:onClick="startMainMenu"
+        android:text="@string/login_page_main_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/dashboard_billing_notification_text"
+        app:layout_constraintStart_toStartOf="@+id/dashboard_billing_notification_text" />
 
 </android.support.constraint.ConstraintLayout>

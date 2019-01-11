@@ -122,7 +122,7 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
 
     @Override
     public String createLogInfo() {
-        return null;
+        return user.getName();
     }
 
     @Override

@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.mongodb.MongoClient;
@@ -18,6 +18,7 @@ import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public abstract class OnlineDatabase implements DatabaseOperator{
         return instance;
     }
 
-        public static <T extends DatabaseObjects> List<T> convertDocumentsToObjects(List<Document> docs, Class<T> objClass) {
+    public static <T extends DatabaseObjects> List<T> convertDocumentsToObjects(List<Document> docs, Class<T> objClass) {
         Gson gson=new Gson();
         List<T> objects = new ArrayList<>();
 
@@ -60,22 +61,41 @@ public abstract class OnlineDatabase implements DatabaseOperator{
             String s = doc.toJson();
             return gson.fromJson(s, objClass);
         }
-                return null;
+        return null;
+    }
+
+    private static String convertJSONFromLongNumberToLong(String s) {
+        final String JSON_LONG = "{ \"$numberLong\" : ";
+        String modifiedJsonString =s;
+        int startIndex = 0;
+        int endIndex;
+        while(startIndex >= 0) {
+            startIndex = modifiedJsonString.indexOf(JSON_LONG);
+            endIndex = modifiedJsonString.indexOf("}", startIndex + JSON_LONG.length());
+            if(startIndex != -1) {
+                String tempBeforeLongString = modifiedJsonString.substring(0, startIndex);
+                String tempAfterLongString = modifiedJsonString.substring(startIndex + JSON_LONG.length(), endIndex);
+                modifiedJsonString = tempBeforeLongString + tempAfterLongString + modifiedJsonString.substring(endIndex + 1, modifiedJsonString.length());
+            }
+        }
+        return modifiedJsonString;
     }
 
     public static <T extends DatabaseObjects> T convertDocumentToObject(FindIterable<Document> doc, Class<T> objClass) {
         MongoCursor<Document> dbc = doc.iterator();
 
         while (dbc.hasNext()) {
+            String json = convertJSONFromLongNumberToLong(dbc.next().toJson());
             try {
-                JsonParser jsonParser = new JsonFactory().createParser(dbc.next().toJson());
+                JsonParser jsonParser = new JsonFactory().createParser(json);
                 ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
                 return mapper.readValue(jsonParser, objClass);
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("DOCSTOOBJS", "convertDocumentsToObjects: fail");
+                Log.e("DOCSTOOBJS","An IOException was caught :"+e.getMessage());
             }
         }
         return null;
@@ -86,30 +106,29 @@ public abstract class OnlineDatabase implements DatabaseOperator{
         List<T> convertedObjects = new ArrayList<>();
 
         while (dbc.hasNext()) {
+            String json = convertJSONFromLongNumberToLong(dbc.next().toJson());
             try {
-                JsonParser jsonParser = new JsonFactory().createParser(dbc.next().toJson());
+                JsonParser jsonParser = new JsonFactory().createParser(json);
                 ObjectMapper mapper = new ObjectMapper();
 
                 T object = mapper.readValue(jsonParser, objClass);
                 convertedObjects.add(object);
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                Log.d("DOCSTOOBJS", "convertDocumentsToObjects: fail");
+                Log.e("DOCSTOOBJS","An IOException was caught :"+e.getMessage());
+
             }
         }
         return convertedObjects;
     }
 
     public static Document convertFromObjectToDocument (Object obj) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String json = mapper.writeValueAsString(obj);
+        Gson gson = new Gson();
+
+            String json = gson.toJson(obj);
+
             return Document.parse(json);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public MongoDatabase getMongoDb() {

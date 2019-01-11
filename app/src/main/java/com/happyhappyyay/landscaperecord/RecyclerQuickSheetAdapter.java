@@ -84,11 +84,17 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
-            databaseAccessMethod(db);
+        if(Util.hasOnlineDatabaseEnabled(context)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
+                databaseAccessMethod(db);
 
-        } catch(Exception e) {
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(context);
+                databaseAccessMethod(db);
+            }
+        }
+        else {
             AppDatabase db = AppDatabase.getAppDatabase(context);
             databaseAccessMethod(db);
         }

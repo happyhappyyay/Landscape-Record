@@ -28,7 +28,7 @@ import static com.happyhappyyay.landscaperecord.OnlineDatabase.convertFromObject
 public class Util {
     public static final Customer CUSTOMER_REFERENCE = new Customer();
     public static final LogActivity LOG_REFERENCE = new LogActivity();
-    public static final WorkDay WORK_DAY_REFERENCE = new WorkDay(retrieveStringCurrentDate());
+    public static final WorkDay WORK_DAY_REFERENCE = new WorkDay();
     public static final User USER_REFERENCE = new User();
     public static final String DELIMITER = "|";
     public static final String INSERT = "Insert";
@@ -63,7 +63,7 @@ public class Util {
        return Authentication.getAuthentication();
     }
 
-    private static boolean hasOnlineDatabaseEnabled(Context context) {
+    public static boolean hasOnlineDatabaseEnabled(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getBoolean("pref_settings_database_usage", false);
     }
@@ -263,18 +263,16 @@ public class Util {
                 if(hasOnlineDatabaseEnabled(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
-                        List<T> objects = object.retrieveAllClassInstancesFromDatabase(db);
-                        if(!objects.isEmpty()) {
-                            return object.retrieveAllClassInstancesFromDatabase(db);
-                        }
+                        dbObjs = object.retrieveAllClassInstancesFromDatabase(db);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-
-                    AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
-                    return object.retrieveAllClassInstancesFromDatabase(db);
-
+                    if(dbObjs == null) {
+                        AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
+                        dbObjs = object.retrieveAllClassInstancesFromDatabase(db);
+                    }
+                    return dbObjs;
             }
 
             @Override
@@ -516,22 +514,29 @@ public class Util {
     public static void updateDatabases(Context context) {
             OnlineDatabase od = OnlineDatabase.getOnlineDatabase(context);
             AppDatabase ad = AppDatabase.getAppDatabase(context);
-            updateDatabase(context, od, ad);
-            updateDatabase(context, ad, od);
-
+            LogActivity logO = updateDatabase(od, ad);
+            LogActivity logU = updateDatabase(ad, od);
+            logO.setModifiedTime(logU.getModifiedTime());
+            LOG_REFERENCE.insertClassInstanceFromDatabase(od, logO);
+            LOG_REFERENCE.insertClassInstanceFromDatabase(ad, logU);
     }
 
-    public static void updateDatabase(Context context, DatabaseOperator originalDB, DatabaseOperator updatingDB) {
+    public static LogActivity updateDatabase(DatabaseOperator originalDB, DatabaseOperator updatingDB) {
         int deleteCount = 0;
         int insertCount = 0;
         int updateCount = 0;
         int logCount = 0;
-        List<LogActivity> logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTimeWithType(originalDB, 0, LogActivityType.DATABASE.ordinal());
+        List<LogActivity> logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTimeWithType(updatingDB, 0, LogActivityType.DATABASE.ordinal());
         long newestLogTime = 0;
-        for (int i = 0; i < logs.size(); i++) {
-            long logModifiedTime = logs.get(i).getModifiedTime();
-            if (logModifiedTime > newestLogTime) {
-                newestLogTime = logModifiedTime;
+        if(logs.size() > 0) {
+            int count = 0;
+            for (int i = 0; i < logs.size(); i++) {
+                Log.d(TAG, "updateDatabase: " + count);
+                count++;
+                long logModifiedTime = logs.get(i).getModifiedTime();
+                if (logModifiedTime > newestLogTime) {
+                    newestLogTime = logModifiedTime;
+                }
             }
         }
 
@@ -540,52 +545,58 @@ public class Util {
 
         for (int i = 0; i < logs.size(); i++) {
             String logObjId = logs.get(i).getObjId();
-            if (logs.get(i).getLogActivityAction() == 0) {
+            if (logs.get(i).getLogActivityAction() == LogActivityAction.ADD.ordinal()) {
                 switch (logs.get(i).getLogActivityType()) {
                     case 0:
-                        User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                        if (user != null) {
-                            USER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, user);
+                        User userO = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        User userU = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (userO != null & userU == null) {
+                            USER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, userO);
                             insertCount++;
                         }
                         break;
                     case 1:
-                        Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        Customer customerO = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        Customer customerU = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
                         Log.d("DATABASE", "updateDatabase: customer add");
-                        if (customer != null) {
-                            CUSTOMER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, customer);
+                        if (customerO != null & customerU == null) {
+                            CUSTOMER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, customerO);
                             insertCount++;
                         }
                         break;
                     case 7:
-                        WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                        if (workDay != null) {
-                            WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(updatingDB, workDay);
+                        WorkDay workDayO = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        WorkDay workDayU = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (workDayO != null & workDayU ==null) {
+                            WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(updatingDB, workDayO);
                             insertCount++;
                         }
                         break;
                 }
-            } else if (logs.get(i).getLogActivityAction() == 1) {
+            } else if (logs.get(i).getLogActivityAction() == LogActivityAction.DELETE.ordinal()) {
                 switch (logs.get(i).getLogActivityType()) {
                     case 0:
-                        User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                        if (user != null) {
-                            USER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, user);
+                        User userO = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        User userU = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (userO == null & userU != null) {
+                            USER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, userU);
                             deleteCount++;
                         }
                         break;
                     case 1:
-                        Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                        if (customer != null) {
-                            CUSTOMER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, customer);
+                        Customer customerO = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        Customer customerU = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (customerO == null & customerU != null) {
+                            CUSTOMER_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, customerU);
                             deleteCount++;
                             Log.d("DATABASE", "updateDatabase: customer delete");
                         }
                         break;
                     case 7:
-                        WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
-                        if (workDay != null) {
-                            WORK_DAY_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, workDay);
+                        WorkDay workDayO = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        WorkDay workDayU = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (workDayO == null & workDayU != null) {
+                            WORK_DAY_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, workDayU);
                             deleteCount++;
                         }
                         break;
@@ -607,6 +618,7 @@ public class Util {
             if(databaseObject instanceof User) {
                 User user = USER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, databaseObject.getId());
                 if(user != null) {
+                    databaseObject.setModifiedTime(System.currentTimeMillis());
                     USER_REFERENCE.updateClassInstanceFromDatabase(updatingDB, (User) databaseObject);
                     updateCount++;
                 }
@@ -614,6 +626,7 @@ public class Util {
             else if(databaseObject instanceof Customer) {
                 Customer customer = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, databaseObject.getId());
                 if(customer != null) {
+                    databaseObject.setModifiedTime(System.currentTimeMillis());
                     CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(updatingDB, (Customer) databaseObject);
                     updateCount++;
                 }
@@ -621,6 +634,7 @@ public class Util {
             } else if (databaseObject instanceof WorkDay) {
                 WorkDay workDay = WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, databaseObject.getId());
                 if(workDay != null) {
+                    databaseObject.setModifiedTime(System.currentTimeMillis());
                     WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(updatingDB, (WorkDay) databaseObject);
                     updateCount++;
                 }
@@ -629,15 +643,18 @@ public class Util {
 
         logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         for(int i = 0; i < logs.size(); i++) {
-            LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logs.get(i));
-            logCount++;
+            LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getLogId());
+            LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getLogId());
+            if (logO != null & logU == null) {
+                LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logO);
+                logCount++;
+            }
         }
 
-        LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), "ADD:"
+        return new LogActivity(Authentication.getAuthentication().getUser().getName(), "ADD:"
                 + insertCount + " UPDATE:" + updateCount + " DELETE:" + deleteCount + " LOG:" + logCount,
                 LogActivityAction.UPDATE.ordinal(), LogActivityType.DATABASE.ordinal());
 
-        LOG_REFERENCE.insertClassInstanceFromDatabase(originalDB, log);
         }
 
 ////        class UpdateHolder   {

@@ -276,11 +276,18 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
-            updateWorkDay(db);
-        }catch (Exception e) {
+        if(Util.hasOnlineDatabaseEnabled(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
+                updateWorkDay(db);
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(this);
+                Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
+                updateWorkDay(db);
+            }
+        }
+        else {
             AppDatabase db = AppDatabase.getAppDatabase(this);
             Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
             updateWorkDay(db);

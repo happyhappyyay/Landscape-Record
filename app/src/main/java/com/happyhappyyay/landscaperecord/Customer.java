@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
@@ -17,8 +18,9 @@ import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gt;
+import static com.mongodb.client.model.Projections.excludeId;
 
-@Entity
+@JsonIgnoreProperties(ignoreUnknown = true) @Entity
 public class Customer implements DatabaseObjects<Customer> {
     @PrimaryKey @NonNull
     private String customerId = UUID.randomUUID().toString();
@@ -137,11 +139,11 @@ public class Customer implements DatabaseObjects<Customer> {
         this.customerServices = customerServices;
     }
 
-    public String getCustomerId() {
+    public @NonNull String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    public void setCustomerId(@NonNull String customerId) {
         this.customerId = customerId;
     }
 
@@ -209,7 +211,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find();
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find().projection(excludeId());
         return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
@@ -221,7 +223,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime));
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime)).projection(excludeId());
         return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
@@ -233,7 +235,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id));
+        FindIterable<Document> document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id)).projection(excludeId());
         return OnlineDatabase.convertDocumentToObject(document, Customer.class);
 
     }

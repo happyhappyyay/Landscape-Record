@@ -58,7 +58,6 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
             }
         });
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
     }
 
     public void onDatabaseSubmit(View view) {

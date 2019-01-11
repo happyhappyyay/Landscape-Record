@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -21,7 +23,7 @@ public class ViewUsers extends AppCompatActivity implements DatabaseAccess<User>
         RecyclerView.LayoutManager layoutManager;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_users);
-        Toolbar myToolbar = findViewById(R.id.view_users_toolbar);
+        Toolbar myToolbar = findViewById(R.id.user_settings_toolbar);
         setSupportActionBar(myToolbar);
         recyclerView = findViewById(R.id.view_users_recycler_view);
         layoutManager = new LinearLayoutManager(this);
@@ -79,5 +81,16 @@ public class ViewUsers extends AppCompatActivity implements DatabaseAccess<User>
         adapter = new RecyclerViewUsersAdapter(this, databaseObjects);
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
     }
 }

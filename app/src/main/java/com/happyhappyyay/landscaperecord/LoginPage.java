@@ -52,11 +52,6 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
         }
     }
 
-    public void skipLogin(View view) {
-        Intent intent = new Intent(getApplicationContext(), AddUser.class);
-        startActivity(intent);
-    }
-
     public void testDatabase(View view) {
         Intent intent = new Intent(getApplicationContext(), testDatabase.class);
         startActivity(intent);

@@ -83,7 +83,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
         if(progressBar.getVisibility() == View.INVISIBLE) {
             boolean authenticatedUser = false;
             if (user.getUserId().equals(authentication.getUser().getUserId())) {
-                Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
                 authenticatedUser = true;
             }
             long currentTime = System.currentTimeMillis();
@@ -113,7 +112,6 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
             boolean authenticatedUser = false;
             if (user.getUserId().equals(authentication.getUser().getUserId())) {
                 authenticatedUser = true;
-                Toast.makeText(this, "same", Toast.LENGTH_SHORT).show();
             }
             double currentTime = System.currentTimeMillis();
             double hours = ((currentTime - startTime) / MILLISECONDS_TO_HOURS);
@@ -248,10 +246,16 @@ public class TimeReporting extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            databaseAccessMethod(db);
-        } catch (Exception e) {
+        if(Util.hasOnlineDatabaseEnabled(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                databaseAccessMethod(db);
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(this);
+                databaseAccessMethod(db);
+            }
+        }
+        else {
             AppDatabase db = AppDatabase.getAppDatabase(this);
             databaseAccessMethod(db);
         }

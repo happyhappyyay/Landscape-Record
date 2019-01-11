@@ -20,6 +20,7 @@ import java.util.UUID;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gt;
+import static com.mongodb.client.model.Projections.excludeId;
 
 //log actions performed by user
 @Entity
@@ -142,7 +143,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find();
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find().projection(excludeId());
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 
@@ -194,18 +195,18 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(and(gt("modifiedTime", modifiedTime), eq("logActivityAction", logActivityAction)));
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(and(gt("modifiedTime", modifiedTime), eq("logActivityAction", logActivityAction))).projection(excludeId());
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 
     public List<LogActivity> retrieveClassInstancesAfterModifiedTimeWithType(DatabaseOperator db, long modifiedTime, int logActivityType) {
         if(db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
-            return ad.logDao().getNewlyModifiedActionLogs(modifiedTime, logActivityType);
+            return ad.logDao().getNewlyModifiedTypeLogs(modifiedTime, logActivityType);
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(and(gt("modifiedTime", modifiedTime), eq("logActivityType", logActivityType)));
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(and(gt("modifiedTime", modifiedTime), eq("logActivityType", logActivityType))).projection(excludeId());
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 
@@ -217,7 +218,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(gt("modifiedTime", modifiedTime));
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(gt("modifiedTime", modifiedTime)).projection(excludeId());
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 

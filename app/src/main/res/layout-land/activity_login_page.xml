@@ -44,16 +44,12 @@
         android:id="@+id/login_page_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="496dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="496dp"
-        android:onClick="skipLogin"
+        android:layout_marginBottom="7dp"
+        android:onClick="attemptLogin"
         android:text="@string/submit_button"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

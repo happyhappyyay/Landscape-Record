@@ -282,7 +282,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_add_contact).setEnabled(false);
+        menu.findItem(R.id.menu_add_service).setEnabled(false);
         return true;
     }
 
@@ -320,11 +320,18 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
-            updateWorkDay(db);
-        } catch(Exception e) {
+        if(Util.hasOnlineDatabaseEnabled(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
+                updateWorkDay(db);
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(this);
+                Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
+                updateWorkDay(db);
+            }
+        }
+        else {
             AppDatabase db = AppDatabase.getAppDatabase(this);
             Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
             updateWorkDay(db);
