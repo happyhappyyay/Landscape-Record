@@ -17,7 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAccess<WorkDay> {
     private CalendarView calendarView;
@@ -123,39 +126,6 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     private void findWorkDayByDate() {
         progressBar.setVisibility(View.VISIBLE);
         Util.enactMultipleDatabaseOperationsPostExecute(this);
-//        new AsyncTask<String, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(String... sDate) {
-//
-//                switch(timeSpanChoice) {
-//                    case 0:
-//                        WorkDay selectedWorkDay = db.workDayDao().findWorkDayByDate(sDate[0]);
-//                        if (selectedWorkDay != null) {
-//                            workDay = selectedWorkDay;
-//                        }
-//                        break;
-//                    case 1:
-//                        List<WorkDay> selectedWorkWeek = db.workDayDao().findWorkWeekByTime(Util.convertStringToFirstDayOfWeekMilli(sDate[0]));
-//
-//                        if (selectedWorkWeek != null) {
-//                            workDays = selectedWorkWeek;
-//                        }
-//                        break;
-//                    case 2:
-//                        List<WorkDay> selectedWorkMonth = db.workDayDao().findWorkMonthByTime(Util.convertStringToFirstDayOfMonthMilli(sDate[0]));
-//
-//                        if (selectedWorkMonth != null) {
-//                            workDays = selectedWorkMonth;
-//                        }
-//                }
-//                users = db.userDao().getAllUsers();
-//                return null;
-//            }
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                setupViewWorkDayAdapter();
-//            }
-//        }.execute(date);
     }
 
     private void setupViewWorkDayAdapter() {
@@ -190,52 +160,37 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     }
 
     public List<String> createStringFromUserHourReferences(WorkDay workDay) {
-        List<String> usersAndHours = new ArrayList<>();
-        List<String> userReferences = workDay.getUserReference();
-        List<Integer> userHours = workDay.getHours();
-
-        for(int i = 0; i < workDay.getHours().size(); i++) {
-            String userAndHours = userReferences.get(i) + " : " + userHours.get(i);
-            usersAndHours.add(userAndHours);
-        }
-
-        return usersAndHours;
+        return workDay.retrieveUsersHoursAsString();
     }
 
     public List<String> createStringFromUserHourReferences(List<WorkDay> workDays) {
-        List<String> usersAndHours = new ArrayList<>();
-        List<Integer> userHours = new ArrayList<>();
-        List<String> userReferences = new ArrayList<>();
-        boolean init = false;
-        for (WorkDay w: workDays) {
-            if (init) {
-                for (int i = 0; i < w.getHours().size(); i++) {
-                    boolean userAlreadyExists = false;
-                    for (int j = 0; j < userReferences.size(); j++) {
-                        if (w.getUserReference().get(i).equals(userReferences.get(j))) {
-                            userAlreadyExists = true;
-                            int existingUserHours = userHours.get(j);
-                            int additionalUserHours = w.getHours().get(i);
-                            userHours.set(j, existingUserHours + additionalUserHours);
-                        }
-                    }
-                    if (!userAlreadyExists) {
-                        userReferences.add(w.getUserReference().get(i));
-                        userHours.add(w.getHours().get(i));
-                    }
+        Map<String, Integer> userHours = new HashMap<>();
+        for(WorkDay w: workDays) {
+            Set< Map.Entry<String, Integer> > mapSet = w.getUserHours().entrySet();
+            for (Map.Entry< String, Integer> mapEntry:mapSet)
+            {
+                String key = mapEntry.getKey();
+                Integer value = mapEntry.getValue();
+                if(userHours.containsKey(key)) {
+                    userHours.put(key,userHours.get(key) + value);
                 }
-            } else {
-                init = true;
-                userReferences.addAll(w.getUserReference());
-                userHours.addAll(w.getHours());
+                else {
+                    userHours.put(key, value);
+                }
             }
         }
 
-        for(int i = 0; i < userHours.size(); i++) {
-            String userAndHours = userReferences.get(i) + " : " + userHours.get(i);
-            usersAndHours.add(userAndHours);
+        List<String> strings = new ArrayList<>();
+        Set< Map.Entry<String, Integer> > mapSet = userHours.entrySet();
+        int count = 0;
+
+        for (Map.Entry< String, Integer> mapEntry:mapSet)
+        {
+            String hourEntry = mapEntry.getKey() + " : " + mapEntry.getValue();
+            strings.add(count, hourEntry);
+            count++;
         }
-        return usersAndHours;
+        return strings;
     }
 
     public List<String> removeCustomerServicesStopCharacters(List<Service> services) {

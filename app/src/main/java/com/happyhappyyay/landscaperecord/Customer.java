@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
@@ -20,7 +19,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gt;
 import static com.mongodb.client.model.Projections.excludeId;
 
-@JsonIgnoreProperties(ignoreUnknown = true) @Entity
+@Entity
 public class Customer implements DatabaseObjects<Customer> {
     @PrimaryKey @NonNull
     private String customerId = UUID.randomUUID().toString();
@@ -78,9 +77,32 @@ public class Customer implements DatabaseObjects<Customer> {
         for (int i = 0; i < customerServices.size(); i++) {
             String services = customerServices.get(i).getServices();
             Service service = customerServices.get(i);
-            servicesWithPrices.add(Util.convertLongToStringDate(service.getEndTime()) + " " + services + " $ " + payment.checkServiceForPrice(services));
+            servicesWithPrices.add(Util.convertLongToStringDate(service.getEndTime()) + " " + services + " $ " + payment.returnServicePrice(services));
         }
         return servicesWithPrices;
+    }
+
+    public boolean hasUnpricedServicesForMonth(int month) {
+        for (int i = 0; i < customerServices.size(); i++) {
+            Service service = customerServices.get(i);
+            int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
+            if(!service.isPriced() && serviceMonth == month) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Service> retrieveUnpricedServicesForMonth(int month) {
+        List<Service> unpricedServices = new ArrayList<>();
+        for (int i = 0; i < customerServices.size(); i++) {
+            Service service = customerServices.get(i);
+            int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
+            if(!service.isPriced() && serviceMonth == month) {
+                unpricedServices.add(customerServices.get(i));
+            }
+        }
+        return unpricedServices;
     }
 
     public void removeService(Service customerService) {

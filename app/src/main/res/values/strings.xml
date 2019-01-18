@@ -186,5 +186,7 @@
     <string name="first_glance_logo">Landscape Record logo</string>
     <string name="first_glance_start">Get Started</string>
     <string name="pref_key_after_first_time" />
+    <string name="billing_service_item_edit_text">Edit</string>
+    <string name="billing_preview_title">Bill Preview</string>
 
 </resources>

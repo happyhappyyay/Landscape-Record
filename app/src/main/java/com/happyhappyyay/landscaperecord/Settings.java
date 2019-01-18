@@ -3,10 +3,12 @@ package com.happyhappyyay.landscaperecord;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -37,11 +39,27 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         String databaseUsageKey = "pref_settings_database_usage";
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         if(s.equals(databaseUsageKey)) {
-            if(sharedPreferences.getBoolean(databaseUsageKey, true)){
+            if(sharedPreferences.getBoolean(s, true)){
                 Util.enactMultipleDatabaseOperations(this);
             }
         }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        pref.registerOnSharedPreferenceChangeListener(this);
+
+
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        pref.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override

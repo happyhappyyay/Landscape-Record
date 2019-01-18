@@ -163,7 +163,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         if(payableServices.size() > 0) {
             final Service service = payableServices.get(serviceSpinner.getSelectedItemPosition() - ZERO_POSITION);
 
-            double priceOfService = customer.getPayment().checkServiceForPrice(service.getServices());
+            double priceOfService = customer.getPayment().returnServicePrice(service.getServices());
             if (priceOfService == Double.parseDouble(paymentAmount.getText().toString()) & priceOfService != -1) {
                 service.setPaid(true);
                 if (checkType) {

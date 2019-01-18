@@ -34,7 +34,7 @@
         </PreferenceScreen>
         <EditTextPreference
             android:defaultValue="@string/billing_item_company_name"
-            android:key="pref_key_company"
+            android:key="pref_key_company_name"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:summary="@string/pref_settings_company_name_summary"

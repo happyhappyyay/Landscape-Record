@@ -39,7 +39,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         customerPhoneNumber = findViewById(R.id.contact_phone_number_text);
         stateSpinner = findViewById(R.id.contact_state_spinner);
         daySpinner = findViewById(R.id.contact_day_spinner);
-        progressBar = findViewById(R.id.add_user_progress_bar);
+        progressBar = findViewById(R.id.edit_customer_progress_bar);
         Intent intent = getIntent();
         customerID = intent.getStringExtra("CUSTOMER_ID");
         findCustomer(customerID);
@@ -189,6 +189,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
             customer = databaseObjects.get(0);
             loadCustomerInformation();
         }
+        progressBar.setVisibility(View.INVISIBLE);
 
     }
 }

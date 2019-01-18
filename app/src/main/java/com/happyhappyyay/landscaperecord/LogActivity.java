@@ -149,7 +149,14 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
 
     @Override
     public LogActivity retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
-        return null;
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getLogById(id);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        FindIterable<Document> document = od.getCollection(OnlineDatabase.LOG).find(eq("logId", id)).projection(excludeId());
+        return OnlineDatabase.convertDocumentToObject(document, LogActivity.class);
     }
 
     @Override

@@ -2,9 +2,11 @@ package com.happyhappyyay.landscaperecord;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,18 +19,19 @@ import java.util.List;
 import static com.happyhappyyay.landscaperecord.TimeReporting.ADAPTER_POSITION;
 
 public class ServicePricing extends AppCompatActivity implements DatabaseAccess<Customer>, AdapterView.OnItemSelectedListener {
-    private RecyclerView recyclerView;
     protected static String MONTH_POSITION = "Month position";
-    RecyclerServicePricingAdapter adapter;
     List<Customer> customers;
     private int monthSelectionPosition;
     private int customerSelectionPosition;
     private ProgressBar progressBar;
+    private ViewPager viewPager;
+    private BillingViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_pricing);
+        viewPager = findViewById(R.id.service_pricing_view_pager);
         Spinner monthSpinner = findViewById(R.id.service_pricing_months_spinner);
         monthSelectionPosition = Util.retrieveMonthFromLong(Util.retrieveLongCurrentDate());
         if(savedInstanceState != null) {
@@ -36,9 +39,6 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
             customerSelectionPosition = savedInstanceState.getInt(ADAPTER_POSITION);
         }
         monthSpinner.setSelection(monthSelectionPosition);
-        recyclerView = findViewById(R.id.service_pricing_recycler);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
         progressBar = findViewById(R.id.services_pricing_progress_bar);
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -106,20 +106,6 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
 
     }
 
-
-//    private List<Customer> findCustomersWithUnpricedServices(List<Customer> customers) {
-//        List<Customer> customersWithUnpricedServices = new ArrayList<>();
-//        for(Customer c: customers) {
-//            for(int i = 0; i < c.getCustomerServices().size(); i++) {
-//                if(!c.getCustomerServices().get(i).isPriced()) {
-//                    customersWithUnpricedServices.add(c);
-//                    break;
-//                }
-//            }
-//        }
-//        return customersWithUnpricedServices;
-//    }
-
     @Override
     public Context getContext() {
         return this;
@@ -134,8 +120,8 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
     public void onPostExecute(List<Customer> databaseObjects) {
         customers = databaseObjects;
         populateSpinner(customers);
-        adapter = new RecyclerServicePricingAdapter(databaseObjects, this, monthSelectionPosition);
-        recyclerView.setAdapter(adapter);
+        adapter = new BillingViewPagerAdapter(this, createUnpricedCustomersForMonthList(customers), monthSelectionPosition);
+        viewPager.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
     }
     @Override
@@ -144,4 +130,60 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
         outState.putInt(ADAPTER_POSITION, customerSelectionPosition);
         super.onSaveInstanceState(outState);
     }
+
+    private List<Customer> createUnpricedCustomersForMonthList(List<Customer> customers) {
+        List<Customer> customersWithUnpricedServices = new ArrayList<>();
+
+            for(Customer c: customers) {
+                if(c.hasUnpricedServicesForMonth(monthSelectionPosition)) {
+                    customersWithUnpricedServices.add(c);
+                }
+            }
+            return customersWithUnpricedServices;
+        }
+
+    private class FragmentStatePageAdapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> fragmentList = new ArrayList<>();
+        private final List<String> fragmentTitle = new ArrayList<>();
+
+        public FragmentStatePageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+
+
+            return fragmentList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitle.get(position);
+        }
+
+        public int getPosition(String title) {
+            String lowercaseTitle = title.toLowerCase();
+            int titlePosition = 0;
+            for (int i = 0; i < fragmentTitle.size(); i++) {
+                if (fragmentTitle.get(i).toLowerCase().equals(lowercaseTitle)) {
+                    titlePosition = i;
+                }
+            }
+            return titlePosition;
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragmentList.add(fragment);
+            fragmentTitle.add(title);
+        }
+    }
 }
+
+
+

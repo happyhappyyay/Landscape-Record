@@ -16,6 +16,9 @@ public interface LogDao {
     @Query("SELECT * FROM LogActivity")
     List<LogActivity> getAllLogs();
 
+    @Query("SELECT * FROM LogActivity WHERE logId > :logId")
+    LogActivity getLogById(String logId);
+
     @Query("SELECT * FROM LogActivity WHERE modifiedTime > :modifiedTime AND logActivityAction == :logActivityAction")
     List<LogActivity> getNewlyModifiedActionLogs(long modifiedTime, int logActivityAction);
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "25cb7dc9dd930fb2cace55129d5e7a69",
+    "identityHash": "14c916c7327cd24db2f66232137bf096",
     "entities": [
       {
         "tableName": "User",
@@ -228,7 +228,7 @@
       },
       {
         "tableName": "WorkDay",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workDayId` TEXT NOT NULL, `dayOfWeek` TEXT, `Month` TEXT, `Year` TEXT, `currentDate` TEXT, `currentDateAsTime` INTEGER NOT NULL, `hours` TEXT, `userReference` TEXT, `services` TEXT, `weekInMilli` INTEGER NOT NULL, `monthInMilli` INTEGER NOT NULL, `yearInMilli` INTEGER NOT NULL, `modifiedTime` INTEGER NOT NULL, PRIMARY KEY(`workDayId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workDayId` TEXT NOT NULL, `dayOfWeek` TEXT, `Month` TEXT, `Year` TEXT, `currentDate` TEXT, `currentDateAsTime` INTEGER NOT NULL, `userHours` TEXT, `services` TEXT, `weekInMilli` INTEGER NOT NULL, `monthInMilli` INTEGER NOT NULL, `yearInMilli` INTEGER NOT NULL, `modifiedTime` INTEGER NOT NULL, PRIMARY KEY(`workDayId`))",
         "fields": [
           {
             "fieldPath": "workDayId",
@@ -267,14 +267,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "hours",
-            "columnName": "hours",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "userReference",
-            "columnName": "userReference",
+            "fieldPath": "userHours",
+            "columnName": "userHours",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -321,7 +315,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"25cb7dc9dd930fb2cace55129d5e7a69\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"14c916c7327cd24db2f66232137bf096\")"
     ]
   }
 }

@@ -68,6 +68,16 @@ public class Util {
         return sharedPref.getBoolean("pref_settings_database_usage", false);
     }
 
+    public static String retrieveCompanyName(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString("pref_key_company_name", "Enter Company Name in Settings");
+    }
+
+    public static String retrievePersonalMessage(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString("pref_key_personal_message", "Enter Personal Message in Settings");
+    }
+
     private static void goToDashboard(Context context) {
         Intent intent = new Intent(context, Dashboard.class);
         context.startActivity(intent);
@@ -602,6 +612,14 @@ public class Util {
                         break;
                 }
             }
+            if(logs.get(i).getLogActivityType() == LogActivityType.DATABASE.ordinal()) {
+                LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getLogId());
+                LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getLogId());
+                if (logO != null & logU == null) {
+                    LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logO);
+                    logCount++;
+                }
+            }
         }
 
         List<DatabaseObjects> databaseObjects = new ArrayList<>();
@@ -641,257 +659,10 @@ public class Util {
             }
         }
 
-        logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
-        for(int i = 0; i < logs.size(); i++) {
-            LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getLogId());
-            LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getLogId());
-            if (logO != null & logU == null) {
-                LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logO);
-                logCount++;
-            }
-        }
 
         return new LogActivity(Authentication.getAuthentication().getUser().getName(), "ADD:"
                 + insertCount + " UPDATE:" + updateCount + " DELETE:" + deleteCount + " LOG:" + logCount,
                 LogActivityAction.UPDATE.ordinal(), LogActivityType.DATABASE.ordinal());
 
         }
-
-////        class UpdateHolder   {
-////            private List<DatabaseUpdaterObject> updaterObjects;
-////            private Context context;
-////            UpdateHolder(List<DatabaseUpdaterObject> databaseUpdaterObjects, Context context) {
-////                updaterObjects = databaseUpdaterObjects;
-////                this.context = context;
-////            }
-////
-//////            List<T> sortUpdaterObjects() {
-//////                List<T> sortedUpdaterObjects = new ArrayList<>();
-//////                for(int i = 0; i< updaterObjects.size(); i++) {
-//////                    sortedUpdaterObjects.add(updaterObjects.get(i).getDatabaseObject());
-//////                }
-//////            }
-////
-////
-////
-////            void transferObjectsFromHolder(DatabaseOperator db) {
-////                boolean removeObject = false;
-////                if(db instanceof AppDatabase) {
-////                    removeObject = true;
-////                }
-////                List<User> updateUsers = new ArrayList<>();
-////                List<Customer> updateCustomers = new ArrayList<>();
-////                List<LogActivity> updateLogs = new ArrayList<>();
-////                List<WorkDay> updateWorkDay = new ArrayList<>();
-////                for(int i = 0; i<updaterObjects.size(); i++) {
-////                    DatabaseObjects dbObj = updaterObjects.get(i).getDatabaseObject();
-////                    if (dbObj instanceof LogActivity) {
-////                        LogActivity logActivity = (LogActivity) dbObj;
-////                            try {
-////                                switch (updaterObjects.get(i).getObjectModificationType()) {
-////                                    case UPDATE:
-////                                        long timeLastModifiedOriginalObj = logActivity.retrieveClassInstanceFromDatabaseID(db, logActivity.getId()).getModifiedTime();
-////                                        long timeLastModifiedUpdateObj = logActivity.getModifiedTime();
-////                                        if(timeLastModifiedUpdateObj > timeLastModifiedOriginalObj) {
-////                                            logActivity.updateClassInstanceFromDatabase(db, logActivity);
-////                                        }
-////                                        break;
-////                                    case INSERT:
-////                                        LogActivity objToInsert= logActivity.retrieveClassInstanceFromDatabaseID(db, logActivity.getId());
-////                                        if(objToInsert == null) {
-////                                            logActivity.insertClassInstanceFromDatabase(db, logActivity);
-////                                        }
-////                                        break;
-////                                    case DELETE:
-////                                        LogActivity objToDelete = logActivity.retrieveClassInstanceFromDatabaseID(db, logActivity.getId());
-////                                        if(objToDelete != null) {
-////                                            logActivity.deleteClassInstanceFromDatabase(db, logActivity);
-////                                        }
-////                                        break;
-////                                    default:
-////                                        break;
-////                                }
-////
-////                                if(removeObject) {
-////                                    updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                                }
-////                                else {
-////                                    DatabaseUpdaterObject dUO = updaterObjects.get(i).retrieveClassInstanceFromDatabaseID(db, updaterObjects.get(i).getId());
-////                                    updaterObjects.get(i).setTimesAccessed(updaterObjects.get(i).getTimesAccessed() + 1);
-////                                    if (Util.retrieveNumberOfConnections(context) <= dUO.getTimesAccessed()) {
-////                                        updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                                    }
-////                                }
-////                            }
-////                            catch (Exception e) {
-////                                e.printStackTrace();
-////                            }
-////                    } else if (dbObj instanceof WorkDay) {
-////                        WorkDay workDay = (WorkDay) dbObj;
-////                        try {
-////                            switch (updaterObjects.get(i).getObjectModificationType()) {
-////                                case UPDATE:
-////                                    long timeLastModifiedOriginalObj = workDay.retrieveClassInstanceFromDatabaseID(db, workDay.getId()).getModifiedTime();
-////                                    long timeLastModifiedUpdateObj = workDay.getModifiedTime();
-////                                    if(timeLastModifiedUpdateObj > timeLastModifiedOriginalObj) {
-////                                        workDay.updateClassInstanceFromDatabase(db, workDay);
-////                                    }
-////                                    break;
-////                                case INSERT:
-////                                    WorkDay objToInsert= workDay.retrieveClassInstanceFromDatabaseID(db, workDay.getId());
-////                                    if(objToInsert == null) {
-////                                        workDay.insertClassInstanceFromDatabase(db, workDay);
-////                                    }
-////                                    break;
-////                                case DELETE:
-////                                    WorkDay objToDelete = workDay.retrieveClassInstanceFromDatabaseID(db, workDay.getId());
-////                                    if(objToDelete != null) {
-////                                        workDay.deleteClassInstanceFromDatabase(db, workDay);
-////                                    }
-////                                    break;
-////                                default:
-////                                    break;
-////                            }
-////
-////                            if(removeObject) {
-////                                updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                            }
-////                            else {
-////                                DatabaseUpdaterObject dUO = updaterObjects.get(i).retrieveClassInstanceFromDatabaseID(db, updaterObjects.get(i).getId());
-////                                updaterObjects.get(i).setTimesAccessed(updaterObjects.get(i).getTimesAccessed() + 1);
-////                                if (Util.retrieveNumberOfConnections(context) <= dUO.getTimesAccessed()) {
-////                                    updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                                }
-////                            }
-////                        }
-////                        catch (Exception e) {
-////                            e.printStackTrace();
-////                        }
-////                    } else if (dbObj instanceof Customer) {
-////                        Customer customer = (Customer) dbObj;
-////                        try {
-////                            switch (updaterObjects.get(i).getObjectModificationType()) {
-////                                case UPDATE:
-////                                    long timeLastModifiedOriginalObj = customer.retrieveClassInstanceFromDatabaseID(db, customer.getId()).getModifiedTime();
-////                                    long timeLastModifiedUpdateObj = customer.getModifiedTime();
-////                                    if(timeLastModifiedUpdateObj > timeLastModifiedOriginalObj) {
-////                                        customer.updateClassInstanceFromDatabase(db, customer);
-////                                    }
-////                                    break;
-////                                case INSERT:
-////                                    Customer objToInsert= customer.retrieveClassInstanceFromDatabaseID(db, customer.getId());
-////                                    if(objToInsert == null) {
-////                                        customer.insertClassInstanceFromDatabase(db, customer);
-////                                    }
-////                                    break;
-////                                case DELETE:
-////                                    Customer objToDelete = customer.retrieveClassInstanceFromDatabaseID(db, customer.getId());
-////                                    if(objToDelete != null) {
-////                                        customer.deleteClassInstanceFromDatabase(db, customer);
-////                                    }
-////                                    break;
-////                                default:
-////                                    break;
-////                            }
-////
-////                            if(removeObject) {
-////                                updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                            }
-////                            else {
-////                                DatabaseUpdaterObject dUO = updaterObjects.get(i).retrieveClassInstanceFromDatabaseID(db, updaterObjects.get(i).getId());
-////                                updaterObjects.get(i).setTimesAccessed(updaterObjects.get(i).getTimesAccessed() + 1);
-////                                if (Util.retrieveNumberOfConnections(context) <= dUO.getTimesAccessed()) {
-////                                    updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                                }
-////                            }
-////                        }
-////                        catch (Exception e) {
-////                            e.printStackTrace();
-////                        }
-////                    } else if (dbObj instanceof User) {
-////                        User user = (User) dbObj;
-////                        try {
-////                            switch (updaterObjects.get(i).getObjectModificationType()) {
-////                                case UPDATE:
-////                                    long timeLastModifiedOriginalObj = user.retrieveClassInstanceFromDatabaseID(db, user.getId()).getModifiedTime();
-////                                    long timeLastModifiedUpdateObj = user.getModifiedTime();
-////                                    if(timeLastModifiedUpdateObj > timeLastModifiedOriginalObj) {
-////                                        user.updateClassInstanceFromDatabase(db, user);
-////                                    }
-////                                    break;
-////                                case INSERT:
-////                                    User objToInsert= user.retrieveClassInstanceFromDatabaseID(db, user.getId());
-////                                    if(objToInsert == null) {
-////                                        user.insertClassInstanceFromDatabase(db, user);
-////                                    }
-////                                    break;
-////                                case DELETE:
-////                                    User objToDelete = user.retrieveClassInstanceFromDatabaseID(db, user.getId());
-////                                    if(objToDelete != null) {
-////                                        user.deleteClassInstanceFromDatabase(db, user);
-////                                    }
-////                                    break;
-////                                default:
-////                                    break;
-////                            }
-////
-////                            if(removeObject) {
-////                                updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                            }
-////                            else {
-////                                DatabaseUpdaterObject dUO = updaterObjects.get(i).retrieveClassInstanceFromDatabaseID(db, updaterObjects.get(i).getId());
-////                                updaterObjects.get(i).setTimesAccessed(updaterObjects.get(i).getTimesAccessed() + 1);
-////                                if (Util.retrieveNumberOfConnections(context) <= dUO.getTimesAccessed()) {
-////                                    updaterObjects.get(i).deleteClassInstanceFromDatabase(db, updaterObjects.get(i));
-////                                }
-////                            }
-////                        }
-////                        catch (Exception e) {
-////                            e.printStackTrace();
-////                        }
-////                    }
-////                }
-//////
-//////            void transferObjectsFromHolder(DatabaseOperator db) {
-//////                boolean removeObject = false;
-//////                if(db instanceof AppDatabase) {
-//////                    removeObject = true;
-//////                }
-//////                for(int i = 0; i<sortedObjects.size();i++) {
-//////                    try {
-//////                        switch (modificationTypes.get(i)) {
-//////                            case UPDATE:
-//////                                long timeLastModifiedOriginalObj = sortedObjects.get(i).retrieveClassInstanceFromDatabaseID(db, ids.get(i)).getModifiedTime();
-//////                                long timeLastModifiedUpdateObj = sortedObjects.get(i).getModifiedTime();
-//////                                if(timeLastModifiedUpdateObj > timeLastModifiedOriginalObj) {
-//////                                    sortedObjects.get(i).updateClassInstanceFromDatabase(db, sortedObjects.get(i));
-//////                                }
-//////                                if(removeObject) {
-//////                                    Util.DATABASE_UPDATER_OBJECT.deleteClassInstanceFromDatabase(db, );
-//////                                }
-//////                                break;
-//////                            case INSERT:
-//////                                T objToInsert= sortedObjects.get(i).retrieveClassInstanceFromDatabaseID(db, ids.get(i));
-//////                                if(objToInsert == null) {
-//////                                    sortedObjects.get(i).insertClassInstanceFromDatabase(db, sortedObjects.get(i));
-//////                                }
-//////                                break;
-//////                            case DELETE:
-//////                                T objToDelete = sortedObjects.get(i).retrieveClassInstanceFromDatabaseID(db, ids.get(i));
-//////                                if(objToDelete == null) {
-//////                                    sortedObjects.get(i).deleteClassInstanceFromDatabase(db, sortedObjects.get(i));
-//////                                }
-//////                                break;
-//////                            default:
-//////                                break;
-//////                        }
-//////                    }
-//////                    catch (Exception e) {
-//////                        e.printStackTrace();
-//////                    }
-//////                }
-//////            }
-////        }
-//
-//    }
 }

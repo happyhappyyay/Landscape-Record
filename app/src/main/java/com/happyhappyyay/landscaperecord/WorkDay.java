@@ -16,8 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -33,10 +36,8 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     private String Year;
     private String currentDate;
     private long currentDateAsTime;
-    @TypeConverters(IntegerListConverter.class)
-    private List<Integer> hours;
-    @TypeConverters(StringListConverter.class)
-    private List<String> userReference;
+    @TypeConverters(MapStringIntConverter.class)
+    private Map<String, Integer> userHours;
     private List<Service> services;
     private long weekInMilli;
     private long monthInMilli;
@@ -45,32 +46,39 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
 
     public WorkDay (String currentDate) {
         services = new ArrayList<>();
-        hours = new ArrayList<>();
-        userReference = new ArrayList<>();
         findCalendarInformation(currentDate);
         modifiedTime = System.currentTimeMillis();
+        userHours = new HashMap<>();
+
     }
 
     @Ignore
     public WorkDay() {
         services = new ArrayList<>();
-        hours = new ArrayList<>();
-        userReference = new ArrayList<>();
+        userHours = new HashMap<>();
     }
 
     public void addUserHourReference (String userReference, int hours) {
-        boolean existingReference = false;
-        for (int i = 0; i < this.userReference.size(); i++) {
-            if(userReference.equals(this.userReference.get(i))) {
-                this.hours.set(i, this.hours.get(i) + hours);
-                existingReference = true;
-                break;
-            }
+        if(userHours.containsKey(userReference)) {
+            userHours.put(userReference,userHours.get(userReference) + hours);
         }
-        if(!existingReference) {
-            this.hours.add(hours);
-            this.userReference.add(userReference);
+        else {
+            userHours.put(userReference, hours);
         }
+    }
+
+    public List<String> retrieveUsersHoursAsString() {
+        List<String> strings = new ArrayList<>();
+        Set< Map.Entry<String, Integer> > mapSet = userHours.entrySet();
+        int count = 0;
+
+        for (Map.Entry< String, Integer> mapEntry:mapSet)
+        {
+            String priceEntry = mapEntry.getKey() + " : " + mapEntry.getValue();
+            strings.add(count, priceEntry);
+            count++;
+        }
+        return strings;
     }
 
     public void addServices(Service service) {
@@ -193,22 +201,6 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         Year = year;
     }
 
-    public List<Integer> getHours() {
-        return hours;
-    }
-
-    public void setHours(List<Integer> hours) {
-        this.hours = hours;
-    }
-
-    public List<String> getUserReference() {
-        return userReference;
-    }
-
-    public void setUserReference(List<String> userReference) {
-        this.userReference = userReference;
-    }
-
     @Override
     public long getModifiedTime() {
         return modifiedTime;
@@ -217,6 +209,14 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     @Override
     public void setModifiedTime(long modifiedTime) {
         this.modifiedTime = modifiedTime;
+    }
+
+    public Map<String, Integer> getUserHours() {
+        return userHours;
+    }
+
+    public void setUserHours(Map<String, Integer> userHours) {
+        this.userHours = userHours;
     }
 
     @Override

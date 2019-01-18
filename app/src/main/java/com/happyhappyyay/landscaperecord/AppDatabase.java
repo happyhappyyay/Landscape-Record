@@ -8,7 +8,7 @@ import android.content.Context;
 
 @Database(entities = {User.class, Customer.class, LogActivity.class, WorkDay.class}, version = 1)
 @TypeConverters({DataTypeConverter.class, IntegerListConverter.class, PaymentTypeConverter.class,
-        StringListConverter.class})
+        StringListConverter.class, MapStringIntConverter.class})
 public abstract class AppDatabase extends RoomDatabase implements DatabaseOperator{
     private static AppDatabase instance;
 
