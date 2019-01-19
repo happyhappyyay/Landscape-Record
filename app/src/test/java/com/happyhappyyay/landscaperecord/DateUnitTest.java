@@ -1,5 +1,8 @@
 package com.happyhappyyay.landscaperecord;
 
+import com.happyhappyyay.landscaperecord.POJO.WorkDay;
+import com.happyhappyyay.landscaperecord.Utility.Util;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

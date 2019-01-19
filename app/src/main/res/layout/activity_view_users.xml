@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewUsers">
+    tools:context=".Activity.ViewUsers">
 
     <ProgressBar
         android:id="@+id/view_users_progress_bar"

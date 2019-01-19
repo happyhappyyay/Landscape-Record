@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".LoginPage"
+            android:name=".Activity.LoginPage"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -24,48 +24,48 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainMenu"
+            android:name=".Activity.MainMenu"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".TimeReporting"
+            android:name=".Activity.TimeReporting"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ReceivePayment"
+            android:name=".Activity.ReceivePayment"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".NewContact"
+            android:name=".Activity.NewContact"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".JobServices"
+            android:name=".Activity.JobServices"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".AdminTools"
+            android:name=".Activity.AdminTools"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".AddUser"
+            android:name=".Activity.AddUser"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ViewUser" />
-        <activity android:name=".Dashboard" />
-        <activity android:name=".Settings" />
-        <activity android:name=".HourOperations" />
-        <activity android:name=".ViewActivityLogs" />
+        <activity android:name=".Activity.ViewUser" />
+        <activity android:name=".Activity.Dashboard" />
+        <activity android:name=".Activity.Settings" />
+        <activity android:name=".Activity.HourOperations" />
+        <activity android:name=".Activity.ViewActivityLogs" />
         <activity
-            android:name=".QuickSheet"
+            android:name=".Activity.QuickSheet"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".ViewServices" />
-        <activity android:name=".ViewWorkDay" />
+        <activity android:name=".Activity.ViewServices" />
+        <activity android:name=".Activity.ViewWorkDay" />
         <activity android:name=".BillingPreview" />
-        <activity android:name=".UserSettings" />
-        <activity android:name=".EditUser" />
-        <activity android:name=".ViewContacts" />
-        <activity android:name=".ViewCustomer" />
-        <activity android:name=".EditCustomer" />
-        <activity android:name=".ViewUsers" />
-        <activity android:name=".PaymentQueue" />
-        <activity android:name=".ServicePricing" />
-        <activity android:name=".testDatabase" />
-        <activity android:name=".FirstGlance"></activity>
+        <activity android:name=".Activity.UserSettings" />
+        <activity android:name=".Activity.EditUser" />
+        <activity android:name=".Activity.ViewContacts" />
+        <activity android:name=".Activity.ViewCustomer" />
+        <activity android:name=".Activity.EditCustomer" />
+        <activity android:name=".Activity.ViewUsers" />
+        <activity android:name=".Activity.PaymentQueue" />
+        <activity android:name=".Activity.ServicePricing" />
+        <activity android:name=".Utility.testDatabase" />
+        <activity android:name=".Activity.FirstGlance"></activity>
     </application>
 
 </manifest>

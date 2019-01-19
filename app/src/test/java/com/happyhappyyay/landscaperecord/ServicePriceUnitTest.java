@@ -1,5 +1,8 @@
 package com.happyhappyyay.landscaperecord;
 
+import com.happyhappyyay.landscaperecord.POJO.Payment;
+import com.happyhappyyay.landscaperecord.Utility.Util;
+
 import org.junit.Assert;
 import org.junit.Test;
 
