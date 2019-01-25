@@ -55,7 +55,6 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".Activity.ViewServices" />
         <activity android:name=".Activity.ViewWorkDay" />
-        <activity android:name=".BillingPreview" />
         <activity android:name=".Activity.UserSettings" />
         <activity android:name=".Activity.EditUser" />
         <activity android:name=".Activity.ViewContacts" />
@@ -63,7 +62,7 @@
         <activity android:name=".Activity.EditCustomer" />
         <activity android:name=".Activity.ViewUsers" />
         <activity android:name=".Activity.PaymentQueue" />
-        <activity android:name=".Activity.ServicePricing" />
+        <activity android:name=".Activity.BillCreation" />
         <activity android:name=".Utility.testDatabase" />
         <activity android:name=".Activity.FirstGlance"></activity>
     </application>

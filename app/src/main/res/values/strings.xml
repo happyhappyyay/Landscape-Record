@@ -69,7 +69,7 @@
     <string name="lawn_services_spray_grass">Spray Grass</string>
     <string name="lawn_services_clean_up">Clean Up</string>
     <string name="lawn_services_rake">Rake</string>
-    <string name="lawn_services_other">Other</string>
+    <string name="lawn_services_other">Other:</string>
     <string name="lawn_services_employees">Number of Employees:</string>
     <string name="lawn_services_optional">Leave blank to autogenerate</string>
     <string name="snow_services_shovel">Shovel</string>
@@ -152,6 +152,12 @@
     <string name="pref_settings_quick_sheet_items_selection_title1">Check Box 1</string>
     <string name="pref_settings_quick_sheet_items_selection_title2">Check Box 2</string>
     <string name="pref_settings_quick_sheet_items_selection_title3">Check Box 3</string>
+    <string name="pref_settings_company_name_summary">Name of company: %s</string>
+    <string name="pref_settings_personal_message_title">Personal Message</string>
+    <string name="pref_settings_personal_message_summary">A personal message to attach to the bottom of each bill.</string>
+    <string name="pref_settings_first_day_of_week">Start of Work Week</string>
+    <string name="pref_settings_first_day_of_week_summary">Set the day that starts the week. The current day selected is %s.</string>
+    <!--                                   -->
 
     <string name="view_work_day_title">View Work Activity</string>
     <string name="activity_view_work_day_user_hour_title">User : Hours</string>
@@ -159,12 +165,8 @@
     <string name="view_work_day_day_button">Day</string>
     <string name="view_work_day_week_button">Week</string>
     <string name="view_work_day_month_button">Month</string>
-    <string name="pref_key_import_contacts">pref_key_import_contacts</string>
     <string name="billing_item_company_name">Company Name</string>
     <string name="billing_item_signature">Thank you.</string>
-    <string name="pref_settings_company_name_summary">Name of company: %s</string>
-    <string name="pref_settings_first_day_of_week">Start of Work Week</string>
-    <string name="pref_settings_first_day_of_week_summary">Set the day that starts the week. The current day selected is %s.</string>
     <string name="dashboard_payments">Payments</string>
     <string name="main_menu_contacts">Contacts</string>
     <string name="user_settings_title">User Settings</string>
@@ -185,8 +187,11 @@
     <string name="first_glance_user">Back to creating first user</string>
     <string name="first_glance_logo">Landscape Record logo</string>
     <string name="first_glance_start">Get Started</string>
-    <string name="pref_key_after_first_time" />
+
     <string name="billing_service_item_edit_text">Edit</string>
     <string name="billing_preview_title">Bill Preview</string>
+    <string name="bill_creation_title">Create Invoice</string>
+    <string name="view_contacts_payment">Receive Payment</string>
+    <string name="view_users_pay">Adjust/Pay User Hours</string>
 
 </resources>

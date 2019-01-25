@@ -10,16 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.POJO.Customer;
+import com.happyhappyyay.landscaperecord.POJO.Service;
 import com.happyhappyyay.landscaperecord.R;
+import com.happyhappyyay.landscaperecord.Utility.CreateDocument;
 import com.happyhappyyay.landscaperecord.Utility.Util;
 
 import java.util.List;
 
-public class BillingViewPagerAdapter extends PagerAdapter {
+public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAccess<Customer> {
 
     private static final String TAG = "MyPagerAdapter";
     private List<Customer> customers;
@@ -60,11 +64,6 @@ public class BillingViewPagerAdapter extends PagerAdapter {
             // Inflate a new layout from our resources
             // Retrieve a TextView from the inflated View, and update it's text
             View view = retrieveView(container,position);
-            RecyclerView recyclerView = view.findViewById(R.id.billing_preview_recycler);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
-            recyclerView.setLayoutManager(layoutManager);
-            RecyclerServicePricingAdapter adapter = new RecyclerServicePricingAdapter(customers.get(position), mContext, monthSelection);
-            recyclerView.setAdapter(adapter);
             // Add the newly created View to the ViewPager
             container.addView(view);
             Log.i(TAG, "instantiateItem() [position: " + position + "]" + " childCount:" + container.getChildCount());
@@ -72,7 +71,7 @@ public class BillingViewPagerAdapter extends PagerAdapter {
             return view;
         }
 
-        private View retrieveView(ViewGroup container, int position) {
+        private View retrieveView(final ViewGroup container, final int position) {
             // Inflate a new layout from our resources
             View view = mLayoutInflater.inflate(R.layout.billing_preview, container, false);
             // Retrieve a TextView from the inflated View, and update it's text
@@ -85,7 +84,7 @@ public class BillingViewPagerAdapter extends PagerAdapter {
             dateText.setText(Util.retrieveStringCurrentDate());
             TextView personalMessage = view.findViewById(R.id.billing_preview_personal_message);
             personalMessage.setText(Util.retrievePersonalMessage(mContext));
-            Customer customer = customers.get(position);
+            final Customer customer = customers.get(position);
             String name = customer.getFullName();
             if(customer.getCustomerBusiness() != null) {
                 businessName.setText(customer.getCustomerBusiness());
@@ -94,11 +93,39 @@ public class BillingViewPagerAdapter extends PagerAdapter {
             }
             customerName.setText(name);
             customerAddress.setText(customer.getCustomerAddress());
+            ImageView backArrow = view.findViewById(R.id.billing_preview_back_arrow);
+            ImageView forwardArrow = view.findViewById(R.id.billing_preview_forward_arrow);
+            if(position - 1 >= 0) {
+                backArrow.setVisibility(View.VISIBLE);
+            }
+            else {
+                backArrow.setVisibility(View.INVISIBLE);
+            }
+
+            if(position + 1 < getCount()) {
+                forwardArrow.setVisibility(View.VISIBLE);
+            }
+            else {
+                forwardArrow.setVisibility(View.INVISIBLE);
+            }
+
+            RecyclerView recyclerView = view.findViewById(R.id.billing_preview_recycler);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+            recyclerView.setLayoutManager(layoutManager);
+            final RecyclerServicePricingAdapter adapter = new RecyclerServicePricingAdapter(customers.get(position), mContext, monthSelection);
+            recyclerView.setAdapter(adapter);
             Button button = view.findViewById(R.id.billing_preview_confirm);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, "BUTTON", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "SEND BUTTON", Toast.LENGTH_SHORT).show();
+                    List<Service> services = adapter.getServices();
+                    for(Service s: services) {
+                        s.setPriced(true);
+                    }
+                    customers.remove(position);
+                    CreateDocument createDocument = new CreateDocument(mContext, customer, services);
+                    updateCustomer(customer);
                 }
             });
             return view;
@@ -148,4 +175,23 @@ public class BillingViewPagerAdapter extends PagerAdapter {
         this.monthSelection = monthSelection;
         notifyDataSetChanged();
     }
+
+    private void updateCustomer(Customer customer) {
+            Util.updateObject(this, Util.CUSTOMER_REFERENCE, customer);
     }
+
+    @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+        updateCustomersSelection(customers);
+    }
+}

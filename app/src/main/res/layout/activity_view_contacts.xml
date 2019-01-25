@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".Activity.ViewContacts">
 
+    <TextView
+        android:id="@+id/view_contacts_payments_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_layout"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="startReceivePayment"
+        android:paddingLeft="4dp"
+        android:text="@string/view_contacts_payment"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_users_recycler_view"
+        app:layout_constraintVertical_bias="0.0" />
+
     <ProgressBar
         android:id="@+id/view_contacts_progress_bar"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
@@ -23,13 +45,12 @@
         android:id="@+id/floatingActionButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:onClick="onAddClick"
         app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view_contacts_payments_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_twotone_add_24px" />
 
@@ -50,7 +71,7 @@
         android:id="@+id/view_customers_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view_contacts_payments_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

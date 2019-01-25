@@ -37,6 +37,7 @@ public class Service implements Parcelable {
     public Service() {
         materials = new ArrayList<>();
         pause = true;
+        priced = false;
         serviceID = idCount++;
     }
 

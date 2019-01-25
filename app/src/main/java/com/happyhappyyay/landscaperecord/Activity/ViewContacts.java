@@ -47,26 +47,17 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     private void getCustomers() {
         progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
-        //        new AsyncTask<Void, Void, List<Customer>>() {
-//            @Override
-//            protected List<Customer> doInBackground(Void... voids) {
-//                return db.customerDao().getAllCustomers();
-//            }
-//
-//            @Override
-//            protected void onPostExecute(List<Customer> customers) {
-//
-//                adapter = new RecyclerViewCustomersAdapter(ViewContacts.this, customers);
-//                recyclerView.setAdapter(adapter);
-//
-//            }
-//        }.execute();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         getCustomers();
+    }
+
+    public void startReceivePayment(View view) {
+        Intent intent = new Intent(this, ReceivePayment.class);
+        startActivity(intent);
     }
 
     @Override
@@ -77,14 +68,12 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.items, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
         return Util.toolbarItemSelection(this, item);
     }
 

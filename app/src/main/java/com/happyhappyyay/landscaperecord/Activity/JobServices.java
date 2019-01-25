@@ -213,11 +213,13 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                     }
                     service.setServices(services);
                     service.setCustomerName(customer.getName());
-                    try {
-                        double numberOfManHours = Double.parseDouble(manHours.getText().toString());
-                        service.setManHours(numberOfManHours);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if(!manHours.getText().toString().isEmpty()) {
+                        try {
+                            double numberOfManHours = Double.parseDouble(manHours.getText().toString());
+                            service.setManHours(numberOfManHours);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (service.getStartTime() == 0) {
                         service.setStartTime(time);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ServicePricing">
+    tools:context=".Activity.BillCreation">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/service_pricing_view_pager"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/admin_tools_toolbar2"
+        android:id="@+id/bill_creation_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/services_pricing_title" />
+        app:title="@string/bill_creation_title" />
 
     <Spinner
         android:id="@+id/service_pricing_months_spinner"
@@ -51,7 +51,7 @@
         android:gravity="center_vertical|center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/service_pricing_customer_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/admin_tools_toolbar2" />
+        app:layout_constraintTop_toBottomOf="@+id/bill_creation_toolbar" />
 
     <Spinner
         android:id="@+id/service_pricing_customer_spinner"
@@ -61,5 +61,5 @@
         android:gravity="center_vertical|center_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/service_pricing_months_spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_tools_toolbar2" />
+        app:layout_constraintTop_toBottomOf="@+id/bill_creation_toolbar" />
 </android.support.constraint.ConstraintLayout>

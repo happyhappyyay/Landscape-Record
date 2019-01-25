@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <!-- PREFERENCE KEYS -->
+    <string name="pref_key_after_first_time">pref_key_after_first_time</string>
+    <string name="pref_key_database_usage">pref_key_database_usage</string>
+    <string name="pref_key_database_uri">pref_key_database_uri</string>
+    <string name="pref_key_database_name">pref_key_database_name</string>
+    <string name="pref_key_quick_sheet_items">pref_key_quick_sheet_items</string>
+    <string name="pref_key_quick_sheet_items_title">pref_key_quick_sheet_items_title</string>
+    <string name="pref_key_quick_sheet_item1">pref_key_quick_sheet_item1</string>
+    <string name="pref_key_quick_sheet_item2">pref_key_quick_sheet_item2</string>
+    <string name="pref_key_quick_sheet_item3">pref_key_quick_sheet_item3</string>
+    <string name="pref_key_company_name">pref_key_company_name</string>
+    <string name="pref_key_storage_settings">pref_key_storage_settings</string>
+    <string name="pref_key_import_contacts">pref_key_import_contacts</string>
+    <string name="pref_key_personal_message">pref_key_personal_message</string>
+    <!--                 -->
+</resources>

@@ -2,12 +2,10 @@ package com.happyhappyyay.landscaperecord.Activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
@@ -24,7 +22,7 @@ import java.util.List;
 
 import static com.happyhappyyay.landscaperecord.Activity.TimeReporting.ADAPTER_POSITION;
 
-public class ServicePricing extends AppCompatActivity implements DatabaseAccess<Customer>, AdapterView.OnItemSelectedListener {
+public class BillCreation extends AppCompatActivity implements DatabaseAccess<Customer>, AdapterView.OnItemSelectedListener {
     protected static String MONTH_POSITION = "Month position";
     List<Customer> customers;
     private int monthSelectionPosition;
@@ -36,10 +34,11 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_service_pricing);
+        setContentView(R.layout.activity_bill_creation);
         viewPager = findViewById(R.id.service_pricing_view_pager);
         Spinner monthSpinner = findViewById(R.id.service_pricing_months_spinner);
         monthSelectionPosition = Util.retrieveMonthFromLong(Util.retrieveLongCurrentDate());
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         if(savedInstanceState != null) {
             monthSelectionPosition = savedInstanceState.getInt(MONTH_POSITION);
             customerSelectionPosition = savedInstanceState.getInt(ADAPTER_POSITION);
@@ -98,12 +97,15 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
         if(i != 0) {
             Customer customer = customers.get(i-ZERO_POSITION);
             List<Customer> customerSelection = new ArrayList<>();
-            customerSelection.add(customer);
+            if(customer.hasUnpricedServicesForMonth(monthSelectionPosition)) {
+                customerSelection.add(customer);
+            }
             customerSelectionPosition = i;
             adapter.updateCustomersSelection(customerSelection);
         }
         else {
-            adapter.updateCustomersSelection(customers);
+            List<Customer> unpricedCustomers = createUnpricedCustomersForMonthList(customers);
+            adapter.updateCustomersSelection(unpricedCustomers);
         }
     }
 
@@ -147,48 +149,6 @@ public class ServicePricing extends AppCompatActivity implements DatabaseAccess<
             }
             return customersWithUnpricedServices;
         }
-
-    private class FragmentStatePageAdapter extends FragmentStatePagerAdapter {
-        private final List<Fragment> fragmentList = new ArrayList<>();
-        private final List<String> fragmentTitle = new ArrayList<>();
-
-        public FragmentStatePageAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-
-
-            return fragmentList.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitle.get(position);
-        }
-
-        public int getPosition(String title) {
-            String lowercaseTitle = title.toLowerCase();
-            int titlePosition = 0;
-            for (int i = 0; i < fragmentTitle.size(); i++) {
-                if (fragmentTitle.get(i).toLowerCase().equals(lowercaseTitle)) {
-                    titlePosition = i;
-                }
-            }
-            return titlePosition;
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            fragmentList.add(fragment);
-            fragmentTitle.add(title);
-        }
-    }
 }
 
 

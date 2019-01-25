@@ -43,7 +43,7 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        String databaseUsageKey = "pref_settings_database_usage";
+        String databaseUsageKey = getString(R.string.pref_key_database_usage);
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         if(s.equals(databaseUsageKey)) {
             if(sharedPreferences.getBoolean(s, true)){

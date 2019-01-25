@@ -85,9 +85,9 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
                         testButton.setText(getString(R.string.first_glance_start));
                         progressBar.setVisibility(View.INVISIBLE);
                         editor = sharedPref.edit();
-                        editor.putBoolean("pref_settings_database_usage", true);
-                        editor.putString("pref_key_dbname", dbNameText);
-                        editor.putString("pref_key_database_uri", dbURIText);
+                        editor.putBoolean(Util.retrieveStringFromResources(R.string.pref_key_database_usage, this), true);
+                        editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_name,this), dbNameText);
+                        editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_uri, this), dbURIText);
                         editor.apply();
                         Toast.makeText(this, "Connection was a success.", Toast.LENGTH_SHORT).show();
 
@@ -111,9 +111,9 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
 
     private  void resetDatabaseSettings() {
         editor = sharedPref.edit();
-        editor.putString("pref_key_dbname", " ");
-        editor.putString("pref_key_database_uri", " ");
-        editor.putBoolean("pref_settings_database_usage", false);
+        editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_name,this), " ");
+        editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_uri, this), " ");
+        editor.putBoolean(Util.retrieveStringFromResources(R.string.pref_key_database_usage, this), false);
         editor.apply();
         Button testButton = findViewById(R.id.first_glance_database_button);
         testButton.setText(getString(R.string.first_glance_test));
@@ -202,7 +202,7 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
 
     private void finishActivity() {
         Intent intent = new Intent(this, LoginPage.class);
-        intent.putExtra("after_first_time", true);
+        intent.putExtra(Util.retrieveStringFromResources(R.string.pref_key_after_first_time, this), true);
         startActivity(intent);
     }
 

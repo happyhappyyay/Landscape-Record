@@ -1,63 +1,71 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/pref_settings_title"
-        android:key="pref_key_storage_settings">
+        android:key="@string/pref_key_storage_settings"
+        android:title="@string/pref_settings_title">
         <PreferenceScreen
-            android:key="pref_key_quick_sheet_items_holder"
+            android:key="@string/pref_key_quick_sheet_items"
             android:summary="@string/pre_settings_quick_sheet_selections_summary"
             android:title="@string/pref_settings_quick_sheet_items_title">
             <PreferenceCategory
-                android:key="pref_key_quick_sheet_items_title"
-                android:title="@string/pref_settings_quick_sheet_items_title">
-            </PreferenceCategory>
+                android:key="@string/pref_key_quick_sheet_items_title"
+                android:title="@string/pref_settings_quick_sheet_items_title"></PreferenceCategory>
             <ListPreference
                 android:defaultValue="@string/lawn_services_prune"
                 android:entries="@array/work_activities"
                 android:entryValues="@array/work_activities_values"
-                android:key="pref_key_quick_sheet_item1"
+                android:key="@string/pref_key_quick_sheet_item1"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title1" />
             <ListPreference
                 android:defaultValue="@string/lawn_services_spray_grass"
                 android:entries="@array/work_activities"
                 android:entryValues="@array/work_activities_values"
-                android:key="pref_key_quick_sheet_item2"
+                android:key="@string/pref_key_quick_sheet_item2"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title2" />
             <ListPreference
                 android:defaultValue="@string/lawn_services_cut"
                 android:entries="@array/work_activities"
                 android:entryValues="@array/work_activities_values"
-                android:key="pref_key_quick_sheet_item3"
+                android:key="@string/pref_key_quick_sheet_item3"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title3" />
         </PreferenceScreen>
         <EditTextPreference
             android:defaultValue="@string/billing_item_company_name"
-            android:key="pref_key_company_name"
+            android:key="@string/pref_key_company_name"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:summary="@string/pref_settings_company_name_summary"
             android:title="@string/billing_item_company_name" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textLongMessage|textMultiLine"
+            android:key="@string/pref_key_personal_message"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:summary="@string/pref_settings_personal_message_summary"
+            android:title="@string/pref_settings_personal_message_title" />
     </PreferenceCategory>
     <SwitchPreference
-        android:key="pref_settings_database_usage"
+        android:key="@string/pref_key_database_usage"
         android:summary="@string/pref_settings_database_usage_summary"
         android:title="@string/pref_settings_database_usage_title" />
     <EditTextPreference
         android:defaultValue=" "
-        android:dependency="pref_settings_database_usage"
+        android:dependency="@string/pref_key_database_usage"
         android:inputType="textPassword"
-        android:key="pref_key_dbname"
+        android:key="@string/pref_key_database_name"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/pref_settings_database_name_summary"
         android:title="@string/pref_settings_database_name_title" />
     <EditTextPreference
         android:defaultValue=" "
-        android:dependency="pref_settings_database_usage"
+        android:dependency="@string/pref_key_database_usage"
         android:inputType="textPassword"
-        android:key="pref_key_database_uri"
+        android:key="@string/pref_key_database_uri"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/pref_settings_database_uri_summary"

@@ -86,17 +86,21 @@ public class Util {
 
     public static boolean hasOnlineDatabaseEnabled(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getBoolean("pref_settings_database_usage", false);
+        return sharedPref.getBoolean(retrieveStringFromResources(R.string.pref_key_database_usage, context), false);
     }
 
     public static String retrieveCompanyName(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString("pref_key_company_name", "Enter Company Name in Settings");
+        return sharedPref.getString(retrieveStringFromResources(R.string.pref_key_company_name, context), "Enter Company Name in Settings");
     }
 
     public static String retrievePersonalMessage(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString("pref_key_personal_message", "Enter Personal Message in Settings");
+        return sharedPref.getString(retrieveStringFromResources(R.string.pref_key_personal_message, context), "Enter Personal Message in Settings");
+    }
+
+    public static String retrieveStringFromResources(int resId, Context context) {
+        return context.getResources().getString(resId);
     }
 
     private static void goToDashboard(Context context) {
@@ -112,6 +116,7 @@ public class Util {
     private static void goToLogout(Context context) {
         Intent intent = new Intent(context, LoginPage.class);
         context.startActivity(intent);
+        Authentication.getAuthentication().setUser(null);
         Toast.makeText(context.getApplicationContext(), "Logged out! ", Toast.LENGTH_LONG).show();
     }
 

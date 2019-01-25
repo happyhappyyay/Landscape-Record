@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/billing_preview_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".BillingPreviewFragment">
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/billing_preview_back_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:rotation="270"
+        android:src="@android:drawable/arrow_up_float"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/billing_header_company_name" />
 
     <TextView
         android:id="@+id/billing_preview_personal_message"
@@ -95,8 +105,20 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Button"
+        android:text="@string/bill_creation_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/billing_preview_forward_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:rotation="90"
+        android:src="@android:drawable/arrow_up_float"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/billing_header_company_name" />
 
 </android.support.constraint.ConstraintLayout>

@@ -61,14 +61,14 @@ public class SnowServices extends Fragment {
     private String updateCheckBoxesAndExistingService(String existingServices) {
         final String SPACE = " ";
         final String TYPE = "Snow";
-        final String OTHER_SEPARATOR = ": ";
+        int lengthOfServiceString = existingServices.length();
         for (CheckBox c : checkBoxes) {
-            String checkBoxText = c.getText().toString();
-            if (existingServices.toLowerCase().contains(checkBoxText.toLowerCase())) {
-                int startIndex = existingServices.indexOf(c.getText().toString());
-                int endIndex = existingServices.length();
-                switch (checkBoxText.toLowerCase()) {
-                    case "other":
+            String checkBoxText = c.getText().toString().toLowerCase();
+            if (existingServices.toLowerCase().contains(checkBoxText)) {
+                int startIndex = existingServices.toLowerCase().indexOf(checkBoxText);
+                int endIndex = lengthOfServiceString;
+                switch (checkBoxText) {
+                    case "other:":
                         int tempStartIndex = startIndex - TYPE.length() - SPACE.length();
                         while(!existingServices.substring(tempStartIndex, startIndex -SPACE.length()).equals(TYPE) & startIndex != -1) {
                             startIndex = existingServices.indexOf(c.getText().toString(), startIndex + checkBoxText.length());
@@ -76,10 +76,10 @@ public class SnowServices extends Fragment {
                         }
                         if (startIndex != -1) {
                             int otherTextStartIndex = startIndex +
-                                    checkBoxText.length() + OTHER_SEPARATOR.length();
+                                    checkBoxText.length() + SPACE.length();
                             startIndex = tempStartIndex;
 
-                            for(int i = otherTextStartIndex; i < existingServices.length(); i++ ) {
+                            for(int i = otherTextStartIndex; i < lengthOfServiceString; i++ ) {
                                 if(Util.DELIMITER.equals(existingServices.substring(i, i+1))) {
                                     endIndex = i;
                                     break;
@@ -90,34 +90,37 @@ public class SnowServices extends Fragment {
                         }
                         break;
                     case "salt":
-                        endIndex = existingServices.length();
-                        for(int i = startIndex; i < existingServices.length(); i++ ) {
+                        endIndex = lengthOfServiceString;
+                        for(int i = startIndex; i < lengthOfServiceString; i++ ) {
                             if(Util.DELIMITER.equals(existingServices.substring(i, i+1))) {
                                 endIndex = i;
                                 break;
                             }
                         }
-                        String saltPhraseStringEnd = existingServices.substring(startIndex + checkBoxText.length() + SPACE.length(),endIndex);
-                        int quantityEndIndex = 0;
-                        for(int i = 0; i < saltPhraseStringEnd.length(); i++) {
-                            if(Character.isLetter(saltPhraseStringEnd.charAt(i))) {
-                                quantityEndIndex = i;
-                                break;
+                        if(endIndex - startIndex > checkBoxText.length()) {
+                            String saltPhraseStringEnd = existingServices.substring(startIndex + checkBoxText.length() + SPACE.length(), endIndex);
+                            int quantityEndIndex = 0;
+                            for (int i = 0; i < saltPhraseStringEnd.length(); i++) {
+                                if (Character.isLetter(saltPhraseStringEnd.charAt(i))) {
+                                    quantityEndIndex = i;
+                                    break;
+                                }
                             }
-                        }
-                        if(quantityEndIndex > 0) {
-                            saltText.setText(saltPhraseStringEnd.substring(0, quantityEndIndex));
+                            if (quantityEndIndex > 0) {
+                                saltText.setText(saltPhraseStringEnd.substring(0, quantityEndIndex));
+                            }
+
+                            String saltStringAfterQuantity = saltPhraseStringEnd.substring(quantityEndIndex);
+                            for (int i = 0; i < saltSpinner.getAdapter().getCount(); i++)
+                                if (saltSpinner.getAdapter().getItem(i).toString().equals(saltStringAfterQuantity)) {
+                                    saltSpinner.setSelection(i);
+                                }
                         }
 
-                        String saltStringAfterQuantity = saltPhraseStringEnd.substring(quantityEndIndex);
-                        for(int i = 0; i < saltSpinner.getAdapter().getCount(); i++)
-                            if (saltSpinner.getAdapter().getItem(i).toString().equals(saltStringAfterQuantity)) {
-                                saltSpinner.setSelection(i);
-                            }
                         break;
                     default:
                         endIndex = c.getText().toString().length() + Util.DELIMITER.length() + startIndex;
-                        if(endIndex > existingServices.length()) {
+                        if(endIndex > lengthOfServiceString) {
                             endIndex = endIndex - Util.DELIMITER.length();
                             break;
                         }
@@ -150,27 +153,27 @@ public class SnowServices extends Fragment {
         StringBuilder servicesStringBuilder = new StringBuilder();
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
-                String checkBoxText = c.getText().toString().toLowerCase();
-                switch (checkBoxText) {
-                    case "other":
+                String checkBoxText = c.getText().toString();
+                switch (checkBoxText.toLowerCase()) {
+                    case "other:":
                         String otherString = otherText.getText().toString();
                         if (!otherString.isEmpty()) {
-                            otherString = TYPE + SPACE + c.getText().toString() + ": " + otherString + Util.DELIMITER;
+                            otherString = TYPE + SPACE + checkBoxText + ": " + otherString + Util.DELIMITER;
                             servicesStringBuilder.append(otherString);
                         }
                         break;
                     case "salt":
                         String saltString = saltText.getText().toString();
                         if (!saltString.isEmpty()) {
-                            String saltAmount = "Salt " + saltString + saltSpinner.getSelectedItem().toString() + Util.DELIMITER;
+                            String saltAmount = checkBoxText+ SPACE + saltString + saltSpinner.getSelectedItem().toString() + Util.DELIMITER;
                             servicesStringBuilder.append(saltAmount);
                         } else {
-                            String salt = c.getText().toString() + Util.DELIMITER;
+                            String salt = checkBoxText + Util.DELIMITER;
                             servicesStringBuilder.append(salt);
                         }
                         break;
                     default:
-                        String serviceString = c.getText().toString() + Util.DELIMITER;
+                        String serviceString = checkBoxText + Util.DELIMITER;
                         servicesStringBuilder.append(serviceString);
                         break;
                 }

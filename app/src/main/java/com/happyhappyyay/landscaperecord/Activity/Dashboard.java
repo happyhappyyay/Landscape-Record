@@ -76,6 +76,32 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
         startActivity(intent);
     }
 
+    public void startBillCreation(View view) {
+        Intent intent = new Intent(getApplicationContext(), BillCreation.class);
+        startActivity(intent);
+    }
+
+    public void startPayments(View view) {
+        Intent intent = new Intent(getApplicationContext(), ReceivePayment.class);
+        startActivity(intent);
+    }
+
+    public void startManageUsers(View view) {
+        Intent intent = new Intent(getApplicationContext(), ViewUsers.class);
+        startActivity(intent);
+    }
+
+    public void startViewServices(View view) {
+        Intent intent = new Intent(getApplicationContext(), ViewServices.class);
+        startActivity(intent);
+    }
+
+    public void startTimeReporting(View view) {
+        Intent intent = new Intent(getApplicationContext(), TimeReporting.class);
+        startActivity(intent);
+    }
+
+
     private void setNotifications(){
         String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDateTime(Authentication.getAuthentication().getUser().getStartTime());
         if (Authentication.getAuthentication().getUser().getStartTime() != 0) {

@@ -71,6 +71,10 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
         notifyDataSetChanged();
     }
 
+    public List<Service> getServices() {
+        return services;
+    }
+
     private class ServiceViewHolder extends RecyclerView.ViewHolder {
         TextView serviceText;
         EditText priceText;
@@ -121,8 +125,9 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
                                     ).setPositiveButton("Yes", dialogClickListener)
                                             .setNegativeButton("No", dialogClickListener).show();
                                 }
-
-                                service.setPriced(true);
+                                else {
+                                    customer.getPayment().addServicePrice(service.getServices(), servicePrice, true);
+                                }
                                 Util.updateObject(RecyclerServicePricingAdapter.this, Util.CUSTOMER_REFERENCE, customer);
                             }
                         }

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.R;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
@@ -36,8 +37,8 @@ public abstract class OnlineDatabase implements DatabaseOperator {
     public static OnlineDatabase getOnlineDatabase(Context context) {
         if (instance == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            String dbURI = sharedPref.getString("pref_key_database_uri", "");
-            databaseName = sharedPref.getString("pref_key_dbname","");
+            String dbURI = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_database_uri, context), "");
+            databaseName = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_database_name, context),"");
             MongoClientURI uri = new MongoClientURI(dbURI);
             mongoClient = new MongoClient(uri);
             instance = new OnlineDatabase() {

@@ -11,11 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.Adapter.RecyclerViewUsersAdapter;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.POJO.User;
 import com.happyhappyyay.landscaperecord.R;
+import com.happyhappyyay.landscaperecord.Utility.Authentication;
 import com.happyhappyyay.landscaperecord.Utility.Util;
 
 import java.util.List;
@@ -29,8 +31,11 @@ public class ViewUsers extends AppCompatActivity implements DatabaseAccess<User>
         RecyclerView.LayoutManager layoutManager;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_users);
+        User user = Authentication.getAuthentication().getUser();
         Toolbar myToolbar = findViewById(R.id.user_settings_toolbar);
         setSupportActionBar(myToolbar);
+        TextView hoursText = findViewById(R.id.view_users_hours_text);
+        hoursText.setVisibility(!user.isAdmin() ? View.GONE : View.VISIBLE);
         recyclerView = findViewById(R.id.view_users_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -44,6 +49,11 @@ public class ViewUsers extends AppCompatActivity implements DatabaseAccess<User>
             Intent intent = new Intent(this, AddUser.class);
             startActivity(intent);
         }
+    }
+
+    public void startHourOperations(View view) {
+        Intent intent = new Intent(this, HourOperations.class);
+        startActivity(intent);
     }
 
     private void getUsers() {

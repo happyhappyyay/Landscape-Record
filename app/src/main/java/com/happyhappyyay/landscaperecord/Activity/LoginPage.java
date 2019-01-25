@@ -33,7 +33,7 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         boolean afterFirstTime = sharedPref.getBoolean(getString(R.string.pref_key_after_first_time), false);
         if(!afterFirstTime) {
-            boolean afterFirst = getIntent().getBooleanExtra("after_first_time", false);
+            boolean afterFirst = getIntent().getBooleanExtra(getString(R.string.pref_key_after_first_time), false);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getString(R.string.pref_key_after_first_time), afterFirst);
             editor.apply();
@@ -67,31 +67,6 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
     private void loginUser() {
         progressBar.setVisibility(View.VISIBLE);
         Util.findObjectByString(this, Util.USER_REFERENCE, username.getText().toString());
-//        new AsyncTask<Void, Void, User>() {
-//            @Override
-//            protected User doInBackground(Void... voids) {
-//
-//                return db.userDao().findUserByName(username.getText().toString());
-//            }
-//
-//            protected void onPostExecute(User user) {
-//                boolean authorized = false;
-//                if (user != null) {
-//                    if (user.getPassword().equals(password.getText().toString())) {
-//                        authorized = true;
-//                        authentication.setUser(user);
-//                        Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-//                        startActivity(intent);
-//                    }
-//                }
-//                if (!authorized) {
-//                    username.setText("");
-//                    password.setText("");
-//                    Toast.makeText(getApplicationContext(), "Could not login with the provided " +
-//                            "credentials", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        }.execute();
     }
 
     @Override
