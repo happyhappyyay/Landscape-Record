@@ -1,5 +1,7 @@
 package com.happyhappyyay.landscaperecord.POJO;
 
+import com.happyhappyyay.landscaperecord.Utility.Util;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -53,10 +55,14 @@ public class Payment {
     }
 
     public List<String> retrieveAllPaymentReceipts() {
-        String paymentInformation = "";
+        String paymentInformation;
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < paymentReceiptDates.size(); i++) {
-            paymentInformation = paymentReceiptDates.get(i) + " $" + paymentReceiptAmount.get(i);
+            String type = "Cash";
+            if (!checkNumbers.get(i).equals("CASH")) {
+                type = "Check";
+            }
+            paymentInformation = paymentReceiptDates.get(i) + ":  $" + paymentReceiptAmount.get(i) + " " + type;
             strings.add(paymentInformation);
         }
         return strings;
@@ -91,19 +97,36 @@ public class Payment {
     }
 
     public void payForServices(double amount, String date) {
+        int index = 0;
+        if(paymentReceiptDates.size() > 0) {
+            index = sortPaymentReceiptsByDate(date);
+        }
         amountPaid += amount;
         amountRemaining -= amount;
-        paymentReceiptAmount.add(amount);
-        paymentReceiptDates.add(date);
-        checkNumbers.add("CASH");
+        paymentReceiptAmount.add(index, amount);
+        paymentReceiptDates.add(index, date);
+        checkNumbers.add(index, "CASH");
     }
 
     public void payForServices(double amount, String date, String checkNumber) {
+        int index = sortPaymentReceiptsByDate(date);
         amountPaid += amount;
         amountRemaining -= amount;
-        paymentReceiptAmount.add(amount);
-        paymentReceiptDates.add(date);
-        checkNumbers.add(checkNumber);
+        paymentReceiptAmount.add(index, amount);
+        paymentReceiptDates.add(index, date);
+        checkNumbers.add(index, checkNumber);
+    }
+
+    private int sortPaymentReceiptsByDate(String date) {
+        long dateLong = Util.convertStringDateToMilliseconds(date);
+
+        for (int i = 0; i < paymentReceiptDates.size(); i++) {
+            long reciptLong = Util.convertStringDateToMilliseconds(paymentReceiptDates.get(i));
+            if (dateLong > reciptLong) {
+                return i;
+            }
+        }
+        return paymentReceiptDates.size();
     }
 
     public List<String> getCheckNumbers() {

@@ -93,6 +93,14 @@ public class Service implements Parcelable {
         return dateMessage;
     }
 
+    public String retrieveStartToEndString(){
+        String dateRange = Util.convertLongToStringDate(startTime) + " - ";
+        if(endTime > 0) {
+            dateRange += Util.convertLongToStringDate(endTime);
+        }
+        return dateRange;
+    }
+
     public String getServices() {
         return services;
     }

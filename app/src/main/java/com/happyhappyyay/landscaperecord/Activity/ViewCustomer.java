@@ -1,140 +1,56 @@
 package com.happyhappyyay.landscaperecord.Activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
 
+import com.happyhappyyay.landscaperecord.Adapter.CustomerViewPagerAdapter;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.POJO.Customer;
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.Utility.Authentication;
 import com.happyhappyyay.landscaperecord.Utility.Util;
 
 import java.util.List;
 
 public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Customer> {
-    private String customerID;
-    private TextView customerFullName, customerDisplayName, customerFullAddress, customerBusiness,
-    customerEmail, customerPhoneNumber, customerDay, customerMileage;
-    private Customer customer;
-
-    private final String CUSTOMER_ID = "Customer ID";
+    private final String ADAPTER_POS = "Adapter Position";
+    private ViewPager pager;
+    private int adapterPosition;
+    private CustomerViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_customer);
-        customerFullName = findViewById(R.id.view_customer_full_name);
-        customerFullAddress = findViewById(R.id.view_customer_full_address);
-        customerBusiness = findViewById(R.id.view_customer_business);
-        customerPhoneNumber = findViewById(R.id.view_customer_phone_number);
-        customerEmail = findViewById(R.id.view_customer_email);
-        customerMileage = findViewById(R.id.view_customer_mileage);
-        customerDay = findViewById(R.id.view_customer_day);
-        customerDisplayName = findViewById(R.id.view_customer_name);
-        Authentication authentication = Authentication.getAuthentication();
-        Intent intent = getIntent();
-        customerID = intent.getStringExtra("CUSTOMER_ID");
+        pager = findViewById(R.id.view_customer_view_pager);
         if (savedInstanceState != null) {
-            customerID = savedInstanceState.getString(CUSTOMER_ID);
+            adapterPosition = savedInstanceState.getInt(ADAPTER_POS);
+        }
+        else {
+            Intent intent = getIntent();
+            adapterPosition = intent.getIntExtra("ADAPTER_POSITION",0);
         }
 
-        findCustomer(customerID);
+        retrieveCustomers();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(CUSTOMER_ID, customerID);
+        if(adapter != null) {
+            outState.putInt(ADAPTER_POS, pager.getCurrentItem());
+        }
         super.onSaveInstanceState(outState);
     }
 
-    public void onEditCustomer(View view) {
-        Intent intent = new Intent(this, EditCustomer.class);
-        intent.putExtra("CUSTOMER_ID", customerID);
-        startActivity(intent);
-    }
-
-    public void onDeleteCustomer(View view) {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            deleteCustomer(customer);
-                            break;
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Are you sure you want to delete customer " + customer.getName() + " ?")
-                    .setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-        }
-
-    private void findCustomer(String customerID) {
-        Util.findObjectByID(this, Util.CUSTOMER_REFERENCE,customerID);
-//        new AsyncTask<Integer, Void, Customer>() {
-//            @Override
-//            protected Customer doInBackground(Integer... integers) {
-//                return db.customerDao().findCustomerByID(integers[0]);
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Customer customer) {
-//                String fullName = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
-//                customerFullName.setText(fullName);
-//                customerDisplayName.setText(customer.getName());
-//                customerBusiness.setText(customer.getCustomerBusiness());
-//                customerDay.setText(customer.getCustomerDay());
-//                customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-//                customerEmail.setText(customer.getCustomerEmail());
-//                customerMileage.setText("0");
-//                customerFullAddress.setText(customer.concatenateFullAddress());
-//                ViewCustomer.this.customer = customer;
-//            }
-//        }.execute(customerID);
-    }
-
-    private void populateTextFields(Customer customer) {
-        String fullName = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
-        customerFullName.setText(fullName);
-        customerDisplayName.setText(customer.getName());
-        customerBusiness.setText(customer.getCustomerBusiness());
-        customerDay.setText(customer.getCustomerDay());
-        customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-        customerEmail.setText(customer.getCustomerEmail());
-        customerMileage.setText("0");
-        customerFullAddress.setText(customer.concatenateFullAddress());
-    }
-
-    private void deleteCustomer(Customer customer) {
-        Util.deleteObject(this, Util.CUSTOMER_REFERENCE, customer);
-//        new AsyncTask<Customer, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Customer... params) {
-//                Customer customer = params[0];
-//                LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),1, 1);
-//                db.logDao().insert(log);
-//                db.customerDao().deleteCustomer(customer);
-//                finish();
-//                return null;
-//            }
-//        }.execute(customer);
+    private void retrieveCustomers() {
+        Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        findCustomer(customerID);
     }
 
     @Override
@@ -144,16 +60,13 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     public String createLogInfo() {
-        return customer.getName();
+        return null;
     }
 
     @Override
     public void onPostExecute (List<Customer> databaseObjects) {
-        if(databaseObjects != null) {
-            customer = databaseObjects.get(0);
-            populateTextFields(customer);
-        }else {
-            finish();
-        }
+        adapter = new CustomerViewPagerAdapter(this, databaseObjects);
+        pager.setAdapter(adapter);
+        pager.setCurrentItem(adapterPosition);
     }
 }

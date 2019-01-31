@@ -20,7 +20,7 @@ import com.happyhappyyay.landscaperecord.Activity.QuickSheet;
 import com.happyhappyyay.landscaperecord.Activity.ReceivePayment;
 import com.happyhappyyay.landscaperecord.Activity.Settings;
 import com.happyhappyyay.landscaperecord.Activity.TimeReporting;
-import com.happyhappyyay.landscaperecord.Activity.ViewContacts;
+import com.happyhappyyay.landscaperecord.Activity.ViewCustomers;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.DatabaseInterface.DatabaseOperator;
@@ -121,7 +121,7 @@ public class Util {
     }
 
     private static void gotToContacts(Context context) {
-        Intent intent = new Intent(context, ViewContacts.class);
+        Intent intent = new Intent(context, ViewCustomers.class);
         context.startActivity(intent);
     }
 

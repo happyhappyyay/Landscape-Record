@@ -135,23 +135,22 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
             boolean checkType = groupPosition == 0;
             String payment = paymentAmount.getText().toString();
             if (!payment.isEmpty()) {
-                Double amount = Double.parseDouble(payment);
+                double amount = Double.parseDouble(payment);
                 if (amount > 0) {
                     if (groupPosition != -1) {
                         if (groupPosition == 0) {
                             String checkNumberText = checkNumber.getText().toString();
                             if (!checkNumberText.isEmpty()) {
-                                customer.getPayment().payForServices(amount, dateString, checkNumberText);
-                                Toast.makeText(this, customer.getName() + " " + amount, Toast.LENGTH_LONG).show();
                                 checkForPaymentMatch(checkType);
                             }
-                            Toast.makeText(this, "The check number is blank. Please reenter " +
-                                    "the check number.", Toast.LENGTH_LONG).show();
+                            else {
+                                Toast.makeText(this, "The check number is blank. Please reenter " +
+                                        "the check number.", Toast.LENGTH_LONG).show();
+                            }
+
 
 
                         } else if (groupPosition == 1) {
-                            customer.getPayment().payForServices(amount, dateString);
-                            Toast.makeText(this, customer.getName() + " " + amount, Toast.LENGTH_LONG).show();
                             checkForPaymentMatch(checkType);
                         }
                     }
@@ -215,6 +214,35 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                         "general account. Proceed with payment?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
             }
+        }
+        else {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            if (checkType) {
+                                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
+                            } else {
+                                customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
+                            }
+                            Toast.makeText(getApplicationContext(), "Complete service and have admin apply paid status to " +
+                                    "service.", Toast.LENGTH_LONG).show();
+                            Util.updateObject(ReceivePayment.this, Util.CUSTOMER_REFERENCE, customer);
+
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            Toast.makeText(getApplicationContext(), "Complete service and then apply " +
+                                    "payment to the correct service " +
+                                    "or apply to general account.", Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("No, finished services found. Credit account with payment?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
         }
     }
 
@@ -306,14 +334,6 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     }
 
     private void findAllCustomers() {
-//        new AsyncTask<Void, Void, Void>() {
-////            @Override
-////            protected Void doInBackground(Void... voids) {
-////                customers = db.customerDao().getAllCustomers();
-////
-////                return null;
-////            }
-////        }.execute();
         progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }

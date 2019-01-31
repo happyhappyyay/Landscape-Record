@@ -39,6 +39,7 @@ public class Customer implements DatabaseObjects<Customer> {
     private String customerBusiness;
     private String customerDay;
     private String customerState;
+    private Double customerMileage;
     private long modifiedTime;
 
     @TypeConverters(PaymentConverter.class)
@@ -212,6 +213,14 @@ public class Customer implements DatabaseObjects<Customer> {
         this.payment = payment;
     }
 
+    public Double getCustomerMileage() {
+        return customerMileage;
+    }
+
+    public void setCustomerMileage(Double customerMileage) {
+        this.customerMileage = customerMileage;
+    }
+
     @Override
     public long getModifiedTime() {
         return modifiedTime;
@@ -229,7 +238,7 @@ public class Customer implements DatabaseObjects<Customer> {
 
     @Override
     public String getName() {
-        return customerBusiness == null ? customerFirstName + customerLastName : customerBusiness;
+        return customerBusiness == null ? customerFirstName + " " + customerLastName : customerBusiness;
     }
 
     @Override
@@ -322,11 +331,14 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     public String concatenateFullAddress() {
-        return getCustomerAddress() + " " + getCustomerCity()
-                + ", " + getCustomerState();
+        if(customerCity != null) {
+            return getCustomerAddress() + " " + getCustomerCity()
+                    + ", " + getCustomerState();
+        }
+            return getCustomerAddress() + " " + getCustomerState();
     }
 
     public String getFullName() {
-        return customerFirstName + customerLastName;
+        return customerFirstName + " " + customerLastName;
     }
 }

@@ -30,7 +30,7 @@ public class RecyclerViewCustomersAdapter extends Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_item, parent, false);
         return new RecyclerViewCustomersAdapter.ListViewHolder(view);
 
     }
@@ -56,7 +56,7 @@ public class RecyclerViewCustomersAdapter extends Adapter {
     private class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView customerName, customerAddress, customerDay;
         private ConstraintLayout constraintLayout;
-        String customerIDToPass;
+        int customerPosToPass;
 
         public ListViewHolder(View view) {
             super(view);
@@ -68,9 +68,9 @@ public class RecyclerViewCustomersAdapter extends Adapter {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            customerIDToPass = customers.get(getAdapterPosition()).getCustomerId();
+                            customerPosToPass = getAdapterPosition();
                             Intent intent = new Intent(context, ViewCustomer.class);
-                            intent.putExtra("CUSTOMER_ID", customerIDToPass);
+                            intent.putExtra("ADAPTER_POSITION", customerPosToPass);
                             context.startActivity(intent);
                         }
                     });

@@ -20,7 +20,7 @@ import com.happyhappyyay.landscaperecord.Utility.Util;
 
 import java.util.List;
 
-public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Customer> {
+public class ViewCustomers extends AppCompatActivity implements DatabaseAccess<Customer> {
     private RecyclerView recyclerView;
     private RecyclerViewCustomersAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -29,7 +29,7 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_contacts);
+        setContentView(R.layout.activity_view_customers);
         Toolbar myToolbar = findViewById(R.id.view_contacts_toolbar);
         setSupportActionBar(myToolbar);
         recyclerView = findViewById(R.id.view_customers_recycler_view);
@@ -40,7 +40,7 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
     }
 
     public void onAddClick(View view) {
-            Intent intent = new Intent(this, NewContact.class);
+            Intent intent = new Intent(this, AddCustomer.class);
             startActivity(intent);
     }
 
@@ -89,7 +89,7 @@ public class ViewContacts extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
-        adapter = new RecyclerViewCustomersAdapter(ViewContacts.this, databaseObjects);
+        adapter = new RecyclerViewCustomersAdapter(ViewCustomers.this, databaseObjects);
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
     }

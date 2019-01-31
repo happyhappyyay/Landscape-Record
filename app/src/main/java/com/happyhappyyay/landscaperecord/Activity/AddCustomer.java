@@ -20,7 +20,7 @@ import com.happyhappyyay.landscaperecord.Utility.Util;
 import java.util.List;
 
 
-public class NewContact extends AppCompatActivity implements DatabaseAccess<Customer> {
+public class AddCustomer extends AppCompatActivity implements DatabaseAccess<Customer> {
     private EditText firstNameText, lastNameText, emailText, businessText, addressText, cityText,
             phoneText;
     private Spinner stateSpinner, daySpinner;
@@ -30,7 +30,7 @@ public class NewContact extends AppCompatActivity implements DatabaseAccess<Cust
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_contact);
+        setContentView(R.layout.activity_add_customer);
         Toolbar myToolbar = findViewById(R.id.new_contact_toolbar);
         setSupportActionBar(myToolbar);
         firstNameText = findViewById(R.id.contact_first_name_text);

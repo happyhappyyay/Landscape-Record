@@ -33,7 +33,7 @@
             android:name=".Activity.ReceivePayment"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Activity.NewContact"
+            android:name=".Activity.AddCustomer"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Activity.JobServices"
@@ -57,7 +57,7 @@
         <activity android:name=".Activity.ViewWorkDay" />
         <activity android:name=".Activity.UserSettings" />
         <activity android:name=".Activity.EditUser" />
-        <activity android:name=".Activity.ViewContacts" />
+        <activity android:name=".Activity.ViewCustomers" />
         <activity android:name=".Activity.ViewCustomer" />
         <activity android:name=".Activity.EditCustomer" />
         <activity android:name=".Activity.ViewUsers" />

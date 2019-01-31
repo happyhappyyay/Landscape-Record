@@ -68,7 +68,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void startNewContact(View view) {
-        Intent intent = new Intent(this, ViewContacts.class);
+        Intent intent = new Intent(this, ViewCustomers.class);
         startActivity(intent);
     }
 
