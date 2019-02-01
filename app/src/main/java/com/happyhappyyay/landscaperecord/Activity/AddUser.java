@@ -24,7 +24,6 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
     private EditText firstName, lastName, password, hours, nickname;
     private User user;
     private CheckBox admin;
-    private String logInfo;
     private ProgressBar progressBar;
 
     @Override
@@ -58,6 +57,8 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
         if(progressBar.getVisibility() == View.INVISIBLE) {
             if (!firstName.getText().toString().isEmpty() & !lastName.getText().toString().isEmpty()) {
                 user = new User();
+                user.setFirstName(firstName.getText().toString());
+                user.setLastName(lastName.getText().toString());
                 user.setName(firstName.getText().toString() + " " + lastName.getText().toString());
                 if (password.getText().toString().length() > 5) {
                     user.setPassword(password.getText().toString());
@@ -95,7 +96,6 @@ public class AddUser <T extends DatabaseObjects<T>> extends AppCompatActivity im
 
     private void insertUser() {
         progressBar.setVisibility(View.VISIBLE);
-        logInfo = user.getName();
         Util.insertObject(this, Util.USER_REFERENCE, user);
         Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
                 " created.", Toast.LENGTH_LONG).show();

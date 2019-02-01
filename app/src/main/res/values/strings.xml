@@ -194,5 +194,7 @@
     <string name="view_contacts_payment">Receive Payment</string>
     <string name="view_users_pay">Adjust/Pay User Hours</string>
     <string name="dynamic_text">TextView</string>
+    <string name="view_user_activity">Activity</string>
+    <string name="view_customers_title">Customers</string>
 
 </resources>

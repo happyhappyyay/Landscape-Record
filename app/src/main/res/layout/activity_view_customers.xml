@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/main_menu_contacts" />
+        app:title="@string/view_customers_title" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/view_customers_recycler_view"

@@ -235,6 +235,17 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 
+    public List<LogActivity> retrieveClassInstancesFromUsername(DatabaseOperator db, String username) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getLogsByName(username);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        FindIterable<Document> documents = od.getCollection(OnlineDatabase.LOG).find(eq("username", username)).projection(excludeId());
+        return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
+    }
+
 
     @Override
     public String getId() {

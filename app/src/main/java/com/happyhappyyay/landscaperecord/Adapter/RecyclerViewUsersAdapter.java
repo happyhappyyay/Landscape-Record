@@ -57,7 +57,6 @@ public class RecyclerViewUsersAdapter extends Adapter {
     private class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView username, userHours, userCheckIn;
         private ConstraintLayout constraintLayout;
-        String userIDToPass;
 
         public ListViewHolder(View view) {
             super(view);
@@ -69,9 +68,9 @@ public class RecyclerViewUsersAdapter extends Adapter {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            userIDToPass = users.get(getAdapterPosition()).getUserId();
+                            int posToPass = getAdapterPosition();
                             Intent intent = new Intent(context, ViewUser.class);
-                            intent.putExtra("USER_ID", userIDToPass);
+                            intent.putExtra("ADAPTER_POSITION", posToPass);
                             context.startActivity(intent);
                         }
                     });

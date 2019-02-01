@@ -30,6 +30,9 @@ public interface LogDao {
     @Query("SELECT * FROM LogActivity WHERE modifiedTime > :modifiedTime")
     List<LogActivity> getNewlyModifiedLogs(long modifiedTime);
 
+    @Query("SELECT * FROM LogActivity WHERE username == :username")
+    List<LogActivity> getLogsByName(String username);
+
     @Delete
     void deleteLog(LogActivity log);
 
