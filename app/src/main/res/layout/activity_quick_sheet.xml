@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".Activity.QuickSheet">
+    tools:context=".activity.QuickSheet">
 
     <ProgressBar
         android:id="@+id/quick_sheet_progress_bar"

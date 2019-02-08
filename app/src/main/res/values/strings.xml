@@ -18,16 +18,20 @@
     <string name="contact_address">Address:</string>
     <string name="contact_city">City:</string>
     <string name="contact_state">State:</string>
-    <string name="name_text_field">Name:</string>
     <string name="email_example">John.Smith@Example.com</string>
     <string name="address_example">12300 Country Road</string>
     <string name="city_example">Chicago</string>
+    <string name="name_text_field">Name</string>
     <string name="phone_number_example">123-456-7890</string>
-    <string name="main_menu_time">Time Reporting</string>
-    <string name="main_menu_job">Job Reporting</string>
+    <string name="main_menu_time">Time Reporting\n\nCheck-in and check-out for employees. Accumulates employee hours.</string>
+    <string name="main_menu_job">Job Reporting\n\nA full version of service reporting (for checklist style reporting, see menu bar above).</string>
     <string name="main_menu_payment">Payment Reporting</string>
     <string name="main_menu_contact">New Contact</string>
     <string name="main_menu_admin">Admin Tools</string>
+    <string name="main_menu_users">Employees\n\nA list of all employees. Add, edit, and view information regarding employees.</string>
+    <string name="main_menu_contacts">Customers\n\nA list of all customers. Add, edit, and view information regarding customers.</string>
+    <string name="admin_tools_workday">View Workday\n\nLook at services and employee hours for past workdays. Sort by day, week, or month.</string>
+    <string name="admin_tools_logs">View Activity Logs\n\nLook at the logs of employee activity, starting with the most recent.</string>
     <string name="job_lawn_service">Lawn</string>
     <string name="job_landscaping_services">Landscaping</string>
     <string name="job_snow_services">Snow</string>
@@ -168,7 +172,6 @@
     <string name="billing_item_company_name">Company Name</string>
     <string name="billing_item_signature">Thank you.</string>
     <string name="dashboard_payments">Payments</string>
-    <string name="main_menu_contacts">Contacts</string>
     <string name="user_settings_title">User Settings</string>
     <string name="view_users_users_title">Users</string>
     <string name="add_user_nickname">Nickname</string>
@@ -196,5 +199,8 @@
     <string name="dynamic_text">TextView</string>
     <string name="view_user_activity">Activity</string>
     <string name="view_customers_title">Customers</string>
+    <string name="view_customers_create_invoice">Create Invoices</string>
+    <string name="time_reporting_title">Time Report</string>
+    <string name="admin_tools_settings">Settings\n\nView and edit settings related to application (e.g., quick sheet preferences, online database access, mass contact import, etc).</string>
 
 </resources>

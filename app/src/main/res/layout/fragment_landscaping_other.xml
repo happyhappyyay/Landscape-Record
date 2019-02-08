@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".Fragment.LandscapingOther">
+    tools:context=".fragments.LandscapingOther">
 
     <Spinner
         android:id="@+id/landscaping_other_dump_type_spinner"

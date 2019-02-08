@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.LoginPage">
+    tools:context=".activity.LoginPage">
 
     <EditText
         android:id="@+id/login_page_username"

@@ -4,105 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MainMenu">
+    tools:context=".activity.MainMenu">
 
     <TextView
         android:id="@+id/admin_tools_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:drawableTop="@drawable/ic_twotone_build_64px"
+        android:gravity="center"
         android:onClick="startAdminTools"
         android:text="@string/main_menu_admin"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:drawableTop="@drawable/ic_twotone_calendar_today_64px"
-        android:onClick="startViewWorkDay"
-        android:text="@string/view_work_day_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textView20"
-        app:layout_constraintStart_toStartOf="@+id/textView20" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_menu_users" />
 
     <TextView
         android:id="@+id/textView28"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:drawableTop="@drawable/ic_twotone_contacts_64px"
-        android:onClick="startNewContact"
+        android:background="@drawable/rounded_layout"
+        android:drawableStart="@drawable/ic_twotone_contacts_64px"
+        android:onClick="startViewCustomers"
+        android:padding="4dp"
         android:text="@string/main_menu_contacts"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textView26"
-        app:layout_constraintStart_toStartOf="@+id/textView26" />
+        app:layout_constraintBottom_toTopOf="@+id/main_menu_users"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+    <TextView
+        android:id="@+id/main_menu_users"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/rounded_layout"
+        android:drawableStart="@drawable/ic_twotone_account_circle_64px"
+        android:onClick="startViewUsers"
+        android:padding="4dp"
+        android:text="@string/main_menu_users"
+        app:layout_constraintBottom_toTopOf="@+id/admin_tools_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
     <TextView
         android:id="@+id/textView20"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:drawableTop="@drawable/ic_twotone_assignment_64px"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_layout"
+        android:drawableStart="@drawable/ic_twotone_assignment_64px"
         android:onClick="startJobReporting"
+        android:padding="4dp"
         android:text="@string/main_menu_job"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar" />
-
-    <TextView
-        android:id="@+id/main_menu_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:drawableTop="@drawable/ic_twotone_hourglass_full_64px"
-        android:onClick="startTimeReporting"
-        android:text="@string/main_menu_time"
-        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/textView28"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/main_menu_full" />
 
     <TextView
         android:id="@+id/main_menu_full"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:drawableTop="@drawable/ic_twotone_hourglass_empty_64px"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_layout"
+        android:drawableStart="@drawable/ic_twotone_hourglass_empty_64px"
         android:onClick="startTimeReporting"
+        android:padding="4dp"
         android:text="@string/main_menu_time"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/textView20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar" />
-
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="32dp"
-        android:drawableTop="@drawable/ic_twotone_attach_money_64px"
-        android:onClick="startPaymentReporting"
-        android:gravity="center"
-        android:text="@string/dashboard_payments"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_menu_toolbar"

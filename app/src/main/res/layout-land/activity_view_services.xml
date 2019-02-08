@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ViewServices">
+    tools:context=".activity.ViewServices">
 
     <ProgressBar
         android:id="@+id/view_services_progress_bar"
@@ -75,7 +75,6 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:checkedButton="@+id/view_services_all_box"

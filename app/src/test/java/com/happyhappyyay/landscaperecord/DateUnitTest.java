@@ -1,7 +1,7 @@
 package com.happyhappyyay.landscaperecord;
 
-import com.happyhappyyay.landscaperecord.POJO.WorkDay;
-import com.happyhappyyay.landscaperecord.Utility.Util;
+import com.happyhappyyay.landscaperecord.pojo.WorkDay;
+import com.happyhappyyay.landscaperecord.utility.Util;
 
 import junit.framework.Assert;
 

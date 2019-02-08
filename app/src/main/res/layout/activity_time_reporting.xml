@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.TimeReporting">
+    tools:context=".activity.TimeReporting">
 
     <ProgressBar
         android:id="@+id/time_reporting_progress_bar"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/main_menu_time" />
+        app:title="@string/time_reporting_title" />
 
     <Button
         android:id="@+id/checkInButton"

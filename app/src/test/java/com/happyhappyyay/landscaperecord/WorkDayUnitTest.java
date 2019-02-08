@@ -1,10 +1,10 @@
 package com.happyhappyyay.landscaperecord;
 
-import com.happyhappyyay.landscaperecord.Activity.ViewWorkDay;
-import com.happyhappyyay.landscaperecord.POJO.Service;
-import com.happyhappyyay.landscaperecord.POJO.User;
-import com.happyhappyyay.landscaperecord.POJO.WorkDay;
-import com.happyhappyyay.landscaperecord.Utility.Util;
+import com.happyhappyyay.landscaperecord.activity.ViewWorkDay;
+import com.happyhappyyay.landscaperecord.pojo.Service;
+import com.happyhappyyay.landscaperecord.pojo.User;
+import com.happyhappyyay.landscaperecord.pojo.WorkDay;
+import com.happyhappyyay.landscaperecord.utility.Util;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,7 +44,6 @@ public class WorkDayUnitTest {
         user.setName("John");
         users.add(user);
         ViewWorkDay day = new ViewWorkDay();
-        day.setUsers(users);
         WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
         for (int i = 0; i < users.size(); i++) {
             workDay.addUserHourReference(users.get(i).getName(), 2*(i+1));
@@ -69,7 +68,6 @@ public class WorkDayUnitTest {
         user.setName("John");
         users.add(user);
         ViewWorkDay day = new ViewWorkDay();
-        day.setUsers(users);
         List<WorkDay> workDays = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
             WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
@@ -90,7 +88,6 @@ public class WorkDayUnitTest {
         user.setName("Bob");
         users.add(user);
         ViewWorkDay day = new ViewWorkDay();
-        day.setUsers(users);
         WorkDay workDay = new WorkDay(Util.retrieveStringCurrentDate());
         for (int i = 0; i < users.size(); i++) {
             workDay.addUserHourReference(users.get(i).getName(), 2*(i+1));
