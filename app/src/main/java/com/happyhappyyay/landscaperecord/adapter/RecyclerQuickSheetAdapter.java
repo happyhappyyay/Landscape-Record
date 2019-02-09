@@ -129,6 +129,8 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                 workDay = new WorkDay(endDateString);
                 workDay.addServices(service);
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), endDateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.happyhappyyay.landscaperecord.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -52,9 +50,6 @@ import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_P
 
 public class JobServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MultiDatabaseAccess<Customer> {
 
-    private ViewPager viewPager;
-    private FragmentPageAdapter fragAdapter;
-    private TabLayout tabLayout;
     private Spinner accountSpinner;
     private Spinner daySpinner;
     private String services;
@@ -64,7 +59,6 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     private EditText date, manHours;
     public static final String MAN_HOURS = "Man Hours";
     private Service service;
-    private WorkDay workDay;
     private LawnServices lawnServices;
     private LandscapeServices landscapeServices;
     private SnowServices snowServices;
@@ -74,11 +68,15 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_job_services);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        allCustomers = new ArrayList<>();
         String dateString = Util.retrieveStringCurrentDate();
         String manHoursString = "";
-        Bundle b = getIntent().getBundleExtra("bundle");
-        if(b != null) {
-            service = b.getParcelable("SERVICE");
+        services = "";
+        Bundle bundle = getIntent().getBundleExtra("bundle");
+        if(bundle != null) {
+            service = bundle.getParcelable("SERVICE");
         }
         if(savedInstanceState != null) {
             lawnServices = (LawnServices) getSupportFragmentManager().getFragment(savedInstanceState, "LAWN");
@@ -97,31 +95,31 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
             snowServices = new SnowServices();
         }
 
-        allCustomers = new ArrayList<>();
-        setContentView(R.layout.activity_job_services);
-        viewPager = findViewById(R.id.job_services_view_pager);
+        if(service != null) {
+            ExistingService.getExistingService().setServices(service.getServices());
+            ExistingService.getExistingService().setMaterials(service.getMaterials());
+        }
+
+        ViewPager viewPager = findViewById(R.id.job_services_view_pager);
         viewPager.setOffscreenPageLimit(2);
         setupViewPager(viewPager);
-        tabLayout = findViewById(R.id.job_services_tab_layout);
+
+        TabLayout tabLayout = findViewById(R.id.job_services_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+
         Toolbar myToolbar = findViewById(R.id.dashboard_toolbar);
         setSupportActionBar(myToolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        accountSpinner = findViewById(R.id.job_services_account_spinner);
-        daySpinner = findViewById(R.id.job_services_day_spinner);
+
         date = findViewById(R.id.job_services_date_text);
         date.setText(dateString);
         manHours = findViewById(R.id.job_services_man_hours_text);
         manHours.setText(manHoursString);
         progressBar = findViewById(R.id.job_services_progress_bar);
-        services = "";
-        if(service != null) {
-            ExistingService.getExistingService().setServices(service.getServices());
-            ExistingService.getExistingService().setMaterials(service.getMaterials());
-        }
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        daySpinner = findViewById(R.id.job_services_day_spinner);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -149,12 +147,16 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
             }
 
         });
+
+        accountSpinner = findViewById(R.id.job_services_account_spinner);
+        accountSpinner.setOnItemSelectedListener(this);
+
         progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        fragAdapter = new FragmentPageAdapter(getSupportFragmentManager());
+        FragmentPageAdapter fragAdapter = new FragmentPageAdapter(getSupportFragmentManager());
         if(lawnServices == null) {
             fragAdapter.addFragment(new LawnServices(), "LAWN");
         }
@@ -177,17 +179,6 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         }
 
         viewPager.setAdapter(fragAdapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.items, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return Util.toolbarItemSelection(this, item);
     }
 
     public void onSubmitButton(View view) {
@@ -252,7 +243,6 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
             arraySpinner[i] = customers.get(i).getCustomerAddress();
         }
 
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -264,34 +254,8 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (service == null) {
-            customer = allCustomers.get(position);
-            adapterPosition = position;
-        }
-        else {
-            for (int i = 0; i < allCustomers.size(); i++) {
-                if(allCustomers.get(i).getName().equals(service.getCustomerName())) {
-                    accountSpinner.setSelection(adapterPosition = i);
-                    customer = allCustomers.get(i);
-                    break;
-                }
-                if(i == allCustomers.size()) {
-                    accountSpinner.setSelection(Adapter.IGNORE_ITEM_VIEW_TYPE);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-            if (service == null) {
-                if (sortedCustomers.size() > 0) customer = sortedCustomers.get(0);
-            }
-    }
-
     private void updateWorkDay(DatabaseOperator db) {
+        WorkDay workDay;
         WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.convertLongToStringDate(service.getStartTime()));
         if (tempWorkDay != null) {
             workDay = tempWorkDay;
@@ -328,19 +292,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         if (databaseObjects != null) {
                 allCustomers = databaseObjects;
                 sortedCustomers = allCustomers;
-//                if(service == null) {
-                    populateSpinner(allCustomers);
-//                }
-//                else {
-//                    for(int i = 0; i < allCustomers.size();i++) {
-//                        if (allCustomers.get(i).getName().equals(service.getCustomerName())) {
-//                            List<Customer> selectedCustomer = new ArrayList<>();
-//                            selectedCustomer.add(allCustomers.get(i));
-//                            populateSpinner(selectedCustomer);
-//                            customer = selectedCustomer.get(0);
-//                        }
-//                    }
-//                }
+                populateSpinner(allCustomers);
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -394,11 +346,48 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (service == null) {
+            customer = allCustomers.get(position);
+            adapterPosition = position;
+        } else {
+            for (int i = 0; i < allCustomers.size(); i++) {
+                if (allCustomers.get(i).getName().equals(service.getCustomerName())) {
+                    accountSpinner.setSelection(adapterPosition = i);
+                    customer = allCustomers.get(i);
+                    break;
+                }
+                if (i == allCustomers.size()) {
+                    accountSpinner.setSelection(Adapter.IGNORE_ITEM_VIEW_TYPE);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (service == null) {
+            if (sortedCustomers.size() > 0) customer = sortedCustomers.get(0);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return Util.toolbarItemSelection(this, item);
+    }
+
     private class FragmentPageAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragmentList = new ArrayList<>();
         private final List<String> fragmentTitle = new ArrayList<>();
 
-        public FragmentPageAdapter(FragmentManager fm) {
+        private FragmentPageAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -417,40 +406,9 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
             return fragmentTitle.get(position);
         }
 
-        public int getPosition(String title) {
-            String lowercaseTitle = title.toLowerCase();
-            int titlePosition = 0;
-            for (int i = 0; i < fragmentTitle.size(); i++) {
-                if (fragmentTitle.get(i).toLowerCase().equals(lowercaseTitle)) {
-                    titlePosition = i;
-                }
-            }
-            return titlePosition;
-        }
-
-        public void addFragment(Fragment fragment, String title) {
+        private void addFragment(Fragment fragment, String title) {
             fragmentList.add(fragment);
             fragmentTitle.add(title);
         }
     }
-    @Override
-    public void onBackPressed() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        JobServices.super.onBackPressed();
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to leave this page without submitting job information?"
-        ).setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();    }
 }

@@ -1,6 +1,5 @@
 package com.happyhappyyay.landscaperecord.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
@@ -24,20 +24,15 @@ import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
-import com.happyhappyyay.landscaperecord.utility.PopulateSpinner;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
 
 import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_POSITION;
 
-public class HourOperations extends AppCompatActivity implements PopulateSpinner,
-        AdapterView.OnItemSelectedListener, MultiDatabaseAccess {
+public class HourOperations extends AppCompatActivity implements MultiDatabaseAccess <User> {
 
-    private final int VIEW_ID = R.id.hour_operations_spinner;
     private EditText hours;
-    private Authentication authentication;
-    private List<User> users;
     private User user;
     private int adapterPosition;
     private EditText dateText;
@@ -56,7 +51,6 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         hours = findViewById(R.id.hour_operations_hours_text);
-        authentication = Authentication.getAuthentication();
         progressBar = findViewById(R.id.hour_operations_progress_bar);
         if (savedInstanceState != null) {
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
@@ -85,13 +79,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                 }
             }
         });
-        Util.UserAccountsSpinner task = new Util.UserAccountsSpinner() {
-            @Override
-            protected void onPostExecute(List<User> dbUsers) {
-                users = dbUsers;
-            }
-        };
-        task.execute(this);
+        findAllUsers();
     }
 
     private boolean progressBarIsInvisible() {
@@ -142,7 +130,7 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
                     logActivityReference = 1;
                     updateUser();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Hours removed: " + payHours + " exceeds " +
+                    Toast.makeText(getApplicationContext(), payHours + " exceeds " +
                             "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -162,92 +150,15 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     }
 
     @Override
-    public Authentication getAuthentication() {
-        return authentication;
-    }
-
-    @Override
-    public Activity getActivity() {
-        return this;
-    }
-
-    @Override
-    public int getViewID() {
-        return VIEW_ID;
-    }
-
-    @Override
-    public AdapterView.OnItemSelectedListener getItemSelectedListener() {
-        return this;
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(ADAPTER_POSITION, adapterPosition);
         outState.putString(DATE_STRING, dateString);
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (users != null) {
-            user = users.get(position);
-            adapterPosition = position;
-        }
-        else {
-            parent.setSelection(adapterPosition);
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
     private void updateUser() {
         progressBar.setVisibility(View.VISIBLE);
         Util.enactMultipleDatabaseOperations(this);
-
-//        new AsyncTask<Integer, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Integer... integers) {
-//                int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
-//                int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
-//                if (!integers[0].equals(payLogReference)) {
-//                    boolean isNewWorkDay = false;
-//                    WorkDay workDay = db.workDayDao().findWorkDayByDate(dateString);
-//                    int numberOfHours = (int) Math.round(Double.parseDouble(hours.getText().toString()));
-//                    if (workDay == null) {
-//                        isNewWorkDay = true;
-//                        workDay = new WorkDay(dateString);
-//                    }
-//                    if (integers[0].equals(deleteLogReference)) {
-//                        numberOfHours = -numberOfHours;
-//                    }
-//
-//                    workDay.addUserHourReference(user.toString(), numberOfHours);
-//
-//                    if (isNewWorkDay) {
-//                        db.workDayDao().insert(workDay);
-//                    }
-//                    else {
-//                        db.workDayDao().updateWorkDay(workDay);
-//                    }
-//
-//                }
-//
-//                LogActivity log = new LogActivity(authentication.getUser().getName(), user.getName() + " " + hours.getText().toString() + " for " + dateString, logActivityReference, 3);
-//                db.logDao().insert(log);
-//                db.userDao().updateUser(user);
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                hours.setText("");
-//
-//                }
-//        }.execute(logActivityReference);
     }
 
     private void updateWorkDay(DatabaseOperator db) {
@@ -269,6 +180,8 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
 
             if (isNewWorkDay) {
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), dateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
             }
             else {
                 Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
@@ -277,7 +190,9 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
         }
     }
 
-
+    public void findAllUsers() {
+        Util.findAllObjects(this, Util.USER_REFERENCE);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -339,7 +254,32 @@ public class HourOperations extends AppCompatActivity implements PopulateSpinner
     }
 
     @Override
-    public void onPostExecute(List databaseObjects) {
-        progressBar.setVisibility(View.INVISIBLE);
+    public void onPostExecute(final List<User> databaseObjects) {
+        if(databaseObjects != null) {
+            AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+                List<User> usersInside;
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (usersInside != null) {
+                        user = usersInside.get(position);
+                        adapterPosition = position;
+                    }
+                    else {
+                        usersInside = databaseObjects;
+                        parent.setSelection(adapterPosition);
+                        user = usersInside.get(adapterPosition);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            };
+            Spinner spinner = findViewById(R.id.hour_operations_spinner);
+            Util.populateSpinner(spinner,listener,this,databaseObjects, true);
+        }
+            progressBar.setVisibility(View.INVISIBLE);
+
     }
 }

@@ -233,7 +233,7 @@ public class Customer implements DatabaseObjects<Customer> {
 
     @Override
     public String toString() {
-        return (customerBusiness == null ? customerFirstName + customerLastName : customerBusiness) + " " + concatenateFullAddress();
+        return (customerBusiness == null ? customerFirstName + " " + customerLastName : customerBusiness) + " " + concatenateFullAddress();
     }
 
     @Override

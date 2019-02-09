@@ -141,43 +141,28 @@ public class Util {
 
     }
 
-    /* Loads spinner with list items and sets initial item of list */
-    private static <T extends DatabaseObjects> void populateSpinner(PopulateSpinner populateSpinner, List<T> objects) {
-        Authentication authentication = populateSpinner.getAuthentication();
-        Activity activity = populateSpinner.getActivity();
-        int viewID = populateSpinner.getViewID();
-        AdapterView.OnItemSelectedListener listener = populateSpinner.getItemSelectedListener();
-
+    public static <T extends DatabaseObjects<T>> void populateSpinner(Spinner spinner, AdapterView.OnItemSelectedListener listener, Context context, List<T> objects, boolean largeText) {
         String[] arraySpinner = new String[objects.size()];
         int pos = 0;
         for (int i = 0; i < objects.size(); i++) {
-            arraySpinner[i] = objects.get(i).getName();
-            if (objects.get(i).getName().equals(authentication.getUser().getName())) {
-                pos = i;
+
+            if(objects.get(i) instanceof User) {
+                arraySpinner[i] = objects.get(i).getName();
+                if (objects.get(i).getName().equals(Authentication.getAuthentication().getUser().getName())) {
+                    pos = i;
+                }
+            }
+            else if (objects.get(i) instanceof Customer) {
+                arraySpinner[i] = ((Customer) objects.get(i)).concatenateFullAddress();
             }
         }
-
-        Spinner s = activity.findViewById(viewID);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
-                R.layout.spinner_item, arraySpinner);
+        int layoutReference = largeText? R.layout.spinner_item: R.layout.support_simple_spinner_dropdown_item;
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                layoutReference, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);
-        s.setOnItemSelectedListener(listener);
-        s.setSelection(pos);
-    }
-
-    //Asynchronous task for Users
-    public static class UserAccountsSpinner extends AsyncTask<PopulateSpinner, Void, List<User>> {
-
-        @Override
-        protected List<User> doInBackground(PopulateSpinner... params) {
-            Context context = params[0].getActivity().getApplicationContext();
-            AppDatabase db = AppDatabase.getAppDatabase(context);
-            List<User> users = db.userDao().getAllUsers();
-            populateSpinner(params[0], users);
-            return users;
-        }
-
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(listener);
+        spinner.setSelection(pos);
     }
 
     public static String retrieveStringCurrentDate() {

@@ -30,19 +30,20 @@ import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_P
 
 public class ReceivePayment extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatabaseAccess<Customer> {
 
-    private int adapterPosition, dayPosition, groupPosition = -1;
+    public static final String SERVICE_POSITION = "Service adapter Position";
     private String dateString;
     EditText dateStringText;
     private List<Customer> allCustomers;
     private List<Customer> sortedCustomers;
     private EditText checkNumber, paymentAmount;
-    private Spinner daySpinner, serviceSpinner;
+    private int adapterPosition, dayPosition, servicePosition, groupPosition = -1;
     private Customer customer;
     private List<Service> payableServices;
     private ProgressBar progressBar;
 
     public static final String DAY_POSITION = "Day Adapter Position";
     public static final String GROUP_POSITION = "Radio Group Position";
+    private Spinner daySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
             dateString = savedInstanceState.getString(DATE_STRING);
             dayPosition = savedInstanceState.getInt(DAY_POSITION);
             groupPosition = savedInstanceState.getInt(GROUP_POSITION);
+            servicePosition = savedInstanceState.getInt(SERVICE_POSITION);
         }
 
         checkNumber.setVisibility(groupPosition == 0? View.VISIBLE: View.INVISIBLE);
@@ -86,7 +88,6 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                 }
             }
         });
-        serviceSpinner = findViewById(R.id.receive_payment_service_spinner);
         daySpinner = findViewById(R.id.receive_payment_day_spinner);
         daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -261,32 +262,20 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
     }
 
     private void populateSpinner(List<Customer> customers) {
-        String[] arraySpinner = new String[customers.size()];
-        int pos = adapterPosition;
-        for (int i = 0; i < customers.size(); i++) {
-            arraySpinner[i] = customers.get(i).getCustomerAddress();
-        }
-
         Spinner s = findViewById(R.id.receive_payment_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                R.layout.support_simple_spinner_dropdown_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);
-        s.setOnItemSelectedListener(this);
+        Util.populateSpinner(s,this, this, customers, false);
     }
 
     private void populateSpinner(Customer customer) {
-        List<Service> services = customer.getCustomerServices();
+        final List<Service> services = customer.getCustomerServices();
         payableServices = new ArrayList<>();
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         };
         final int ZERO_POSITION = 1;
@@ -307,9 +296,10 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner serviceSpinner = findViewById(R.id.receive_payment_service_spinner);
         serviceSpinner.setAdapter(adapter);
         serviceSpinner.setOnItemSelectedListener(listener);
         serviceSpinner.setSelection(-1);
@@ -347,6 +337,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
         outState.putInt(ADAPTER_POSITION, adapterPosition);
         outState.putInt(DAY_POSITION, dayPosition);
         outState.putInt(GROUP_POSITION, groupPosition);
+        outState.putInt(SERVICE_POSITION, servicePosition);
 
         super.onSaveInstanceState(outState);
     }

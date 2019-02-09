@@ -194,18 +194,20 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
         List<String> customerServices = new ArrayList<>();
         for (Service s: services) {
             String serviceString = s.getServices();
-            String serviceStringWithoutSeparators = "";
+            String serviceStringWithoutSeparators;
+            StringBuilder sb = new StringBuilder();
             int endServicePosition;
             int startServicePosition = 0;
 
             for (int i = 0; i < serviceString.length(); i++) {
                 if (serviceString.substring(i,i+1).equals("|")) {
                     endServicePosition = i;
-                    serviceStringWithoutSeparators += serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                    String tempString = serviceString.substring(startServicePosition, endServicePosition) + ", ";
+                    sb.append(tempString);
                     startServicePosition = i+1;
                 }
             }
-
+            serviceStringWithoutSeparators = sb.toString();
             if (serviceStringWithoutSeparators.length() > 2) {
                 serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
             }
