@@ -33,6 +33,7 @@ public abstract class OnlineDatabase implements DatabaseOperator {
     private static OnlineDatabase instance;
     private static MongoClient mongoClient;
     private static String databaseName;
+    private static int failedConnections = 0;
 
     public static OnlineDatabase getOnlineDatabase(Context context) {
         if (instance == null) {
@@ -45,6 +46,21 @@ public abstract class OnlineDatabase implements DatabaseOperator {
             };
         }
         return instance;
+    }
+
+    public static boolean connectionIsValid(Context context){
+        try {
+            getOnlineDatabase(context);
+            return true;
+        }
+        catch (Exception e) {
+            failedConnections++;
+            return false;
+        }
+    }
+
+    public static boolean hadFailedConnections() {
+        return failedConnections > 0;
     }
 
     public static <T extends DatabaseObjects> List<T> convertDocumentsToObjects(List<Document> docs, Class<T> objClass) {
@@ -136,5 +152,13 @@ public abstract class OnlineDatabase implements DatabaseOperator {
 
     public MongoDatabase getMongoDb() {
         return mongoClient.getDatabase(databaseName);
+    }
+
+    public void resetDatabaseInstance() {
+        instance = null;
+    }
+
+    public void resetFailedConnections(){
+        failedConnections = 0;
     }
 }

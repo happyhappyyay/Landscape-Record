@@ -82,9 +82,9 @@ public class Util {
        return Authentication.getAuthentication();
     }
 
-    public static boolean hasOnlineDatabaseEnabled(Context context) {
+    public static boolean hasOnlineDatabaseEnabledAndValid(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getBoolean(retrieveStringFromResources(R.string.pref_key_database_usage, context), false);
+        return sharedPref.getBoolean(retrieveStringFromResources(R.string.pref_key_database_usage, context), false) & OnlineDatabase.connectionIsValid(context);
     }
 
     public static String retrieveCompanyName(Context context) {
@@ -248,13 +248,18 @@ public class Util {
             List<T> dbObjs;
             @Override
             protected List<T> doInBackground(Void... Voids) {
-                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                if(hasOnlineDatabaseEnabledAndValid(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
                         dbObjs = object.retrieveAllClassInstancesFromDatabase(db);
+                        if(OnlineDatabase.hadFailedConnections()){
+                            updateDatabases(access.getContext());
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                 }
                     if(dbObjs == null) {
                         AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
@@ -280,26 +285,25 @@ public class Util {
                 LogActivityType logType = findLogTypeInt(access,object);
                 LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.DELETE.ordinal(), logType.ordinal());
                 log.setObjId(objectToDelete.getId());
-                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                if(hasOnlineDatabaseEnabledAndValid(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
 
                         object.deleteClassInstanceFromDatabase(db, objectToDelete);
 
-                        if(!(object instanceof WorkDay)){
                             if(access.createLogInfo() != null) {
                                 db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
                             }
+                        if(OnlineDatabase.hadFailedConnections()){
+                            updateDatabases(access.getContext());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-//                if(!(object instanceof WorkDay)){
                     if(access.createLogInfo() != null) {
                         adb.logDao().insert(log);
                     }
-//                }
                 object.deleteClassInstanceFromDatabase(adb, objectToDelete);
                 return null;
             }
@@ -321,25 +325,24 @@ public class Util {
                 LogActivityType logType = findLogTypeInt(access,object);
                 LogActivity log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.UPDATE.ordinal(), logType.ordinal());
                 log.setObjId(objectToUpdate.getId());
-                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                if(hasOnlineDatabaseEnabledAndValid(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
                         object.updateClassInstanceFromDatabase(db, objectToUpdate);
-                        if(!(object instanceof WorkDay)){
-                            if(access.createLogInfo() != null) {
-                                db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
-                            }
+                        if(access.createLogInfo() != null) {
+                            db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
+                        }
+                        if(OnlineDatabase.hadFailedConnections()){
+                            updateDatabases(access.getContext());
                         }
 
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-//                if(!(object instanceof WorkDay)){
                     if(access.createLogInfo() != null) {
                         adb.logDao().insert(log);
                     }
-//                }
                 object.updateClassInstanceFromDatabase(adb, objectToUpdate);
                 return null;
             }
@@ -365,14 +368,15 @@ public class Util {
                     log = new LogActivity(authentication.getUser().getName(), access.createLogInfo(), LogActivityAction.ADD.ordinal(), logType.ordinal());
                     log.setObjId(objectToInsert.getId());
                 }
-                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                if(hasOnlineDatabaseEnabledAndValid(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
                         object.insertClassInstanceFromDatabase(db, objectToInsert);
-                        if(!(object instanceof WorkDay)){
-                            if(access.createLogInfo() != null) {
-                                db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
-                            }
+                        if(access.createLogInfo() != null) {
+                            db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
+                        }
+                        if(OnlineDatabase.hadFailedConnections()){
+                            updateDatabases(access.getContext());
                         }
                     }
                     catch (Exception e) {
@@ -381,11 +385,9 @@ public class Util {
                 }
 
                 object.insertClassInstanceFromDatabase(adb, objectToInsert);
-//                if(!(object instanceof WorkDay)){
                     if(access.createLogInfo() != null) {
                         adb.logDao().insert(log);
                     }
-//                }
 
                 return null;
             }
@@ -402,11 +404,13 @@ public class Util {
             T dbObj;
             @Override
             protected T doInBackground(Void... Voids) {
-                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                if(hasOnlineDatabaseEnabledAndValid(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
                         dbObj = object.retrieveClassInstanceFromDatabaseID(db, IDToFind);
-
+                        if(OnlineDatabase.hadFailedConnections()){
+                            updateDatabases(access.getContext());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -432,10 +436,13 @@ public class Util {
             T dbObj;
             @Override
             protected T doInBackground(Void... Voids) {
-                if(hasOnlineDatabaseEnabled(access.getContext())) {
+                if(hasOnlineDatabaseEnabledAndValid(access.getContext())) {
                     try {
                         OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
                         dbObj = object.retrieveClassInstanceFromDatabaseString(db, stringToFind);
+                        if(OnlineDatabase.hadFailedConnections()){
+                            updateDatabases(access.getContext());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -504,6 +511,7 @@ public class Util {
             AppDatabase ad = AppDatabase.getAppDatabase(context);
             LogActivity logO = updateDatabase(od, ad);
             LogActivity logU = updateDatabase(ad, od);
+            od.resetFailedConnections();
             logO.setModifiedTime(logU.getModifiedTime());
             LOG_REFERENCE.insertClassInstanceFromDatabase(od, logO);
             LOG_REFERENCE.insertClassInstanceFromDatabase(ad, logU);
@@ -546,7 +554,6 @@ public class Util {
                     case 1:
                         Customer customerO = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
                         Customer customerU = CUSTOMER_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
-                        Log.d("DATABASE", "updateDatabase: customer add");
                         if (customerO != null & customerU == null) {
                             CUSTOMER_REFERENCE.insertClassInstanceFromDatabase(updatingDB, customerO);
                             insertCount++;
@@ -598,6 +605,8 @@ public class Util {
                     logCount++;
                 }
             }
+                LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logs.get(i));
+                logCount++;
         }
 
         List<DatabaseObjects> databaseObjects = new ArrayList<>();

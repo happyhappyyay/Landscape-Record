@@ -90,7 +90,7 @@ public class ViewUser extends AppCompatActivity implements MultiDatabaseAccess<U
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        if(Util.hasOnlineDatabaseEnabled(this)) {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
                 databaseAccessMethod(db);

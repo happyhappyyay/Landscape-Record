@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.fragments.SettingsFragment;
+import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
@@ -44,12 +45,48 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         String databaseUsageKey = getString(R.string.pref_key_database_usage);
+        String databaseURIKey = getString(R.string.pref_key_database_uri);
+        String databaseNameKey = getString(R.string.pref_key_database_name);
+        String prefName = sharedPreferences.getString(databaseNameKey, null);
+        String prefURI = sharedPreferences.getString(databaseURIKey, null);
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         if(s.equals(databaseUsageKey)) {
             if(sharedPreferences.getBoolean(s, true)){
-                Util.enactMultipleDatabaseOperations(this);
+                if(OnlineDatabase.connectionIsValid(this)) {
+                    OnlineDatabase.getOnlineDatabase(this).resetDatabaseInstance();
+                    Util.enactMultipleDatabaseOperations(this);
+                }
+                else if(prefName != null && prefURI != null){
+                    invalidToast();
+                }
             }
         }
+        else if(s.equals(databaseURIKey)) {
+            if(sharedPreferences.getString(databaseNameKey, null) != null) {
+                if(!OnlineDatabase.connectionIsValid(this)){
+                    invalidToast();
+                }
+                else {
+                    OnlineDatabase.getOnlineDatabase(this).resetDatabaseInstance();
+                    Util.enactMultipleDatabaseOperations(this);
+                }
+            }
+        }
+        else if(s.equals(databaseNameKey)) {
+            if(sharedPreferences.getString(databaseURIKey, null) != null) {
+                if(!OnlineDatabase.connectionIsValid(this)){
+                    invalidToast();
+                }
+                else {
+                    OnlineDatabase.getOnlineDatabase(this).resetDatabaseInstance();
+                    Util.enactMultipleDatabaseOperations(this);
+                }
+            }
+        }
+    }
+
+    private void invalidToast() {
+        Toast.makeText(this, "Database connection is not valid. Check connectivity and database uri/ database name.", Toast.LENGTH_LONG).show();
     }
 
     @Override

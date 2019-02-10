@@ -71,7 +71,7 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
     }
 
     public void startUserSettings(View view) {
-        Intent intent = new Intent(getApplicationContext(), UserSettings.class);
+        Intent intent = new Intent(getApplicationContext(), UserSetting.class);
         startActivity(intent);
     }
 

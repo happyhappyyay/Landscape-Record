@@ -299,7 +299,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        if(Util.hasOnlineDatabaseEnabled(this)) {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
                 Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);

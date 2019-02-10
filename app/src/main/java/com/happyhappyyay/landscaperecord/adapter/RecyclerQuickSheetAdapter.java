@@ -43,7 +43,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     private Context context;
     private Service service;
 
-    public RecyclerQuickSheetAdapter (List<Customer> customers, Context context, String startDateString, String endDateString) {
+    public RecyclerQuickSheetAdapter(List<Customer> customers, Context context, String startDateString, String endDateString) {
         this.customers = customers;
         if (this.customers == null) {
             this.customers = new ArrayList<>();
@@ -99,7 +99,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        if(Util.hasOnlineDatabaseEnabled(context)) {
+        if (Util.hasOnlineDatabaseEnabledAndValid(context)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
                 databaseAccessMethod(db);
@@ -108,8 +108,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                 AppDatabase db = AppDatabase.getAppDatabase(context);
                 databaseAccessMethod(db);
             }
-        }
-        else {
+        } else {
             AppDatabase db = AppDatabase.getAppDatabase(context);
             databaseAccessMethod(db);
         }
@@ -119,7 +118,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     private void databaseAccessMethod(DatabaseOperator db) {
         WorkDay workDay;
         Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
-        if(service != null) {
+        if (service != null) {
             WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
             if (tempWorkDay != null) {
                 workDay = tempWorkDay;
@@ -130,7 +129,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                 workDay.addServices(service);
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
                 LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), endDateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
-                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             }
         }
     }
@@ -142,11 +141,31 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-        } catch (Exception e){
+        } catch (Exception e) {
             AppDatabase db = AppDatabase.getAppDatabase(context);
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
 
         }
+    }
+
+    private long retrieveStartTime(long startTime) {
+        return startTimeEqualsSameDay(startTime)? Util.retrieveLongCurrentDate():startTime;
+    }
+
+    private boolean startTimeEqualsSameDay(long startTime) {
+        return startTime == Util.convertStringDateToMilliseconds(Util.retrieveStringCurrentDate());
+    }
+
+    private long retrieveEndTime(long endTime) {
+        return endTimeEqualsSameDay(endTime)? Util.retrieveLongCurrentDate():endTime;
+    }
+
+    private boolean endTimeEqualsSameDay(long endTime) {
+        return endTime == Util.convertStringDateToMilliseconds(Util.retrieveStringCurrentDate());
+    }
+
+    private boolean startAndEndDateMatch(long startTime, long endTime) {
+        return startTime == endTime;
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
@@ -156,8 +175,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
         List<CheckBox> checkBoxes;
 
 
-
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.quick_sheet_address_text);
             jobActionButton = view.findViewById(R.id.quick_sheet_button);
@@ -165,18 +183,19 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            service = null;
-                            boolean flagDifferentEndTime = false;
-                            long startTime = 0;
-                            long endTime = 0;
-                            Service tempService = null;
+                            if (Util.checkDateFormat(endDateString) & Util.checkDateFormat(startDateString)) {
+                                service = null;
+                                boolean flagDifferentEndTime = false;
+                                long startTime = 0;
+                                long endTime = 0;
+                                Service tempService = null;
 //                            set entered/automatic dates into start and end dates
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
                                 try {
                                     Date startDate = dateFormat.parse(startDateString);
                                     Date endDate = dateFormat.parse(endDateString);
-                                    startTime = startDate.getTime();
-                                    endTime = endDate.getTime();
+                                    startTime = retrieveStartTime(startDate.getTime());
+                                    endTime = retrieveEndTime(endDate.getTime());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -184,69 +203,76 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                                 if (endTime < startTime) {
                                     flagDifferentEndTime = true;
                                 }
-                            String servicesString = updateCheckBoxes();
-                            customer = customers.get(getAdapterPosition());
-                            List<Service> services = customer.getCustomerServices();
-                            int serviceListPosition = 0;
+                                String servicesString = updateCheckBoxes();
+                                customer = customers.get(getAdapterPosition());
+                                List<Service> services = customer.getCustomerServices();
+                                int serviceListPosition = 0;
 //                            check for service pause and date then set inputs to services string
-                            for (int i = 0; i < services.size(); i++) {
-                                Service s = services.get(i);
-                                if (s.convertStartTimeToDateString().equals(startDateString)) {
-                                    tempService = s;
-                                    if (s.isPause()) {
-                                        serviceListPosition = i;
-                                    }
-                                }
-                            }
-//                            create new service if could not find existing service
-                            if (tempService == null) {
-                                jobActionButton.setText("Finish");
-                                tempService = new Service();
-                                tempService.setPause(true);
-                                tempService.setStartTime(startTime);
-                                tempService.setServices(servicesString);
-                                tempService.setCustomerName(customer.getName());
-                                customer.addService(tempService);
-                                updateCustomer();
-                            }
-//                            otherwise update existing service
-                            else {
-                                if (!jobActionButton.getText().toString().equals("✓")) {
-                                    if (!flagDifferentEndTime) {
-                                        jobActionButton.setText("✓");
-                                        String tempServiceString = tempService.getServices();
-                                        for(CheckBox c: checkBoxes) {
-                                            String checkBoxText = c.getText().toString();
-                                            int startIndex = tempServiceString.indexOf(checkBoxText);
-                                            if(startIndex != -1) {
-                                                int endIndex = startIndex + checkBoxText.length() + Util.DELIMITER.length();
-                                                String tempServicePreString = tempServiceString.substring(0, startIndex);
-                                                String tempServicePostString = tempServiceString.substring(endIndex);
-                                                tempServiceString = tempServicePreString + tempServicePostString;
-                                            }
+                                for (int i = 0; i < services.size(); i++) {
+                                    Service s = services.get(i);
+                                    if (s.convertStartTimeToDateString().equals(startDateString)) {
+                                        tempService = s;
+                                        if (s.isPause()) {
+                                            serviceListPosition = i;
                                         }
-                                        tempService.setServices(servicesString + tempServiceString);
-                                        tempService.setEndTime(endTime);
-                                        tempService.setManHours((tempService.getStartTime() - tempService.getEndTime()) / TimeReporting.MILLISECONDS_TO_HOURS );
-                                        tempService.setPause(false);
-                                        customer.updateService(tempService, serviceListPosition);
-                                        service = tempService;
-                                        updateCustomer();
-                                    } else {
-                                        Toast.makeText(context,
-                                                "There was an error with the start - end date " +
-                                                        "combination. Please check the dates are correct.",
-                                                Toast.LENGTH_SHORT).show();
                                     }
                                 }
+//                            create new service if could not find existing service
+                                if (tempService == null) {
+                                    jobActionButton.setText("Finish");
+                                    tempService = new Service();
+                                    tempService.setPause(true);
+                                    tempService.setStartTime(startTime);
+                                    tempService.setServices(servicesString);
+                                    tempService.setCustomerName(customer.getName());
+                                    customer.addService(tempService);
+                                    updateCustomer();
+                                }
+//                            otherwise update existing service
+                                else {
+                                    if (!jobActionButton.getText().toString().equals("✓")) {
+                                        if (!flagDifferentEndTime) {
+                                            jobActionButton.setText("✓");
+                                            String tempServiceString = tempService.getServices();
+                                            for (CheckBox c : checkBoxes) {
+                                                String checkBoxText = c.getText().toString();
+                                                int startIndex = tempServiceString.indexOf(checkBoxText);
+                                                if (startIndex != -1) {
+                                                    int endIndex = startIndex + checkBoxText.length() + Util.DELIMITER.length();
+                                                    String tempServicePreString = tempServiceString.substring(0, startIndex);
+                                                    String tempServicePostString = tempServiceString.substring(endIndex);
+                                                    tempServiceString = tempServicePreString + tempServicePostString;
+                                                }
+                                            }
+                                            tempService.setServices(servicesString + tempServiceString);
+                                            tempService.setEndTime(endTime);
+                                            if(startAndEndDateMatch(startTime, endTime)) {
+                                                tempService.setManHours((tempService.getEndTime() - tempService.getStartTime()) / TimeReporting.MILLISECONDS_TO_HOURS);
+                                            }
+                                            tempService.setPause(false);
+                                            customer.updateService(tempService, serviceListPosition);
+                                            service = tempService;
+                                            updateCustomer();
+                                        } else {
+                                            Toast.makeText(context,
+                                                    "There was an error with the start - end date " +
+                                                            "combination. Please check the dates are correct.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context,
+                                        "Date format incorrect. Please reenter the date (mm/dd/yyyy).",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
             );
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            String quickSheetItem = sharedPref.getString("pref_key_quick_sheet_item1", "1");
-            String quickSheetItem1 = sharedPref.getString("pref_key_quick_sheet_item2", "2");
-            String quickSheetItem2 = sharedPref.getString("pref_key_quick_sheet_item3", "3");
+            String quickSheetItem = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item1, context), "1");
+            String quickSheetItem1 = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item2, context), "2");
+            String quickSheetItem2 = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item3, context), "3");
             checkBox1 = view.findViewById(R.id.quick_sheet_check_box1);
             checkBox1.setText(quickSheetItem);
             checkBox2 = view.findViewById(R.id.quick_sheet_check_box2);
@@ -267,16 +293,14 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                         existingService = true;
                         if (s.isPause()) {
                             jobActionButton.setText("Finish");
-                        }
-                        else {
+                        } else {
                             jobActionButton.setText("✓");
                         }
 
                         for (CheckBox c : checkBoxes) {
                             if (s.getServices().contains(c.getText().toString())) {
                                 c.setChecked(true);
-                            }
-                            else {
+                            } else {
                                 c.setChecked(false);
                             }
                         }
@@ -290,6 +314,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                 }
             }
         }
+
         private String updateCheckBoxes() {
             StringBuilder stringBuilder = new StringBuilder();
             for (CheckBox c : checkBoxes) {
@@ -301,8 +326,6 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
             return stringBuilder.toString();
         }
     }
-
-
 
     private void updateCustomer() {
         Util.enactMultipleDatabaseOperations(this);

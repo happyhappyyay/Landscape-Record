@@ -207,7 +207,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        if(Util.hasOnlineDatabaseEnabled(this)) {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
                 Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);

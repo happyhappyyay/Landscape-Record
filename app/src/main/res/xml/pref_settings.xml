@@ -8,7 +8,7 @@
             android:title="@string/pref_settings_quick_sheet_items_title">
             <PreferenceCategory
                 android:key="@string/pref_key_quick_sheet_items_title"
-                android:title="@string/pref_settings_quick_sheet_items_title"></PreferenceCategory>
+                android:title="@string/pref_settings_quick_sheet_items_title"/>
             <ListPreference
                 android:defaultValue="@string/lawn_services_prune"
                 android:entries="@array/work_activities"
@@ -53,7 +53,6 @@
         android:summary="@string/pref_settings_database_usage_summary"
         android:title="@string/pref_settings_database_usage_title" />
     <EditTextPreference
-        android:defaultValue=" "
         android:dependency="@string/pref_key_database_usage"
         android:inputType="textPassword"
         android:key="@string/pref_key_database_name"
@@ -62,7 +61,6 @@
         android:summary="@string/pref_settings_database_name_summary"
         android:title="@string/pref_settings_database_name_title" />
     <EditTextPreference
-        android:defaultValue=" "
         android:dependency="@string/pref_key_database_usage"
         android:inputType="textPassword"
         android:key="@string/pref_key_database_uri"
@@ -73,7 +71,7 @@
 
     <Preference
         android:key="@string/pref_key_import_contacts"
-        android:summary="Upload a Comma-seperated Values(.csv) file to import contacts. Headers needed: First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."
-        android:title="Import Contacts" />
+        android:summary="@string/pref_settings_import_contacts_summary"
+        android:title="@string/pref_settings_import_contacts" />
 
 </PreferenceScreen>

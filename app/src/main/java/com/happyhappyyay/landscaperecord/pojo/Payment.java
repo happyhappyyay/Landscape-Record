@@ -160,4 +160,12 @@ public class Payment {
     public void setServicesPriced(Map<String, Double> servicesPriced) {
         this.servicesPriced = servicesPriced;
     }
+
+    public List<String> getPaymentReceiptDates() {
+        return paymentReceiptDates;
+    }
+
+    public void setPaymentReceiptDates(List<String> paymentReceiptDates) {
+        this.paymentReceiptDates = paymentReceiptDates;
+    }
 }

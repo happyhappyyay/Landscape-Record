@@ -31,6 +31,28 @@ public class CSVReadWrite {
         csvRead();
     }
 
+    private void csvWrite() {
+        /*
+        public void writeCSV(File file, Processable<RecordType> dataset)
+		throws IOException {
+	CSVWriter writer = new CSVWriter(new FileWriter(file));
+
+	String[] headers = getHeader();
+	if(headers!=null) {
+		writer.writeNext(headers);
+	}
+
+	for (RecordType record : dataset.get()) {
+		String[] values = format(record);
+
+		writer.writeNext(values);
+	}
+
+	writer.close();
+}
+         */
+    }
+
     private void csvRead() {
 
         try

@@ -161,6 +161,9 @@
     <string name="pref_settings_personal_message_summary">A personal message to attach to the bottom of each bill.</string>
     <string name="pref_settings_first_day_of_week">Start of Work Week</string>
     <string name="pref_settings_first_day_of_week_summary">Set the day that starts the week. The current day selected is %s.</string>
+    <string name="pref_settings_import_contacts_summary">Upload a Comma-separated Values(.csv) file to import contacts. Headers needed:
+        First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."</string>
+    <string name="pref_settings_import_contacts">Import Contacts</string>
     <!--                                   -->
 
     <string name="view_work_day_title">View Work Activity</string>

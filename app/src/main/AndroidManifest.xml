@@ -76,8 +76,6 @@
         <activity android:name=".activity.ViewWorkDay"
             android:parentActivityName=".activity.AdminTools"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.UserSettings"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activity.EditUser"
             android:parentActivityName=".activity.ViewUsers"
             android:theme="@style/AppTheme"/>
@@ -100,6 +98,9 @@
             android:parentActivityName=".activity.ViewCustomers"
             android:theme="@style/AppTheme"/>
         <activity android:name=".utility.testDatabase" />
+        <activity android:name=".activity.UserSetting"
+            android:parentActivityName=".activity.Dashboard"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".activity.FirstGlance"></activity>
     </application>
 

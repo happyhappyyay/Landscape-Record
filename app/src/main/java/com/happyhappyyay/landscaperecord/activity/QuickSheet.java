@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.adapter.RecyclerQuickSheetAdapter;
@@ -87,59 +88,48 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
         });
         startDateText = findViewById(R.id.quick_sheet_start_date_text);
         startDateText.setText(startDateString);
-        startDateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String customDateString = startDateText.getText().toString();
-                    if(Util.checkDateFormat(customDateString)) {
-                        adapter.setStartDateString(customDateString);
-                        startDateString = customDateString;
-                        adapter.notifyDataSetChanged();
+        startDateText.addTextChangedListener(new TextWatcher() {
 
-                    }
-                    else if (customDateString.equals("") || customDateString.equals(" ")){
-                        adapter.setStartDateString(startDateString);
-                        startDateText.setText(startDateString);
-                        startDateString = customDateString;
-                        adapter.notifyDataSetChanged();
-                    }
-                    else {
-                        startDateText.setText("");
-                        Toast.makeText(QuickSheet.this,
-                                "Date format incorrect. Please reenter the date.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
+            @Override
+            public void afterTextChanged(Editable s) {
+                String customDateString = startDateText.getText().toString();
+                adapter.setStartDateString(customDateString);
+                startDateString = customDateString;
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
             }
         });
 
         endDateText = findViewById(R.id.quick_sheet_end_date_text);
         endDateText.setText(endDateString);
-        endDateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        endDateText.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        String customDateString = endDateText.getText().toString();
-                        if(Util.checkDateFormat(customDateString)) {
-                            adapter.setEndDateString(customDateString);
-                            endDateString = customDateString;
-                            adapter.notifyDataSetChanged();
-                        }
-                        else if (customDateString.equals("") || customDateString.equals(" ")){
-                            adapter.setEndDateString(startDateString);
-                            endDateText.setText(startDateString);
-                            endDateString = customDateString;
-                            adapter.notifyDataSetChanged();
-                        }
-                        else {
-                            endDateText.setText("");
-                            Toast.makeText(QuickSheet.this,
-                                    "Date format incorrect. Please reenter the date.",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
+            public void afterTextChanged(Editable s) {
+                String customDateString = endDateText.getText().toString();
+                adapter.setEndDateString(customDateString);
+                endDateString = customDateString;
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
         });
 
         getCustomers();
@@ -161,18 +151,6 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
     private void getCustomers() {
         progressBar.setVisibility(View.VISIBLE);
         Util.findAllObjects(this, Util.CUSTOMER_REFERENCE);
-//        new AsyncTask<Void, Void, List<Customer>>() {
-//            @Override
-//            protected List<Customer> doInBackground(Void... voids) {
-//                return db.customerDao().getAllCustomers();
-//            }
-//
-//            @Override
-//            protected void onPostExecute(List<Customer> customers) {
-//                allCustomers = customers;
-//                updateCustomers(customers);
-//            }
-//        }.execute();
     }
 
     @Override

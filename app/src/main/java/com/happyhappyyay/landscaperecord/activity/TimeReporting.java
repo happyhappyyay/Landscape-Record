@@ -188,7 +188,7 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        if(Util.hasOnlineDatabaseEnabled(this)) {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
                 databaseAccessMethod(db);
