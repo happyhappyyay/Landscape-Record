@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
-import com.happyhappyyay.landscaperecord.utility.CreateDocument;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
@@ -121,10 +120,6 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
             int spinnerPosition = stateAdapter.getPosition(compareStateValue);
             stateSpinner.setSelection(spinnerPosition);
         }
-    }
-
-    public void docCreate(View view) {
-        CreateDocument createDocument = new CreateDocument(this, customer, customer.getCustomerServices());
     }
 
     private void updateCustomer() {

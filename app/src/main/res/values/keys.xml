@@ -16,5 +16,11 @@
     <string name="pref_key_storage_settings">pref_key_storage_settings</string>
     <string name="pref_key_import_contacts">pref_key_import_contacts</string>
     <string name="pref_key_personal_message">pref_key_personal_message</string>
+    <string name="pref_key_export_title">pref_key_export_title</string>
+    <string name="pref_key_customer_export">pref_key_customer_export</string>
+    <string name="pref_key_user_export">pref_key_user_export</string>
+    <string name="pref_key_log_export">pref_key_log_export</string>
+    <string name="pref_key_service_export">pref_key_service_export</string>
+    <string name="pref_key_all_export">pref_key_all_export</string>
     <!--                 -->
 </resources>

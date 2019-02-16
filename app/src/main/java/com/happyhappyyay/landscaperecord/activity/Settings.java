@@ -116,7 +116,7 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
 
     @Override
     public Context getContext() {
-        return null;
+        return this;
     }
 
     @Override

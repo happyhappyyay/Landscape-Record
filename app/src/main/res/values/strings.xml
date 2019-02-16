@@ -204,6 +204,30 @@
     <string name="view_customers_title">Customers</string>
     <string name="view_customers_create_invoice">Create Invoices</string>
     <string name="time_reporting_title">Time Report</string>
-    <string name="admin_tools_settings">Settings\n\nView and edit settings related to application (e.g., quick sheet preferences, online database access, mass contact import, etc).</string>
+    <string name="admin_tools_settings">Settings\n\nView and edit settings related to application
+        (e.g., quick sheet preferences, online database access, mass contact import, etc).</string>
+    <string name="pref_settings_export_data_title">Export Data</string>
+    <string name="pref_settings_export_data_summary">Allows for the exporting of record information
+        in .CSV format. Customer, Employee, Log, and Services information can be exported.</string>
+    <string name="pref_settings_export_data_items_title">Export Data</string>
+    <string name="pref_settings_customers_export_title">Export Customers</string>
+    <string name="pref_settings_customer_export_summary">Export records related to the customer. Output will
+        contain First Name, Last Name, Business, Address, City, State, Phone Number, E-mail Address,
+        Amount Paid, and Amount Remaining. Export will be saved to the landscape-record directory.</string>
+    <string name="pref_settings_user_export_title">Export Employees</string>
+    <string name="pref_settings_user_export_summary">Export records related to the Employee. Output will
+        contain First Name, Last Name, Unpaid Hours, and Paid Hours. Export will be saved to the
+        landscape-record directory.</string>
+    <string name="pref_settings_log_export_title">Export Logs</string>
+    <string name="pref_settings_log_export_summary">Export records related to the Logs. Output will
+        contain Date, Employee, and Log Information. Export will be saved to the
+        landscape-record directory.</string>
+    <string name="pref_settings_services_export_title">Export Services</string>
+    <string name="pref_settings_services_export_summary">Export records related to Services. Output will
+        contain Account Name, Date, Address, Service, Price, Billed, Paid, Man Hours, Mileage,
+        Service ID. Export will be saved to the landscape-record directory.</string>
+    <string name="pref_settings_all_export_title">Export All</string>
+    <string name="pref_settings_all_export_summary">Export records related to Customer, User, Logs, and Services. Output will
+        contain the other four exports. Exports will be saved to the landscape-record directory.</string>
 
 </resources>

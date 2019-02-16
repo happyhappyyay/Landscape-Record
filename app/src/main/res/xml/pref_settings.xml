@@ -70,8 +70,53 @@
         android:title="@string/pref_settings_database_uri_title" />
 
     <Preference
+        android:id="@+id/preference9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:key="@string/pref_key_import_contacts"
         android:summary="@string/pref_settings_import_contacts_summary"
         android:title="@string/pref_settings_import_contacts" />
+    <PreferenceScreen
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:key="@string/pref_key_quick_sheet_items"
+        android:summary="@string/pref_settings_export_data_summary"
+        android:title="@string/pref_settings_export_data_title">
+        <PreferenceCategory
+            android:key="@string/pref_key_export_title"
+            android:title="@string/pref_settings_export_data_items_title" />
+        <Preference
+            android:key="@string/pref_key_customer_export"
+            android:summary="@string/pref_settings_customer_export_summary"
+            android:title="@string/pref_settings_customers_export_title" />
+        <Preference
+            android:id="@+id/preference6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="@string/pref_key_user_export"
+            android:summary="@string/pref_settings_user_export_summary"
+            android:title="@string/pref_settings_user_export_title" />
+        <Preference
+            android:id="@+id/preference8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="@string/pref_key_service_export"
+            android:summary="@string/pref_settings_services_export_summary"
+            android:title="@string/pref_settings_services_export_title" />
+        <Preference
+            android:id="@+id/preference5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="@string/pref_key_log_export"
+            android:summary="@string/pref_settings_log_export_summary"
+            android:title="@string/pref_settings_log_export_title" />
+        <Preference
+            android:id="@+id/preference7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="@string/pref_key_all_export"
+            android:summary="@string/pref_settings_all_export_summary"
+            android:title="@string/pref_settings_all_export_title" />
+    </PreferenceScreen>
 
 </PreferenceScreen>

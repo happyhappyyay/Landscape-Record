@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -30,10 +31,12 @@ public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAcc
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private int monthSelection;
+    private Activity activity;
 
-    public BillingViewPagerAdapter(Context context, List<Customer> customers, int monthSelection) {
-        mContext = context;
+    public BillingViewPagerAdapter(Activity activity, List<Customer> customers, int monthSelection) {
+        mContext = activity.getApplicationContext();
         this.customers = customers;
+        this.activity = activity;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.monthSelection = monthSelection;
     }
@@ -124,8 +127,15 @@ public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAcc
                         s.setPriced(true);
                     }
                     customers.remove(position);
-                    CreateDocument createDocument = new CreateDocument(mContext, customer, services);
-                    updateCustomer(customer);
+                    Util.verifyStoragePermissions(activity);
+                    CreateDocument createDocument = new CreateDocument();
+                    try {
+                        createDocument.createADocument(mContext, customer, services);
+                        updateCustomer(customer);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             return view;
