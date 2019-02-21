@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.fragments.SettingsFragment;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 

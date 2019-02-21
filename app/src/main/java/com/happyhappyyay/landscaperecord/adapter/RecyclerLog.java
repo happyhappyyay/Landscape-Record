@@ -12,11 +12,11 @@ import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 
 import java.util.List;
 
-public class RecyclerLogAdapter extends RecyclerView.Adapter {
+public class RecyclerLog extends RecyclerView.Adapter {
     private static final String TAG = "selected for work";
     protected List<LogActivity> logs;
 
-    public RecyclerLogAdapter(List<LogActivity> logs) {
+    public RecyclerLog(List<LogActivity> logs) {
         this.logs = logs;
     }
 

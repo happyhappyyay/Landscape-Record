@@ -1,4 +1,4 @@
-package com.happyhappyyay.landscaperecord.database_interface;
+package com.happyhappyyay.landscaperecord.interfaces;
 
 import android.content.Context;
 

@@ -15,8 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.BillingViewPagerAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.BillingViewPager;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -32,10 +32,11 @@ public class BillCreation extends AppCompatActivity implements DatabaseAccess<Cu
     private int customerSelectionPosition;
     private ProgressBar progressBar;
     private ViewPager viewPager;
-    private BillingViewPagerAdapter adapter;
+    private BillingViewPager adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final int ZERO_POSITION = 1;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_creation);
         Toolbar myToolbar = findViewById(R.id.bill_creation_toolbar);
@@ -51,14 +52,14 @@ public class BillCreation extends AppCompatActivity implements DatabaseAccess<Cu
             monthSelectionPosition = savedInstanceState.getInt(MONTH_POSITION);
             customerSelectionPosition = savedInstanceState.getInt(ADAPTER_POSITION);
         }
-        monthSpinner.setSelection(monthSelectionPosition);
+        monthSpinner.setSelection(monthSelectionPosition-ZERO_POSITION);
         progressBar = findViewById(R.id.services_pricing_progress_bar);
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(adapter != null) {
-                    monthSelectionPosition = i;
-                    adapter.updateMonthSelection(monthSelectionPosition);
+                    monthSelectionPosition = i+ZERO_POSITION;
+                    adapter.updateMonthAndCustomerSelection(monthSelectionPosition, createUnpricedCustomersForMonthList(customers));
                 }
             }
 
@@ -147,7 +148,7 @@ public class BillCreation extends AppCompatActivity implements DatabaseAccess<Cu
     public void onPostExecute(List<Customer> databaseObjects) {
         customers = databaseObjects;
         populateSpinner(customers);
-        adapter = new BillingViewPagerAdapter(this, createUnpricedCustomersForMonthList(customers), monthSelectionPosition);
+        adapter = new BillingViewPager(this, createUnpricedCustomersForMonthList(customers), monthSelectionPosition);
         viewPager.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
     }

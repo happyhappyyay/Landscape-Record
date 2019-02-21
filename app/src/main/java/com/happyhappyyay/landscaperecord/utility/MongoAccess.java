@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseObjects;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.Material;
 import com.happyhappyyay.landscaperecord.pojo.Service;

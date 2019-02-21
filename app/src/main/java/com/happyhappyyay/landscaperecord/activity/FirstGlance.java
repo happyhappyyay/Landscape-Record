@@ -17,9 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
+import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -27,7 +28,7 @@ import com.mongodb.client.MongoDatabase;
 
 import java.util.List;
 
-public class FirstGlance extends AppCompatActivity implements DatabaseAccess<User> {
+public class FirstGlance extends AppCompatActivity implements MultiDatabaseAccess<User> {
     private ConstraintLayout userLayout;
     private ConstraintLayout databaseLayout;
     private ProgressBar progressBar;
@@ -91,7 +92,6 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
                         editor.apply();
                         Toast.makeText(this, "Connection was a success.", Toast.LENGTH_SHORT).show();
 
-
                     } catch (Exception e) {
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(this, "Could not connect. Check internet connection is established. Also, check that the database name and uri are correct.", Toast.LENGTH_LONG).show();
@@ -154,7 +154,7 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         Toast.makeText(getApplicationContext(), "Settings saved. Please log in using your existing username and password.", Toast.LENGTH_LONG).show();
-                        finishActivity();
+                        Util.enactMultipleDatabaseOperationsPostExecute(FirstGlance.this);
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -241,5 +241,18 @@ public class FirstGlance extends AppCompatActivity implements DatabaseAccess<Use
     @Override
     public void onBackPressed() {
         moveTaskToBack(false);
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        if(OnlineDatabase.connectionIsValid(this)){
+            OnlineDatabase.getOnlineDatabase(this).resetDatabaseInstance();
+            Util.updateDatabases(this);
+        }
+    }
+
+    @Override
+    public void createCustomLog() {
+
     }
 }

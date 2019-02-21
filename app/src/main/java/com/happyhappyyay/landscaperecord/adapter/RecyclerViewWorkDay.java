@@ -13,11 +13,11 @@ import com.happyhappyyay.landscaperecord.R;
 
 import java.util.List;
 
-public class RecyclerViewWorkDayAdapter extends Adapter {
+public class RecyclerViewWorkDay extends Adapter {
     protected List<String> services;
     protected List<String> users;
 
-    public RecyclerViewWorkDayAdapter(List<String> users, List<String> services) {
+    public RecyclerViewWorkDay(List<String> users, List<String> services) {
         String TAG = "Initialize";
         Log.d(TAG, "start adapter");
         this.services = services;
@@ -28,13 +28,13 @@ public class RecyclerViewWorkDayAdapter extends Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_work_day_item, parent, false);
-        return new RecyclerViewWorkDayAdapter.ListViewHolder(view);
+        return new RecyclerViewWorkDay.ListViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((RecyclerViewWorkDayAdapter.ListViewHolder) holder).bindView(position);
+        ((RecyclerViewWorkDay.ListViewHolder) holder).bindView(position);
     }
 
     @Override

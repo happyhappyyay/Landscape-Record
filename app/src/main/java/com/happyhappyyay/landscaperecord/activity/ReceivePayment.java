@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.utility.Util;
@@ -178,9 +178,10 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
             }
             final Service service = tempService;
 
-            double priceOfService = customer.getPayment().returnServicePrice(service.getServices());
+            final double priceOfService = customer.getPayment().returnServicePrice(service.getServices());
             if (priceOfService == Double.parseDouble(paymentAmount.getText().toString()) & priceOfService != -1) {
                 service.setPaid(true);
+                service.setAmountPaid(priceOfService);
                 if (checkType) {
                     customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString, checkNumber.getText().toString());
                 } else {
@@ -199,15 +200,19 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                                 } else {
                                     customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText().toString()), dateString);
                                 }
-                                Toast.makeText(getApplicationContext(), "Have admin apply paid status to " +
-                                        "service.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "If this is the correct amount, " +
+                                        "have admin apply paid status to service.", Toast.LENGTH_LONG).show();
+                                service.addServiceAmountPaid(Double.parseDouble(paymentAmount.getText().toString()));
+                                if(priceOfService == service.getAmountPaid()) {
+                                    service.setPaid(true);
+                                }
                                 Util.updateObject(ReceivePayment.this, Util.CUSTOMER_REFERENCE, customer);
 
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Toast.makeText(getApplicationContext(), "Apply payment to the correct service " +
-                                        "or apply to general account.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Please apply payment to the " +
+                                        "correct service.", Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
@@ -215,7 +220,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("The payment amount does not match the selected service. Amount will be applied to the " +
-                        "general account. Proceed with payment?").setPositiveButton("Yes", dialogClickListener)
+                        "service anyway. Proceed with payment?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
             }
         }

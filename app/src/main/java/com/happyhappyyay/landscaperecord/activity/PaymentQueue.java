@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerServicePaymentAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerServicePayment;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -97,7 +97,7 @@ public class PaymentQueue extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Customer customer = customers.get(i);
         adapterPosition = i;
-        RecyclerServicePaymentAdapter adapter = new RecyclerServicePaymentAdapter(customer);
+        RecyclerServicePayment adapter = new RecyclerServicePayment(customer);
         recyclerView.setAdapter(adapter);
     }
 

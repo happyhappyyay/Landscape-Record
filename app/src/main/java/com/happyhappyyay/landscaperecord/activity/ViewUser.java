@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.UserViewPagerAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.UserViewPager;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
@@ -28,7 +28,7 @@ public class ViewUser extends AppCompatActivity implements MultiDatabaseAccess<U
     private final String ADAPTER_POS = "Adapter Position";
     private ViewPager pager;
     private int adapterPosition;
-    private UserViewPagerAdapter adapter;
+    private UserViewPager adapter;
     private ProgressBar progressBar;
     private List<LogActivity> logs;
     private List<User> users;
@@ -82,7 +82,7 @@ public class ViewUser extends AppCompatActivity implements MultiDatabaseAccess<U
 
     @Override
     public void onPostExecute(List<User> databaseObjects) {
-        adapter = new UserViewPagerAdapter(this, users, logs);
+        adapter = new UserViewPager(this, users, logs);
         pager.setAdapter(adapter);
         pager.setCurrentItem(adapterPosition);
         progressBar.setVisibility(View.INVISIBLE);

@@ -14,10 +14,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
 import com.happyhappyyay.landscaperecord.enums.LogActivityType;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;

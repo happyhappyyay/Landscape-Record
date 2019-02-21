@@ -10,8 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.CustomerViewPagerAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.CustomerViewPager;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -21,7 +21,7 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
     private final String ADAPTER_POS = "Adapter Position";
     private ViewPager pager;
     private int adapterPosition;
-    private CustomerViewPagerAdapter adapter;
+    private CustomerViewPager adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class ViewCustomer extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     public void onPostExecute (List<Customer> databaseObjects) {
-        adapter = new CustomerViewPagerAdapter(this, databaseObjects);
+        adapter = new CustomerViewPager(this, databaseObjects);
         pager.setAdapter(adapter);
         pager.setCurrentItem(adapterPosition);
     }

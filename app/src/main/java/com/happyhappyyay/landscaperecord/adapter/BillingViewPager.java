@@ -2,8 +2,10 @@ package com.happyhappyyay.landscaperecord.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,10 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.utility.CreateDocument;
@@ -24,7 +25,7 @@ import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
 
-public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAccess<Customer> {
+public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Customer> {
 
     private static final String TAG = "MyPagerAdapter";
     private List<Customer> customers;
@@ -33,7 +34,7 @@ public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAcc
     private int monthSelection;
     private Activity activity;
 
-    public BillingViewPagerAdapter(Activity activity, List<Customer> customers, int monthSelection) {
+    public BillingViewPager(Activity activity, List<Customer> customers, int monthSelection) {
         mContext = activity.getApplicationContext();
         this.customers = customers;
         this.activity = activity;
@@ -115,31 +116,67 @@ public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAcc
             RecyclerView recyclerView = view.findViewById(R.id.billing_preview_recycler);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
             recyclerView.setLayoutManager(layoutManager);
-            final RecyclerServicePricingAdapter adapter = new RecyclerServicePricingAdapter(customers.get(position), mContext, monthSelection);
+            final RecyclerServicePricing adapter = new RecyclerServicePricing(customers.get(position), mContext, monthSelection);
             recyclerView.setAdapter(adapter);
             Button button = view.findViewById(R.id.billing_preview_confirm);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, "SEND BUTTON", Toast.LENGTH_SHORT).show();
-                    List<Service> services = adapter.getServices();
-                    for(Service s: services) {
-                        s.setPriced(true);
+                    final List<Service> services = adapter.getServices();
+                    if(customer.hasUnfinishedServicesForMonth(monthSelection)) {
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        Util.verifyStoragePermissions(activity);
+                                        CreateDocument createDocument = new CreateDocument();
+                                        try {
+                                            createDocument.createADocument(mContext, customer, services);
+                                            for(Service s: services) {
+                                                s.setPriced(true);
+                                            }
+                                            customers.remove(position);
+                                            updateCustomer(customer);
+                                        }
+                                        catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        break;
+
+                                    case DialogInterface.BUTTON_NEGATIVE:
+
+                                        break;
+                                }
+                            }
+                        };
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("There are still jobs in-progress for this month. Proceed " +
+                                "with the invoice creation?").setPositiveButton("Yes", dialogClickListener)
+                                .setNegativeButton("No", dialogClickListener).show();
                     }
-                    customers.remove(position);
-                    Util.verifyStoragePermissions(activity);
-                    CreateDocument createDocument = new CreateDocument();
-                    try {
-                        createDocument.createADocument(mContext, customer, services);
-                        updateCustomer(customer);
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
+                    else {
+                        Util.verifyStoragePermissions(activity);
+                        CreateDocument createDocument = new CreateDocument();
+                        try {
+                            createDocument.createADocument(mContext, customer, services);
+                            for(Service s: services) {
+                                s.setPriced(true);
+                            }
+                            customers.remove(position);
+                            updateCustomer(customer);
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
             return view;
         }
+
+
 
         /**
          * Destroy the item from the {@link android.support.v4.view.ViewPager}. In our case this is simply removing the
@@ -181,8 +218,9 @@ public class BillingViewPagerAdapter extends PagerAdapter implements DatabaseAcc
         notifyDataSetChanged();
     }
 
-    public void updateMonthSelection(int monthSelection) {
+    public void updateMonthAndCustomerSelection(int monthSelection, List<Customer> customers) {
         this.monthSelection = monthSelection;
+        this.customers = customers;
         notifyDataSetChanged();
     }
 

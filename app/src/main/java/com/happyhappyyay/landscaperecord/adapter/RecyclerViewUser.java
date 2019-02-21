@@ -14,11 +14,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class RecyclerViewUserAdapter extends RecyclerView.Adapter {
+public class RecyclerViewUser extends RecyclerView.Adapter {
 
     private List<LogActivity> logs;
 
-    public RecyclerViewUserAdapter(List<LogActivity> logs) {
+    public RecyclerViewUser(List<LogActivity> logs) {
         this.logs = sortLogsByModifiedTime(logs);
     }
 
@@ -37,13 +37,13 @@ public class RecyclerViewUserAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.log_item, parent, false);
-        return new RecyclerViewUserAdapter.ListViewHolder(view);
+        return new RecyclerViewUser.ListViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((RecyclerViewUserAdapter.ListViewHolder) holder).bindView(position);
+        ((RecyclerViewUser.ListViewHolder) holder).bindView(position);
     }
 
     @Override

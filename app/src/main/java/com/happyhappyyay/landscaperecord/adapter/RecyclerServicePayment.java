@@ -18,10 +18,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class RecyclerServicePaymentAdapter extends Adapter {
+public class RecyclerServicePayment extends Adapter {
     protected Customer customer;
 
-    public RecyclerServicePaymentAdapter(Customer customer) {
+    public RecyclerServicePayment(Customer customer) {
         String TAG = "Initialize";
         Log.d(TAG, "start adapter");
         this.customer = customer;
@@ -31,13 +31,13 @@ public class RecyclerServicePaymentAdapter extends Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_payment_item, parent, false);
-        return new RecyclerServicePaymentAdapter.ListViewHolder(view);
+        return new RecyclerServicePayment.ListViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((RecyclerServicePaymentAdapter.ListViewHolder) holder).bindView(position);
+        ((RecyclerServicePayment.ListViewHolder) holder).bindView(position);
     }
 
     @Override

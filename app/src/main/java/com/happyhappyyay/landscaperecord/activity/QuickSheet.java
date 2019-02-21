@@ -17,8 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerQuickSheetAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerQuickSheet;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -30,7 +30,7 @@ import static com.happyhappyyay.landscaperecord.activity.HourOperations.DATE_STR
 public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Customer> {
 
     private RecyclerView recyclerView;
-    private RecyclerQuickSheetAdapter adapter;
+    private RecyclerQuickSheet adapter;
     private Spinner daySpinner;
     private List<Customer> allCustomers;
     private EditText startDateText;
@@ -144,7 +144,7 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
     }
 
     public void updateCustomers(List<Customer> customers) {
-        adapter = new RecyclerQuickSheetAdapter(customers, this, startDateString, endDateString);
+        adapter = new RecyclerQuickSheet(customers, this, startDateString, endDateString);
         recyclerView.setAdapter(adapter);
     }
 

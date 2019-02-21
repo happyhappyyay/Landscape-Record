@@ -16,8 +16,8 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerViewWorkDayAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerViewWorkDay;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
@@ -150,7 +150,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
             noWorkDayMessage();
         }
 
-        RecyclerViewWorkDayAdapter adapter = new RecyclerViewWorkDayAdapter(userWithHours, customerWithServices);
+        RecyclerViewWorkDay adapter = new RecyclerViewWorkDay(userWithHours, customerWithServices);
         recyclerView.setAdapter(adapter);
         workDay = null;
         workDays = null;

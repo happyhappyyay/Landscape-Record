@@ -17,12 +17,11 @@ import com.happyhappyyay.landscaperecord.pojo.Customer;
 
 import java.util.List;
 
-public class RecyclerViewCustomersAdapter extends Adapter {
-    private static final String TAG = "selected for work";
+public class RecyclerViewCustomers extends Adapter {
     protected List<Customer> customers;
     private Context context;
 
-    public RecyclerViewCustomersAdapter( Context context, List<Customer> customers) {
+    public RecyclerViewCustomers(Context context, List<Customer> customers) {
         this.customers = customers;
         this.context = context;
     }
@@ -31,13 +30,13 @@ public class RecyclerViewCustomersAdapter extends Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_item, parent, false);
-        return new RecyclerViewCustomersAdapter.ListViewHolder(view);
+        return new RecyclerViewCustomers.ListViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((RecyclerViewCustomersAdapter.ListViewHolder) holder).bindView(position);
+        ((RecyclerViewCustomers.ListViewHolder) holder).bindView(position);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class RecyclerViewCustomersAdapter extends Adapter {
         private ConstraintLayout constraintLayout;
         int customerPosToPass;
 
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             customerName = view.findViewById(R.id.contact_item_name);
             customerAddress = view.findViewById(R.id.contact_item_address);

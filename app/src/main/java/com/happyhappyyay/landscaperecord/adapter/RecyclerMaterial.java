@@ -14,14 +14,14 @@ import com.happyhappyyay.landscaperecord.pojo.Material;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerMaterialAdapter extends RecyclerView.Adapter {
+public class RecyclerMaterial extends RecyclerView.Adapter {
     private List<Material> materials;
 
-    public RecyclerMaterialAdapter(List<Material> materials) {
+    public RecyclerMaterial(List<Material> materials) {
         this.materials = materials;
     }
 
-    public RecyclerMaterialAdapter() {
+    public RecyclerMaterial() {
         materials = new ArrayList<>();
     }
 

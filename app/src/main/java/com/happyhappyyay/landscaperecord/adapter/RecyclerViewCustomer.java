@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class RecyclerViewCustomerAdapter extends RecyclerView.Adapter {
+public class RecyclerViewCustomer extends RecyclerView.Adapter {
     private final int PAYMENT = 0, SERVICE = 1, TITLE = 2;
     private final String TITLE_TEXT = "TITLE";
     private final boolean ADMIN = Authentication.getAuthentication().getUser().isAdmin();
@@ -32,7 +32,7 @@ public class RecyclerViewCustomerAdapter extends RecyclerView.Adapter {
     private Customer customer;
     private Context context;
 
-    public RecyclerViewCustomerAdapter(Context context, Customer customer) {
+    public RecyclerViewCustomer(Context context, Customer customer) {
         this.customer = customer;
         objects = createObjectList();
         this.context = context;
@@ -76,16 +76,16 @@ public class RecyclerViewCustomerAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case PAYMENT:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_customer_payment_item, parent, false);
-                return new RecyclerViewCustomerAdapter.PaymentViewHolder(view);
+                return new RecyclerViewCustomer.PaymentViewHolder(view);
             case SERVICE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_customer_service_item, parent, false);
-                return new RecyclerViewCustomerAdapter.ServiceViewHolder(view);
+                return new RecyclerViewCustomer.ServiceViewHolder(view);
             case TITLE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_customer_title_item, parent, false);
-                return new RecyclerViewCustomerAdapter.TitleViewHolder(view);
+                return new RecyclerViewCustomer.TitleViewHolder(view);
             default:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_pricing_recycler_item, parent, false);
-                return new RecyclerViewCustomerAdapter.ServiceViewHolder(view);
+                return new RecyclerViewCustomer.ServiceViewHolder(view);
         }
     }
 

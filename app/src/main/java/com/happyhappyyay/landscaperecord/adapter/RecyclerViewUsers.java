@@ -18,12 +18,12 @@ import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
 
-public class RecyclerViewUsersAdapter extends Adapter {
+public class RecyclerViewUsers extends Adapter {
     private static final String TAG = "selected for work";
     protected List<User> users;
     private Context context;
 
-    public RecyclerViewUsersAdapter(Context context, List<User> users) {
+    public RecyclerViewUsers(Context context, List<User> users) {
         this.users = users;
         this.context = context;
     }
@@ -32,13 +32,13 @@ public class RecyclerViewUsersAdapter extends Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
-        return new RecyclerViewUsersAdapter.ListViewHolder(view);
+        return new RecyclerViewUsers.ListViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((RecyclerViewUsersAdapter.ListViewHolder) holder).bindView(position);
+        ((RecyclerViewUsers.ListViewHolder) holder).bindView(position);
     }
 
     @Override

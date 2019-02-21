@@ -25,12 +25,12 @@ import com.happyhappyyay.landscaperecord.activity.QuickSheet;
 import com.happyhappyyay.landscaperecord.activity.ReceivePayment;
 import com.happyhappyyay.landscaperecord.activity.TimeReporting;
 import com.happyhappyyay.landscaperecord.activity.ViewCustomers;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseObjects;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
 import com.happyhappyyay.landscaperecord.enums.LogActivityType;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.User;
@@ -132,18 +132,20 @@ public class Util {
     }
 
     public static boolean checkDateFormat(String date) {
-        try {
-            int month = Integer.parseInt(date.substring(0, 2));
-            int day = Integer.parseInt(date.substring(3, 5));
-            int year = Integer.parseInt(date.substring(6, 10));
-            if (month > 0 & month < 13 & day > 0 & day < 31 & year > 2000 & year < 2100) {
-                Calendar calendar = new GregorianCalendar(year, month, day);
-                 if (day <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-                     return true;
+        if(!date.equals("") && !date.equals(" ")) {
+            try {
+                int month = Integer.parseInt(date.substring(0, 2));
+                int day = Integer.parseInt(date.substring(3, 5));
+                int year = Integer.parseInt(date.substring(6, 10));
+                if (month > 0 & month < 13 & day > 0 & day < 31 & year > 2000 & year < 2100) {
+                    Calendar calendar = new GregorianCalendar(year, month, day);
+                    if (day <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                        return true;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
 

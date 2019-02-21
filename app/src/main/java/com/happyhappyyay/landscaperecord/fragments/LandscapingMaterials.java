@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerMaterialAdapter;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerMaterial;
 import com.happyhappyyay.landscaperecord.enums.MaterialType;
 import com.happyhappyyay.landscaperecord.pojo.Material;
 import com.happyhappyyay.landscaperecord.utility.ExistingService;
@@ -26,7 +26,7 @@ import java.util.List;
 public class LandscapingMaterials extends Fragment {
 
     private LandscapingMaterialsViewModel mViewModel;
-    private RecyclerMaterialAdapter adapter;
+    private RecyclerMaterial adapter;
     private EditText materialNameEText, materialQuantityEText, materialPriceEText;
     private Spinner materialMeasurementSpinner, materialTypeSpinner;
 
@@ -38,10 +38,10 @@ public class LandscapingMaterials extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         if(mViewModel != null) {
-            adapter = new RecyclerMaterialAdapter(mViewModel.getMaterials());
+            adapter = new RecyclerMaterial(mViewModel.getMaterials());
         }
         else {
-            adapter = new RecyclerMaterialAdapter();
+            adapter = new RecyclerMaterial();
         }
         recyclerView.setAdapter(adapter);
         materialNameEText = view.findViewById(R.id.landscaping_materials_material_name_text);

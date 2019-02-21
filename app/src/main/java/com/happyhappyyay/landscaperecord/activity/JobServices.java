@@ -23,8 +23,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
 import com.happyhappyyay.landscaperecord.enums.LogActivityType;
 import com.happyhappyyay.landscaperecord.fragments.LandscapeServices;
@@ -32,6 +30,8 @@ import com.happyhappyyay.landscaperecord.fragments.LandscapingMaterials;
 import com.happyhappyyay.landscaperecord.fragments.LandscapingOther;
 import com.happyhappyyay.landscaperecord.fragments.LawnServices;
 import com.happyhappyyay.landscaperecord.fragments.SnowServices;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.Service;
@@ -209,6 +209,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                     }
                     service.setServices(services);
                     service.setCustomerName(customer.getName());
+                    service.setMileage(customer.getCustomerMileage());
                     if(!manHours.getText().toString().isEmpty()) {
                         try {
                             double numberOfManHours = Double.parseDouble(manHours.getText().toString());

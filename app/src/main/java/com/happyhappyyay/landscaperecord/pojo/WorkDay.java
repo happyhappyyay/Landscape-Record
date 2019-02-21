@@ -7,8 +7,8 @@ import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import com.happyhappyyay.landscaperecord.converter.MapStringIntConverter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseObjects;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.mongodb.client.FindIterable;

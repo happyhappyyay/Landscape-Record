@@ -24,13 +24,13 @@ public class Service implements Parcelable {
     private double materialCost;
     private double manHours;
     private double mileage;
+    private double amountPaid;
+    private double price;
     private List<Material> materials;
-    //    TODO: get pause time, then pass time difference of pause and restart to accumulated time subtract from man hours
     private long startTime;
     private long endTime;
     private static int idCount = 0;
     private boolean priced;
-//    private int accumulatedTime;
     private boolean pause;
     private boolean paid;
 
@@ -50,6 +50,8 @@ public class Service implements Parcelable {
         materialCost = in.readDouble();
         manHours = in.readDouble();
         mileage = in.readDouble();
+        amountPaid = in.readDouble();
+        price = in.readDouble();
         materials = new ArrayList<>();
         in.readTypedList(materials, Material.CREATOR);
         startTime = in.readLong();
@@ -99,6 +101,10 @@ public class Service implements Parcelable {
             dateRange += Util.convertLongToStringDate(endTime);
         }
         return dateRange;
+    }
+
+    public void addServiceAmountPaid(Double paid) {
+        amountPaid += paid;
     }
 
     public String getServices() {
@@ -209,6 +215,22 @@ public class Service implements Parcelable {
         this.paid = paid;
     }
 
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -224,6 +246,8 @@ public class Service implements Parcelable {
         parcel.writeDouble(materialCost);
         parcel.writeDouble(manHours);
         parcel.writeDouble(mileage);
+        parcel.writeDouble(amountPaid);
+        parcel.writeDouble(price);
         parcel.writeTypedList(materials);
         parcel.writeLong(startTime);
         parcel.writeLong(endTime);

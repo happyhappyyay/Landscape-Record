@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerLogAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerLog;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -50,8 +50,8 @@ public class ViewActivityLogs extends AppCompatActivity implements DatabaseAcces
 
     @Override
     public void onPostExecute(List<LogActivity> databaseObjects) {
-        RecyclerLogAdapter adapter;
-        adapter = new RecyclerLogAdapter(databaseObjects);
+        RecyclerLog adapter;
+        adapter = new RecyclerLog(databaseObjects);
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
     }

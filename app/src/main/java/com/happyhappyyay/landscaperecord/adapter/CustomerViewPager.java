@@ -17,37 +17,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.activity.EditUser;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
-import com.happyhappyyay.landscaperecord.pojo.LogActivity;
-import com.happyhappyyay.landscaperecord.pojo.User;
+import com.happyhappyyay.landscaperecord.activity.EditCustomer;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess<User> {
+public class CustomerViewPager extends PagerAdapter implements DatabaseAccess<Customer> {
 
     private static final String TAG = "MyPagerAdapter";
-    private List<User> users;
-    private List<LogActivity> logs;
+    private List<Customer> customers;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
-    private User user;
+    private Customer customer;
 
-    public UserViewPagerAdapter(Context context, List<User> users, List<LogActivity> logs) {
+    public CustomerViewPager(Context context, List<Customer> customers) {
         mContext = context;
-        this.users = users;
-        this.logs = logs;
+        this.customers = customers;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
         //Abstract method in PagerAdapter
         @Override
         public int getCount() {
-            return users.size();
+            return customers.size();
         }
 
         //Abstract method in PagerAdapter
@@ -79,28 +75,38 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
 
         private View retrieveView(final ViewGroup container, final int position) {
             // Inflate a new layout from our resources
-            View view = mLayoutInflater.inflate(R.layout.view_user, container, false);
+            View view = mLayoutInflater.inflate(R.layout.view_customer, container, false);
             // Retrieve a TextView from the inflated View, and update it's text
-            final User user = users.get(position);
-            List<LogActivity> userLogs = retrieveLogsForUser(user);
-            this.user = user;
-            if(user.isAdmin()) {
-                TextView adminView = view.findViewById(R.id.view_user_admin);
-                adminView.setVisibility(View.VISIBLE);
+            final Customer customer = customers.get(position);
+            this.customer = customer;
+            if(customer.getCustomerBusiness() != null) {
+                TextView businessName = view.findViewById(R.id.view_customer_business);
+                businessName.setText(customer.getCustomerBusiness());
             }
-            TextView userFirstName = view.findViewById(R.id.view_user_first_name);
-            TextView userLastName = view.findViewById(R.id.view_user_last_name);
-            TextView userPassword = view.findViewById(R.id.view_user_password);
-            TextView userHours = view.findViewById(R.id.view_user_hours);
-            TextView username = view.findViewById(R.id.view_user_name);
-            username.setText(user.toString());
-            userFirstName.setText(user.getFirstName());
-            userLastName.setText(user.getLastName());
-            userPassword.setText(user.getPassword());
-            userHours.setText(String.format(Locale.US, "%.2f",user.getHours()));
-
-            ImageView backArrow = view.findViewById(R.id.view_user_back_arrow);
-            ImageView forwardArrow = view.findViewById(R.id.view_user_forward_arrow);
+            TextView customerTitle = view.findViewById(R.id.view_customer_name);
+            TextView customerName = view.findViewById(R.id.view_customer_full_name);
+            TextView customerAddress = view.findViewById(R.id.view_customer_full_address);
+            TextView dayText = view.findViewById(R.id.view_customer_day);
+            TextView phoneText = view.findViewById(R.id.view_customer_phone_number);
+            TextView emailText = view.findViewById(R.id.view_customer_email);
+            TextView mileageText = view.findViewById(R.id.view_customer_mileage);
+            customerTitle.setText(customer.getName());
+            dayText.setText(customer.getCustomerDay());
+            if(customer.getCustomerPhoneNumber() != null) {
+                phoneText.setText(customer.getCustomerPhoneNumber());
+            }
+            if(customer.getCustomerEmail() != null) {
+                emailText.setText(customer.getCustomerEmail());
+            }
+            if(customer.getCustomerMileage() != null) {
+                if(customer.getCustomerMileage() > 0) {
+                    mileageText.setText(String.format(Locale.US, "%.2f", customer.getCustomerMileage()));
+                }
+            }
+            customerName.setText(customer.getFullName());
+            customerAddress.setText(customer.concatenateFullAddress());
+            ImageView backArrow = view.findViewById(R.id.view_customer_back_arrow);
+            ImageView forwardArrow = view.findViewById(R.id.view_customer_forward_arrow);
             if(position - 1 >= 0) {
                 backArrow.setVisibility(View.VISIBLE);
             }
@@ -116,19 +122,19 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
             }
             boolean admin = Authentication.getAuthentication().getUser().isAdmin();
             if(admin) {
-                ImageButton editUser = view.findViewById(R.id.view_user_edit_image_button);
-                editUser.setVisibility(View.VISIBLE);
-                editUser.setOnClickListener(new View.OnClickListener() {
+                ImageButton editCustomer = view.findViewById(R.id.view_customer_edit_image_button);
+                editCustomer.setVisibility(View.VISIBLE);
+                editCustomer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(mContext, EditUser.class);
-                        intent.putExtra("USER_ID", user.getUserId());
+                        Intent intent = new Intent(mContext, EditCustomer.class);
+                        intent.putExtra("CUSTOMER_ID", customer.getCustomerId());
                         mContext.startActivity(intent);
                     }
                 });
-                ImageView deleteUser = view.findViewById(R.id.view_user_delete_image);
-                deleteUser.setVisibility(View.VISIBLE);
-                deleteUser.setOnClickListener(new View.OnClickListener() {
+                ImageView deleteCustomer = view.findViewById(R.id.view_customer_delete_image);
+                deleteCustomer.setVisibility(View.VISIBLE);
+                deleteCustomer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -136,8 +142,8 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case DialogInterface.BUTTON_POSITIVE:
-                                        users.remove(user);
-                                        deleteUser(user);
+                                        customers.remove(customer);
+                                        deleteCustomer(customer);
                                         break;
 
                                     case DialogInterface.BUTTON_NEGATIVE:
@@ -147,29 +153,19 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
                         };
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setMessage("Are you sure you want to delete user " + user.getName() + " ?")
+                        builder.setMessage("Are you sure you want to delete customer " + customer.getName() + " ?")
                                 .setPositiveButton("Yes", dialogClickListener)
                                 .setNegativeButton("No", dialogClickListener).show();
                     }
                 });
             }
 
-            RecyclerView recyclerView = view.findViewById(R.id.view_user_recycler);
+            RecyclerView recyclerView = view.findViewById(R.id.view_customer_recycler);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
             recyclerView.setLayoutManager(layoutManager);
-            final RecyclerViewUserAdapter adapter = new RecyclerViewUserAdapter(userLogs);
+            final RecyclerViewCustomer adapter = new RecyclerViewCustomer(mContext, customer);
             recyclerView.setAdapter(adapter);
             return view;
-        }
-
-        private List<LogActivity> retrieveLogsForUser(User user) {
-            List<LogActivity> userLogs = new ArrayList<>();
-            for(LogActivity l: logs) {
-                if (l.getUsername().equals(user.getName())) {
-                    userLogs.add(l);
-                }
-            }
-            return userLogs;
         }
 
         /**
@@ -196,8 +192,8 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
          */
         @Override
         public int getItemPosition(@NonNull Object object) {
-            User user = (User) ((View) object).getTag();
-            int position = users.indexOf(user);
+            Customer customer = (Customer) ((View) object).getTag();
+            int position = customers.indexOf(customer);
             if (position >= 0) {
                 // The current data matches the data in this active fragment, so let it be as it is.
                 return position;
@@ -207,13 +203,13 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
             }
         }
 
-    private void updateUsersSelection(List<User> users) {
-        this.users = users;
+    private void updateCustomersSelection(List<Customer> customers) {
+        this.customers = customers;
         notifyDataSetChanged();
     }
 
-    private void deleteUser(User user) {
-            Util.deleteObject(this, Util.USER_REFERENCE, user);
+    private void deleteCustomer(Customer customer) {
+            Util.deleteObject(this, Util.CUSTOMER_REFERENCE, customer);
     }
 
     @Override
@@ -223,11 +219,11 @@ public class UserViewPagerAdapter extends PagerAdapter implements DatabaseAccess
 
     @Override
     public String createLogInfo() {
-        return user.getName();
+        return customer.getName();
     }
 
     @Override
-    public void onPostExecute(List<User> databaseObjects) {
-        updateUsersSelection(users);
+    public void onPostExecute(List<Customer> databaseObjects) {
+        updateCustomersSelection(customers);
     }
 }

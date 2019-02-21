@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 
 import com.happyhappyyay.landscaperecord.converter.PaymentConverter;
 import com.happyhappyyay.landscaperecord.converter.ServiceListConverter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseObjects;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
@@ -111,6 +111,17 @@ public class Customer implements DatabaseObjects<Customer> {
             }
         }
         return unpricedServices;
+    }
+
+    public boolean hasUnfinishedServicesForMonth(int month) {
+        for (int i = 0; i < customerServices.size(); i++) {
+            Service service = customerServices.get(i);
+            int serviceMonth = Util.retrieveMonthFromLong(service.getStartTime());
+            if(!service.isPriced() && serviceMonth == month && service.getEndTime() <= 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeService(Service customerService) {

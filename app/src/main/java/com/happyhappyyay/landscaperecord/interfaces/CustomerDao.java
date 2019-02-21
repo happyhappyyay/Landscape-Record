@@ -1,4 +1,4 @@
-package com.happyhappyyay.landscaperecord.dao_interface;
+package com.happyhappyyay.landscaperecord.interfaces;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

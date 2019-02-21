@@ -25,7 +25,7 @@
         android:layout_height="0dp"
         android:entries="@array/days_of_the_week"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup3"
+        app:layout_constraintBottom_toTopOf="@+id/view_services_radio_group_sort"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view_services_search_button"
         app:layout_constraintTop_toBottomOf="@+id/view_services_toolbar" />
@@ -72,7 +72,7 @@
         app:title="@string/view_services_text" />
 
     <RadioGroup
-        android:id="@+id/radioGroup4"
+        android:id="@+id/view_services_radio_group_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checkedButton="@+id/view_services_all_box"
@@ -87,7 +87,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="radioButtonOptionClick"
             android:text="@string/view_services_all"
             android:textSize="12sp" />
 
@@ -96,7 +95,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="radioButtonOptionClick"
             android:text="@string/view_services_in_progress"
             android:textSize="12sp" />
 
@@ -105,13 +103,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="radioButtonOptionClick"
             android:text="@string/view_services_completed"
             android:textSize="12sp" />
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup3"
+        android:id="@+id/view_services_radio_group_sort"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:checkedButton="@+id/view_services_start_date_box"
@@ -125,7 +122,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="radioButtonOptionClick"
             android:text="@string/view_services_start_date"
             android:textSize="12sp" />
 
@@ -134,7 +130,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="radioButtonOptionClick"
             android:text="@string/view_services_end_date"
             android:textSize="12sp" />
 
@@ -143,7 +138,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="radioButtonOptionClick"
             android:text="@string/view_services_customer"
             android:textSize="12sp" />
     </RadioGroup>
@@ -156,7 +150,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/view_services_sort_by"
-        app:layout_constraintEnd_toStartOf="@+id/radioGroup3"
+        app:layout_constraintEnd_toStartOf="@+id/view_services_radio_group_sort"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_services_toolbar" />
 
@@ -177,13 +171,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
+        app:layout_constraintTop_toBottomOf="@+id/view_services_radio_group_view" />
 
     <Button
         android:id="@+id/view_services_search_button"
         android:layout_width="71dp"
         android:layout_height="0dp"
-        android:onClick="checkSearchClick"
         android:text="@string/view_services_search"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/view_services_date_edit_text"

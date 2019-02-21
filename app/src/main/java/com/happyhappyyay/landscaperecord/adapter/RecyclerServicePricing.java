@@ -14,19 +14,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
 
-public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAccess<Customer> {
+public class RecyclerServicePricing extends Adapter implements DatabaseAccess<Customer> {
     protected Context context;
     private Customer customer;
     private List<Service> services;
 
-    public RecyclerServicePricingAdapter(Customer customer, Context context, int monthSelection) {
+    public RecyclerServicePricing(Customer customer, Context context, int monthSelection) {
         this.customer = customer;
         this.context = context;
         services = customer.retrieveUnpricedServicesForMonth(monthSelection);
@@ -37,7 +37,7 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_pricing_recycler_item, parent, false);
-                return new RecyclerServicePricingAdapter.ServiceViewHolder(view);
+                return new RecyclerServicePricing.ServiceViewHolder(view);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
         Button priceButton;
 
 
-        public ServiceViewHolder(View view) {
+        private ServiceViewHolder(View view) {
             super(view);
             serviceText = view.findViewById(R.id.service_pricing_recycler_item_text);
             priceText = view.findViewById(R.id.service_pricing_recycler_item_price_text);
@@ -128,7 +128,9 @@ public class RecyclerServicePricingAdapter extends Adapter implements DatabaseAc
                                 else {
                                     customer.getPayment().addServicePrice(service.getServices(), servicePrice, true);
                                 }
-                                Util.updateObject(RecyclerServicePricingAdapter.this, Util.CUSTOMER_REFERENCE, customer);
+                                service.setPrice(servicePrice);
+                                customer.updateService(service);
+                                Util.updateObject(RecyclerServicePricing.this, Util.CUSTOMER_REFERENCE, customer);
                             }
                         }
                     });

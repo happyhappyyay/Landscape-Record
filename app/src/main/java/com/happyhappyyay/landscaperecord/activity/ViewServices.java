@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -19,15 +21,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerServiceAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerViewServices;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
-import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.happyhappyyay.landscaperecord.activity.HourOperations.DATE_STRING;
@@ -35,11 +33,10 @@ import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_P
 
 public class ViewServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatabaseAccess<Customer> {
 
-    private RecyclerServiceAdapter adapter;
-    private RadioButton allCheckBox, inProgressCheckBox, customerCheckBox, endDateBox,
+    private RecyclerViewServices adapter;
+    private RadioButton allCheckBox, inProgressCheckBox, completedCheckBox, customerCheckBox, endDateBox,
     startDateBox;
     private List<Customer> customers;
-    private List<Service> services;
     private Spinner spinner;
     private EditText dateText;
     private Customer customer;
@@ -62,12 +59,74 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         allCheckBox = findViewById(R.id.view_services_all_box);
+        allCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewByPosition = 0;
+                adapter.setViewBy(viewByPosition);
+                searchByDate = false;
+            }
+        });
         inProgressCheckBox = findViewById(R.id.view_services_in_progress_box);
-        customerCheckBox = findViewById(R.id.view_services_customer_box);
+        inProgressCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewByPosition = 1;
+                adapter.setViewBy(viewByPosition);
+
+            }
+        });
+
+        completedCheckBox = findViewById(R.id.view_services_completed_box);
+        completedCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewByPosition = 2;
+                adapter.setViewBy(viewByPosition);
+            }
+        });
+
         startDateBox = findViewById(R.id.view_services_start_date_box);
+        startDateBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sortByPosition = 0;
+                if (spinner.getVisibility() != View.INVISIBLE) {
+                    spinner.setVisibility(View.INVISIBLE);
+                }
+                adapter.setSortBy(sortByPosition);
+            }
+        });
         endDateBox = findViewById(R.id.view_services_end_date_box);
+        endDateBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sortByPosition = 1;
+                if (spinner.getVisibility() != View.INVISIBLE) {
+                    spinner.setVisibility(View.INVISIBLE);
+                }
+                adapter.setSortBy(sortByPosition);
+            }
+        });
+
+        customerCheckBox = findViewById(R.id.view_services_customer_box);
+        customerCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sortByPosition = 2;
+                if (spinner.getVisibility() == View.INVISIBLE) {
+                    spinner.setVisibility(View.VISIBLE);
+                }
+                if(customer != null) {
+                    adapter.setCustomer(customer);
+                }
+                adapter.setSortBy(sortByPosition);
+            }
+        });
+
         if (savedInstanceState != null) {
             adapterPosition = savedInstanceState.getInt(ADAPTER_POSITION);
             dateString = savedInstanceState.getString(DATE_STRING);
@@ -76,6 +135,12 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
             viewByPosition = savedInstanceState.getInt(VIEW_SEARCH);
             convertIntToRadioButtonClick();
         }
+        else {
+            Intent intent = getIntent();
+            viewByPosition = intent.getIntExtra("VIEW_POSITION",0);
+            convertIntToRadioButtonClick();
+        }
+
         dateText = findViewById(R.id.view_services_date_edit_text);
         dateText.setText(dateString);
         dateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -98,43 +163,35 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+
+        Button search = findViewById(R.id.view_services_search_button);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(progressBar.getVisibility() == View.INVISIBLE) {
+                    if (!Util.checkDateFormat(dateString)) {
+                        dateText.setText(Util.retrieveStringCurrentDate());
+                        Toast.makeText(ViewServices.this,
+                                "Date format incorrect. Please reenter the date.",
+                                Toast.LENGTH_SHORT).show();
+                        searchByDate = false;
+                    } else {
+                        searchByDate = true;
+                        adapter.filterServicesByDate(dateString);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
         spinner = findViewById(R.id.view_services_spinner);
+        if (sortByPosition == 2) {
+            spinner.setVisibility(View.VISIBLE);
+        }
+        else {
+            spinner.setVisibility(View.INVISIBLE);
+        }
         progressBar = findViewById(R.id.view_services_progress_bar);
         getCustomers();
-    }
-
-    public void radioButtonOptionClick(View view) {
-        convertRadioButtonClickToInt();
-        adapter.setServices(getSortedServicesList());
-        adapter.notifyDataSetChanged();
-    }
-
-    private void convertRadioButtonClickToInt()  {
-        int temporaryViewPosition = viewByPosition;
-        int temporarySortPosition = sortByPosition;
-        if(allCheckBox.isChecked()) {
-            viewByPosition = 0;
-        }
-        else if (inProgressCheckBox.isChecked()){
-            viewByPosition = 1;
-        }
-        else {
-            viewByPosition = 2;
-        }
-
-        if (startDateBox.isChecked()) {
-            sortByPosition = 0;
-        }
-        else if (customerCheckBox.isChecked()) {
-            sortByPosition = 2;
-        }
-        else {
-            sortByPosition = 1;
-        }
-
-        if(temporaryViewPosition != viewByPosition || temporarySortPosition != sortByPosition) {
-            searchByDate = false;
-        }
     }
 
     public void convertIntToRadioButtonClick() {
@@ -158,28 +215,8 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                 inProgressCheckBox.setChecked(true);
                 break;
             case 2:
-                customerCheckBox.setChecked(true);
+                completedCheckBox.setChecked(true);
                 break;
-        }
-    }
-
-    public void checkSearchClick(View view) {
-        if(progressBar.getVisibility() == View.VISIBLE) {
-            if (!Util.checkDateFormat(dateString)) {
-                if (!dateString.equals("") || !dateString.equals(" ")) {
-                    dateText.setText("");
-                    Toast.makeText(this,
-                            "Date format incorrect. Please reenter the date.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                searchByDate = false;
-            } else {
-                searchByDate = true;
-            }
-            if (searchByDate) {
-                adapter.setServices(getSortedServicesList());
-                adapter.notifyDataSetChanged();
-            }
         }
     }
 
@@ -190,33 +227,28 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         }
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(adapterPosition);
         if (!customers.isEmpty()) {
+            spinner.setSelection(adapterPosition);
             customer = customers.get(adapterPosition);
-            this.adapter.setServices(getSortedServicesList());
-            this.adapter.notifyDataSetChanged();
+            this.adapter.setCustomer(customer);
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        customer = customers.get(position);
-        adapter.setServices(getSortedServicesList());
-        adapter.notifyDataSetChanged();
-        adapterPosition = position;
+            customer = customers.get(position);
+            adapter.setCustomer(customer);
+            adapterPosition = position;
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        if (!customers.isEmpty()) {
-            customer = customers.get(0);
-        }
-
 
     }
 
@@ -229,102 +261,6 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         outState.putInt(VIEW_SEARCH, viewByPosition);
 
         super.onSaveInstanceState(outState);
-    }
-
-    private List<Service> getDateSortedServices(List<Service> services) {
-        List<Service> tempServices = new ArrayList<>();
-
-        if (sortByPosition == 1) {
-            for (Service s : services) {
-                if (s.convertEndTimeToDateString().equals(dateText.getText().toString())) {
-                    tempServices.add(s);
-                }
-            }
-        }
-        else {
-            for (Service s : services) {
-                if (s.convertStartTimeToDateString().equals(dateText.getText().toString())) {
-                    tempServices.add(s);
-                }
-            }
-        }
-        return tempServices;
-    }
-//  sorting mechanism to return sorted list
-    private List<Service> getSortedServicesList() {
-        List<Service> services;
-        List<Service> tempServices = new ArrayList<>();
-//      check general sort method
-        if (sortByPosition == 2 & customer != null) {
-            services = customer.getCustomerServices();
-            if (spinner.getVisibility() != View.VISIBLE) {
-                spinner.setVisibility(View.VISIBLE);
-            }
-        }
-        else {
-            services = this.services;
-            if (sortByPosition == 0) {
-                if (spinner.getVisibility() != View.INVISIBLE) {
-                    spinner.setVisibility(View.INVISIBLE);
-                }
-                services = sortServicesByStartTime(services);
-            }
-            else if (sortByPosition == 1){
-                if (spinner.getVisibility() != View.INVISIBLE) {
-                    spinner.setVisibility(View.INVISIBLE);
-                }
-                services = sortServicesByEndTime(services);
-            }
-        }
-//      check specific sort method
-        if (viewByPosition == 1) {
-            for (Service s: services) {
-                if (s.isPause()) {
-                    tempServices.add(s);
-                }
-            }
-            services = tempServices;
-        }
-        else if (viewByPosition == 2) {
-            for (Service s : services) {
-                if (!s.isPause()) {
-                    tempServices.add(s);
-                }
-            }
-            services = tempServices;
-        }
-
-        if (!dateText.getText().toString().isEmpty()) {
-            if (searchByDate) {
-                services = getDateSortedServices(services);
-            }
-        }
-
-        return services;
-    }
-
-    private List<Service> sortServicesByEndTime(List<Service> services) {
-        Collections.sort(services, new Comparator<Service>() {
-            public int compare(Service service1, Service service2) {
-                if (service1.getEndTime() > service2.getEndTime()) return -1;
-                if (service1.getEndTime() < service2.getEndTime()) return 1;
-                if (service1.getStartTime() > service2.getStartTime()) return -1;
-                if (service1.getStartTime() < service2.getStartTime()) return 1;
-                return 0;
-            }});
-        return services;
-    }
-
-    private List<Service> sortServicesByStartTime(List<Service> services) {
-        Collections.sort(services, new Comparator<Service>() {
-            public int compare(Service service1, Service service2) {
-                if (service1.getStartTime() > service2.getStartTime()) return -1;
-                if (service1.getStartTime() < service2.getStartTime()) return 1;
-                if (service1.getEndTime() > service2.getEndTime()) return -1;
-                if (service1.getEndTime() < service2.getEndTime()) return 1;
-                return 0;
-            }});
-        return services;
     }
 
     private void getCustomers() {
@@ -345,25 +281,16 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
         customers = databaseObjects;
-        services = new ArrayList<>();
-        for (Customer c : customers) {
-            services.addAll(c.getCustomerServices());
-        }
-        if (viewByPosition == 1) {
-            services = sortServicesByEndTime(services);
-        } else {
-            services = sortServicesByStartTime(services);
-        }
         if(adapter == null) {
             RecyclerView recyclerView = findViewById(R.id.view_services_recycler_view);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new RecyclerServiceAdapter(services, this);
+            adapter = new RecyclerViewServices(customers, this, viewByPosition, sortByPosition);
+            if(sortByPosition == 2) {
+                adapter.setCustomer(customer);
+            }
             recyclerView.setAdapter(adapter);
             populateSpinner(customers);
-        } else {
-            adapter.setServices(services);
-            adapter.notifyDataSetChanged();
         }
         progressBar.setVisibility(View.INVISIBLE);
     }

@@ -14,8 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.adapter.RecyclerViewCustomersAdapter;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.adapter.RecyclerViewCustomers;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
@@ -108,7 +108,7 @@ public class ViewCustomers extends AppCompatActivity implements DatabaseAccess<C
 
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
-        RecyclerViewCustomersAdapter adapter = new RecyclerViewCustomersAdapter(ViewCustomers.this, databaseObjects);
+        RecyclerViewCustomers adapter = new RecyclerViewCustomers(ViewCustomers.this, databaseObjects);
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
     }

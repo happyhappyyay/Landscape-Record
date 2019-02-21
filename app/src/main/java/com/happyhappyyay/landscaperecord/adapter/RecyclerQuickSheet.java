@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.activity.TimeReporting;
-import com.happyhappyyay.landscaperecord.database_interface.DatabaseOperator;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
 import com.happyhappyyay.landscaperecord.enums.LogActivityType;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.Service;
@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements MultiDatabaseAccess<Customer> {
+public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDatabaseAccess<Customer> {
     private String startDateString;
     private String endDateString;
     private List<Customer> customers;
@@ -43,7 +43,7 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
     private Context context;
     private Service service;
 
-    public RecyclerQuickSheetAdapter(List<Customer> customers, Context context, String startDateString, String endDateString) {
+    public RecyclerQuickSheet(List<Customer> customers, Context context, String startDateString, String endDateString) {
         this.customers = customers;
         if (this.customers == null) {
             this.customers = new ArrayList<>();
@@ -225,6 +225,8 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                                     tempService.setStartTime(startTime);
                                     tempService.setServices(servicesString);
                                     tempService.setCustomerName(customer.getName());
+                                    tempService.setUsername(Authentication.getAuthentication().getUser().getName());
+                                    tempService.setMileage(customer.getCustomerMileage());
                                     customer.addService(tempService);
                                     updateCustomer();
                                 }
@@ -246,6 +248,8 @@ public class RecyclerQuickSheetAdapter extends RecyclerView.Adapter implements M
                                             }
                                             tempService.setServices(servicesString + tempServiceString);
                                             tempService.setEndTime(endTime);
+                                            tempService.setUsername(Authentication.getAuthentication().getUser().getName());
+                                            tempService.setMileage(customer.getCustomerMileage());
                                             if(startAndEndDateMatch(startTime, endTime)) {
                                                 tempService.setManHours((tempService.getEndTime() - tempService.getStartTime()) / TimeReporting.MILLISECONDS_TO_HOURS);
                                             }

@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.database_interface.MultiDatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.pojo.User;
@@ -92,6 +92,7 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
 
     public void startViewServices(View view) {
         Intent intent = new Intent(getApplicationContext(), ViewServices.class);
+        intent.putExtra("VIEW_POSITION", 1);
         startActivity(intent);
     }
 
