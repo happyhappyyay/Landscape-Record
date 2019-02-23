@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.constraint.Constraints.TAG;
+
 public abstract class OnlineDatabase implements DatabaseOperator {
     public final static String CUSTOMER = "Customer";
     public final static String USER = "User";
@@ -66,19 +68,20 @@ public abstract class OnlineDatabase implements DatabaseOperator {
     public static <T extends DatabaseObjects> List<T> convertDocumentsToObjects(List<Document> docs, Class<T> objClass) {
         Gson gson=new Gson();
         List<T> objects = new ArrayList<>();
+        Log.d(TAG, "convertDocumentsToObjects: here");
 
         for(Document d: docs) {
             String s = d.toJson();
-            objects.add(gson.fromJson(s, objClass));
+            objects.add(gson.fromJson(convertJSONFromLongNumberToLong(s), objClass));
         }
         return objects;
     }
 
-    public static <T extends DatabaseObjects> T convertDocumentsToObjects(Document doc, Class<T> objClass) {
+    public static <T extends DatabaseObjects> T convertDocumentToObject(Document doc, Class<T> objClass) {
         if (doc != null) {
             Gson gson = new Gson();
             String s = doc.toJson();
-            return gson.fromJson(s, objClass);
+            return gson.fromJson(convertJSONFromLongNumberToLong(s), objClass);
         }
         return null;
     }

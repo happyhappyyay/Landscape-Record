@@ -226,7 +226,7 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                                     tempService.setServices(servicesString);
                                     tempService.setCustomerName(customer.getName());
                                     tempService.setUsername(Authentication.getAuthentication().getUser().getName());
-                                    tempService.setMileage(customer.getCustomerMileage());
+                                    tempService.setMileage(customer.getCustomerMileage() != null? customer.getCustomerMileage():0);
                                     customer.addService(tempService);
                                     updateCustomer();
                                 }
@@ -249,7 +249,7 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                                             tempService.setServices(servicesString + tempServiceString);
                                             tempService.setEndTime(endTime);
                                             tempService.setUsername(Authentication.getAuthentication().getUser().getName());
-                                            tempService.setMileage(customer.getCustomerMileage());
+                                            tempService.setMileage(customer.getCustomerMileage() != null? customer.getCustomerMileage():0);
                                             if(startAndEndDateMatch(startTime, endTime)) {
                                                 tempService.setManHours((tempService.getEndTime() - tempService.getStartTime()) / TimeReporting.MILLISECONDS_TO_HOURS);
                                             }

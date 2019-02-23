@@ -616,16 +616,13 @@ public class Util {
                         break;
                 }
             }
-            if(logs.get(i).getLogActivityType() == LogActivityType.DATABASE.ordinal()) {
-                LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getLogId());
-                LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getLogId());
-                if (logO != null & logU == null) {
-                    LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logO);
-                    logCount++;
-                }
-            }
-                LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logs.get(i));
+
+            LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getLogId());
+            LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getLogId());
+            if (logO != null & logU == null) {
+                LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logO);
                 logCount++;
+            }
         }
 
         List<DatabaseObjects> databaseObjects = new ArrayList<>();

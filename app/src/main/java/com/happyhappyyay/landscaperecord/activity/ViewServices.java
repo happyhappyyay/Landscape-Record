@@ -281,17 +281,17 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
         customers = databaseObjects;
-        if(adapter == null) {
-            RecyclerView recyclerView = findViewById(R.id.view_services_recycler_view);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new RecyclerViewServices(customers, this, viewByPosition, sortByPosition);
-            if(sortByPosition == 2) {
-                adapter.setCustomer(customer);
-            }
-            recyclerView.setAdapter(adapter);
-            populateSpinner(customers);
+
+        RecyclerView recyclerView = findViewById(R.id.view_services_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new RecyclerViewServices(customers, this, viewByPosition, sortByPosition);
+        if(sortByPosition == 2) {
+            adapter.setCustomer(customer);
         }
+        recyclerView.setAdapter(adapter);
+
+        populateSpinner(customers);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
@@ -312,6 +312,5 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
         if(adapter != null) {
             getCustomers();
         }
-
     }
 }

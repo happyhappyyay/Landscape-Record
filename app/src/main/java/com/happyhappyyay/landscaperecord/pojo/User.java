@@ -8,11 +8,11 @@ import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,11 +47,12 @@ public class User implements DatabaseObjects<User> {
         this.admin = admin;
     }
 
+    @NonNull
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(@NonNull String userId) {
         this.userId = userId;
     }
 
@@ -136,7 +137,7 @@ public class User implements DatabaseObjects<User> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.USER).find().projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.USER).find().projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, User.class);
     }
 
@@ -148,7 +149,7 @@ public class User implements DatabaseObjects<User> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.USER).find(gt("modifiedTime", modifiedTime)).projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.USER).find(gt("modifiedTime", modifiedTime)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, User.class);
     }
 
@@ -161,7 +162,7 @@ public class User implements DatabaseObjects<User> {
         else {
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.USER).find(eq("userId", id)).projection(excludeId());
+        Document document = od.getCollection(OnlineDatabase.USER).find(eq("userId", id)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, User.class);
         }
     }
@@ -174,7 +175,7 @@ public class User implements DatabaseObjects<User> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.USER).find(eq("name", string)).projection(excludeId());
+        Document document = od.getCollection(OnlineDatabase.USER).find(eq("name", string)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, User.class);
     }
 

@@ -31,14 +31,15 @@ import com.happyhappyyay.landscaperecord.fragments.LandscapingOther;
 import com.happyhappyyay.landscaperecord.fragments.LawnServices;
 import com.happyhappyyay.landscaperecord.fragments.SnowServices;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.FragmentExchange;
 import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
+import com.happyhappyyay.landscaperecord.pojo.Material;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
-import com.happyhappyyay.landscaperecord.utility.ExistingService;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -48,15 +49,16 @@ import java.util.List;
 import static com.happyhappyyay.landscaperecord.activity.HourOperations.DATE_STRING;
 import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_POSITION;
 
-public class JobServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MultiDatabaseAccess<Customer> {
+public class JobServices extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MultiDatabaseAccess<Customer>, FragmentExchange {
 
     private Spinner accountSpinner;
     private Spinner daySpinner;
     private String services;
     private List<Customer> allCustomers;
     private List<Customer> sortedCustomers;
+    private final String OTHER = "Other: ";
     private Customer customer;
-    private EditText date, manHours;
+    private List<Material> materials;
     public static final String MAN_HOURS = "Man Hours";
     private Service service;
     private LawnServices lawnServices;
@@ -64,6 +66,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     private SnowServices snowServices;
     private int adapterPosition = Adapter.NO_SELECTION;
     private ProgressBar progressBar;
+    private EditText date, manHours, otherText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         allCustomers = new ArrayList<>();
         String dateString = Util.retrieveStringCurrentDate();
         String manHoursString = "";
+        String otherString = "";
         services = "";
         Bundle bundle = getIntent().getBundleExtra("bundle");
         if(bundle != null) {
@@ -96,8 +100,15 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         }
 
         if(service != null) {
-            ExistingService.getExistingService().setServices(service.getServices());
-            ExistingService.getExistingService().setMaterials(service.getMaterials());
+            String tempServices = service.getServices();
+            if(tempServices.contains(OTHER)) {
+                int startIndex = tempServices.indexOf(OTHER);
+                int endIndex = tempServices.indexOf(Util.DELIMITER, startIndex);
+                otherString = tempServices.substring(startIndex + OTHER.length(),endIndex);
+                service.setServices(tempServices.substring(endIndex));
+            }
+            services = tempServices;
+            materials = service.getMaterials();
         }
 
         ViewPager viewPager = findViewById(R.id.job_services_view_pager);
@@ -117,6 +128,8 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         date.setText(dateString);
         manHours = findViewById(R.id.job_services_man_hours_text);
         manHours.setText(manHoursString);
+        otherText = findViewById(R.id.job_services_other_text);
+        otherText.setText(otherString);
         progressBar = findViewById(R.id.job_services_progress_bar);
 
         daySpinner = findViewById(R.id.job_services_day_spinner);
@@ -183,33 +196,35 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 
     public void onSubmitButton(View view) {
         if(progressBar.getVisibility() == View.INVISIBLE) {
+            services = "";
             if (service == null) {
                 service = new Service();
             }
             if (customer != null) {
                 if (Util.checkDateFormat(date.getText().toString())) {
-                    long time = System.currentTimeMillis();
+                    long time = Util.convertStringDateToMilliseconds(date.getText().toString());
 
-                    if (!date.getText().toString().isEmpty()) {
-                        if (Util.checkDateFormat(date.getText().toString())) {
-                            time = Util.convertStringDateToMilliseconds(date.getText().toString());
-                        }
+                    String otherString = otherText.getText().toString();
+                    if (!otherString.isEmpty()) {
+                        otherString = OTHER + otherString + Util.DELIMITER;
+                        services += otherString;
                     }
 
                     if (lawnServices.getView() != null) {
-                        services += lawnServices.markedCheckBoxes();
+                       lawnServices.markedCheckBoxes();
                     }
 
                     if (landscapeServices.getView() != null) {
-                        services += landscapeServices.markedCheckBoxes();
-                        service.setMaterials(landscapeServices.getMaterials());
+                        landscapeServices.markedCheckBoxes();
+                        service.setMaterials(materials);
                     }
                     if (snowServices.getView() != null) {
-                        services += snowServices.markedCheckBoxes();
+                        snowServices.markedCheckBoxes();
                     }
                     service.setServices(services);
                     service.setCustomerName(customer.getName());
-                    service.setMileage(customer.getCustomerMileage());
+                    service.setMileage(customer.getCustomerMileage() != null? customer.getCustomerMileage():0 );
+                    service.setUsername(Authentication.getAuthentication().getUser().getName());
                     if(!manHours.getText().toString().isEmpty()) {
                         try {
                             double numberOfManHours = Double.parseDouble(manHours.getText().toString());
@@ -382,6 +397,31 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return Util.toolbarItemSelection(this, item);
+    }
+
+    @Override
+    public String getServices() {
+        return services;
+    }
+
+    @Override
+    public void setServices(String services) {
+        this.services = services;
+    }
+
+    @Override
+    public void appendServices(String services) {
+        this.services += services;
+    }
+
+    @Override
+    public List<Material> getMaterials() {
+        return materials;
+    }
+
+    @Override
+    public void setMaterials(List<Material> materials) {
+        this.materials = materials;
     }
 
     private class FragmentPageAdapter extends FragmentPagerAdapter {

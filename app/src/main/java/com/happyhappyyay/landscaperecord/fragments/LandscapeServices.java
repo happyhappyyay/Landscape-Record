@@ -1,5 +1,6 @@
 package com.happyhappyyay.landscaperecord.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -13,13 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.happyhappyyay.landscaperecord.R;
+import com.happyhappyyay.landscaperecord.interfaces.FragmentExchange;
 import com.happyhappyyay.landscaperecord.pojo.Material;
 
 import java.util.List;
 
-public class LandscapeServices extends Fragment {
+public class LandscapeServices extends Fragment implements FragmentExchange {
     LandscapingMaterials landscapingMaterials;
     LandscapingOther  landscapingOther;
+    private FragmentExchange mListener;
 
 
     public LandscapeServices() {
@@ -60,26 +63,51 @@ public class LandscapeServices extends Fragment {
         this.landscapingOther = landscapingOther;
     }
 
-    public String markedCheckBoxes() {
-        StringBuilder servicesStringBuilder = new StringBuilder();
-
+    public void markedCheckBoxes() {
         if (landscapingOther.getView() != null) {
-            servicesStringBuilder.append(landscapingOther.markedCheckBoxes());
+            landscapingOther.markedCheckBoxes();
         }
+        landscapingMaterials.retrieveMaterials();
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentExchange) {
+            mListener = (FragmentExchange) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement InteractionListener");
+        }
+    }
 
-            servicesStringBuilder.append(landscapingMaterials.markedCheckBoxes());
+    @Override
+    public String getServices() {
+        return mListener.getServices();
+    }
 
-        return servicesStringBuilder.toString();
+    @Override
+    public void setServices(String services) {
+        mListener.setServices(services);
+    }
+
+    @Override
+    public void appendServices(String services) {
+        mListener.appendServices(services);
     }
 
     public List<Material> getMaterials() {
-        return landscapingMaterials.getMaterials();
+        return mListener.getMaterials();
+    }
+
+    @Override
+    public void setMaterials(List<Material> materials) {
+        mListener.setMaterials(materials);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         final int NUM_PAGES = 2;
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        private ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
 
         }
@@ -100,7 +128,7 @@ public class LandscapeServices extends Fragment {
             }
         }
 
-            @Override
+        @Override
         public int getCount() {
             return NUM_PAGES;
         }

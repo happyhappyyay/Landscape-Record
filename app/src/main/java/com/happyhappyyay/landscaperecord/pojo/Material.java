@@ -12,12 +12,6 @@ public class Material implements Parcelable {
     private double materialQuantity;
     private String materialMeasurement;
 
-    public Material(String materialName, String materialType, boolean addMaterial) {
-        this.materialName = materialName;
-        this.materialType = materialType;
-        this.addMaterial = addMaterial;
-    }
-
     public static final Parcelable.Creator<Material> CREATOR = new Parcelable.Creator<Material>() {
         public Material createFromParcel(Parcel in) {
             return new Material(in);
@@ -27,6 +21,12 @@ public class Material implements Parcelable {
             return new Material[size];
         }
     };
+
+    public Material(String materialName, String materialType, boolean addMaterial) {
+        this.materialName = materialName;
+        this.materialType = materialType;
+        this.addMaterial = addMaterial;
+    }
 
     public Material(Parcel in) {
         materialName = in.readString();

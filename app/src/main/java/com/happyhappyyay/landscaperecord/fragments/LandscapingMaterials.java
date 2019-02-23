@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +18,11 @@ import android.widget.Spinner;
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.adapter.RecyclerMaterial;
 import com.happyhappyyay.landscaperecord.enums.MaterialType;
+import com.happyhappyyay.landscaperecord.interfaces.FragmentExchange;
 import com.happyhappyyay.landscaperecord.pojo.Material;
-import com.happyhappyyay.landscaperecord.utility.ExistingService;
 import com.happyhappyyay.landscaperecord.utility.LandscapingMaterialsViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LandscapingMaterials extends Fragment {
@@ -29,6 +31,7 @@ public class LandscapingMaterials extends Fragment {
     private RecyclerMaterial adapter;
     private EditText materialNameEText, materialQuantityEText, materialPriceEText;
     private Spinner materialMeasurementSpinner, materialTypeSpinner;
+    private FragmentExchange mListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,13 +74,24 @@ public class LandscapingMaterials extends Fragment {
                 }
             }
         });
-        List<Material> materials = ExistingService.getExistingService().getMaterials();
+        List<Material> materials = mListener.getMaterials();
         if (materials != null) {
             adapter.setMaterials(materials);
-            ExistingService.getExistingService().clearMaterials();
+            mListener.setMaterials(new ArrayList<Material>());
         }
         setRetainInstance(true);
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentExchange) {
+            mListener = (FragmentExchange) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement InteractionListener");
+        }
     }
 
     private void resetMaterialInformation() {
@@ -119,7 +133,7 @@ public class LandscapingMaterials extends Fragment {
         return material;
     }
 
-    public String markedCheckBoxes() {
+    public void retrieveMaterials() {
         StringBuilder servicesStringBuilder = new StringBuilder();
         List<Material> materials = adapter.getMaterials();
         for(int i = 0; i < materials.size(); i++) {
@@ -129,11 +143,8 @@ public class LandscapingMaterials extends Fragment {
             String materialString = materials.get(i).toString() + System.getProperty("line.separator");
             servicesStringBuilder.append(materialString);
         }
-        return servicesStringBuilder.toString();
-    }
-
-    public List<Material> getMaterials() {
-        return  adapter.getMaterials();
+        mListener.setMaterials(adapter.getMaterials());
+        mListener.appendServices(servicesStringBuilder.toString());
     }
 
     @Override

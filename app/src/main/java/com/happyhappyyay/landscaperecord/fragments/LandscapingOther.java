@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.utility.ExistingService;
+import com.happyhappyyay.landscaperecord.interfaces.FragmentExchange;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.ArrayList;
@@ -22,10 +22,10 @@ import java.util.List;
 public class LandscapingOther extends Fragment {
     private List<CheckBox> checkBoxes;
     private Spinner dumpTypeSpinner, dumpMeasurementSpinner;
-    private EditText dumpQuantity, otherText;
+    private EditText dumpQuantity;
+    private FragmentExchange mListener;
 
     public LandscapingOther() {
-        // Required empty public constructor
     }
 
     @Override
@@ -41,22 +41,19 @@ public class LandscapingOther extends Fragment {
         checkBoxes.add(edging);
         CheckBox dump = view.findViewById(R.id.landscaping_other_dump);
         checkBoxes.add(dump);
-        CheckBox other = view.findViewById(R.id.landscaping_other_other);
-        checkBoxes.add(other);
         dumpTypeSpinner = view.findViewById(R.id.landscaping_other_dump_type_spinner);
         dumpMeasurementSpinner = view.findViewById(R.id.landscaping_other_dump_spinner_measurement);
         dumpQuantity = view.findViewById(R.id.landscaping_other_dump_amount);
-        otherText = view.findViewById(R.id.landscaping_other_other_text);
-        String existingServices = ExistingService.getExistingService().getServices();
+        String existingServices = mListener.getServices();
         if (existingServices != null && !existingServices.isEmpty()) {
-            ExistingService.getExistingService().setServices(updateCheckBoxesAndExistingService(ExistingService.getExistingService().getServices()));
+            updateCheckBoxesAndExistingService();
         }
         return view;
     }
 
-    private String updateCheckBoxesAndExistingService(String existingServices) {
+    private void updateCheckBoxesAndExistingService() {
+        String existingServices = mListener.getServices();
         final String SPACE = " ";
-        final String TYPE = "Landscape";
         int lengthOfServiceString = existingServices.length();
         for (CheckBox c : checkBoxes) {
              String checkBoxText = c.getText().toString().toLowerCase();
@@ -64,27 +61,6 @@ public class LandscapingOther extends Fragment {
                 int startIndex = existingServices.toLowerCase().indexOf(checkBoxText);
                 int endIndex = lengthOfServiceString;
                 switch (checkBoxText) {
-                    case "other:":
-                        int tempStartIndex = startIndex - TYPE.length() - SPACE.length();
-                        while(!existingServices.substring(tempStartIndex, startIndex -SPACE.length()).equals(TYPE) & startIndex != -1) {
-                            startIndex = existingServices.indexOf(c.getText().toString(), startIndex + checkBoxText.length());
-                            tempStartIndex = startIndex - TYPE.length() - SPACE.length();
-                        }
-                        if (startIndex != -1) {
-                            int otherTextStartIndex = startIndex +
-                                    checkBoxText.length() + SPACE.length();
-                            startIndex = tempStartIndex;
-
-                            for(int i = otherTextStartIndex; i < lengthOfServiceString; i++ ) {
-                                if(Util.DELIMITER.equals(existingServices.substring(i, i+1))) {
-                                    endIndex = i;
-                                    break;
-                                }
-                            }
-
-                            otherText.setText(existingServices.substring(otherTextStartIndex, endIndex));
-                        }
-                        break;
                     case "dump":
                         for(int i = startIndex; i < lengthOfServiceString; i++ ) {
                             if(Util.DELIMITER.equals(existingServices.substring(i, i+1))) {
@@ -140,43 +116,26 @@ public class LandscapingOther extends Fragment {
                 c.setChecked(false);
             }
         }
-        return existingServices;
-    }
-
-    public List<CheckBox> getCheckBoxes() {
-        return checkBoxes;
-    }
-
-    public void setCheckBoxes(List<CheckBox> checkBoxes) {
-        this.checkBoxes = checkBoxes;
+        mListener.setServices(existingServices);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        if (context instanceof FragmentExchange) {
+            mListener = (FragmentExchange) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement InteractionListener");
+        }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    public String markedCheckBoxes() {
-        final String SPACE = " ";
-        final String TYPE = "Landscape";
+    public void markedCheckBoxes() {
         StringBuilder servicesStringBuilder = new StringBuilder();
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
                 String checkBoxText = c.getText().toString();
                 switch (checkBoxText.toLowerCase()) {
-                    case "other":
-                        String otherString = otherText.getText().toString();
-                        if (!otherString.isEmpty()) {
-                            otherString = TYPE + SPACE + checkBoxText + ": " + otherString + Util.DELIMITER;
-                            servicesStringBuilder.append(otherString);
-                        }
-                        break;
                     case "dump":
                         String dumpString = dumpQuantity.getText().toString();
                         String dumpAmount = "Dump " + dumpString + dumpMeasurementSpinner.getSelectedItem().toString() +
@@ -190,6 +149,6 @@ public class LandscapingOther extends Fragment {
                 }
             }
         }
-        return servicesStringBuilder.toString();
+        mListener.appendServices(servicesStringBuilder.toString());
     }
 }

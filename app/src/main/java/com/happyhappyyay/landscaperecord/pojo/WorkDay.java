@@ -11,7 +11,6 @@ import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
@@ -37,8 +36,8 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     @PrimaryKey @NonNull
     private String workDayId = UUID.randomUUID().toString();
     private String dayOfWeek;
-    private String Month;
-    private String Year;
+    private String month;
+    private String year;
     private String currentDate;
     private long currentDateAsTime;
     @TypeConverters(MapStringIntConverter.class)
@@ -98,7 +97,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         return services;
     }
 
-    protected void findCalendarInformation(String newDate) {
+    private void findCalendarInformation(String newDate) {
         try {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
             Date date = dateFormat.parse(newDate);
@@ -112,10 +111,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
             cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
             monthInMilli = cal.getTimeInMillis();
-            Month = new SimpleDateFormat("MMMM", Locale.US).format(date);
+            month = new SimpleDateFormat("MMMM", Locale.US).format(date);
             cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
             yearInMilli = cal.getTimeInMillis();
-            Year = new SimpleDateFormat("yyyy", Locale.US).format(date);
+            year = new SimpleDateFormat("yyyy", Locale.US).format(date);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -191,19 +190,19 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     }
 
     public String getMonth() {
-        return Month;
-    }
-
-    public String getYear() {
-        return Year;
+        return month;
     }
 
     public void setMonth(String month) {
-        Month = month;
+        this.month = month;
+    }
+
+    public String getYear() {
+        return year;
     }
 
     public void setYear(String year) {
-        Year = year;
+        this.year = year;
     }
 
     @Override
@@ -237,7 +236,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find().projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find().projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
@@ -249,7 +248,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(gt("modifiedTime", modifiedTime)).projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(gt("modifiedTime", modifiedTime)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
@@ -261,7 +260,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("workDayId", id)).projection(excludeId());
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("workDayId", id)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, WorkDay.class);
     }
 
@@ -273,7 +272,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDate", date)).projection(excludeId());
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDate", date)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, WorkDay.class);
     }
 
@@ -331,7 +330,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDateAsTime", dateTime)).projection(excludeId());
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDateAsTime", dateTime)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, WorkDay.class);
     }
 
@@ -342,7 +341,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("weekInMilli", weekInMilli)).projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("weekInMilli", weekInMilli)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
@@ -353,7 +352,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("monthInMilli", monthInMilli)).projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("monthInMilli", monthInMilli)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 

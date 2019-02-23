@@ -13,7 +13,6 @@ import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
@@ -260,7 +259,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find().projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find().projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
@@ -272,7 +271,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime)).projection(excludeId());
+        List<Document> documents = od.getCollection(OnlineDatabase.CUSTOMER).find(gt("modifiedTime", modifiedTime)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, Customer.class);
     }
 
@@ -284,7 +283,7 @@ public class Customer implements DatabaseObjects<Customer> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        FindIterable<Document> document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id)).projection(excludeId());
+        Document document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, Customer.class);
 
     }
