@@ -60,6 +60,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="total hours worked"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_settings_toolbar" />
 
@@ -70,6 +71,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="total jobs completed"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -80,6 +82,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="total customers added"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView31" />
 
@@ -90,6 +93,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="total jobs started"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
@@ -100,6 +104,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="man hours spent"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView39" />
 

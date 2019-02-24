@@ -21,6 +21,7 @@ import com.happyhappyyay.landscaperecord.enums.MaterialType;
 import com.happyhappyyay.landscaperecord.interfaces.FragmentExchange;
 import com.happyhappyyay.landscaperecord.pojo.Material;
 import com.happyhappyyay.landscaperecord.utility.LandscapingMaterialsViewModel;
+import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +141,7 @@ public class LandscapingMaterials extends Fragment {
             if(i == 0) {
                 servicesStringBuilder.append(System.getProperty("line.separator"));
             }
-            String materialString = materials.get(i).toString() + System.getProperty("line.separator");
+            String materialString = materials.get(i).toString() + Util.DELIMITER + System.getProperty("line.separator");
             servicesStringBuilder.append(materialString);
         }
         mListener.setMaterials(adapter.getMaterials());

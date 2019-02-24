@@ -263,13 +263,13 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                 if (usersInside != null) {
                     user = usersInside.get(pos);
                     adapterPosition = pos;
-                    startTime = user.getStartTime();
-                    updateCheckInStatus();
                 } else {
                     usersInside = databaseObjects;
                     user = usersInside.get(adapterPosition);
                     parent.setSelection(adapterPosition);
                 }
+                startTime = user.getStartTime();
+                updateCheckInStatus();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {

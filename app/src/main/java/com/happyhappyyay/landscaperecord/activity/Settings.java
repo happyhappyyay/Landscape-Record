@@ -29,6 +29,9 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
                 .commit();
         Toolbar myToolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(myToolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

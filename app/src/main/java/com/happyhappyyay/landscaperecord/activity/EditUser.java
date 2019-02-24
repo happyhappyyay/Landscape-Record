@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.User;
+import com.happyhappyyay.landscaperecord.utility.Authentication;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
         setContentView(R.layout.activity_edit_user);
         Toolbar myToolbar = findViewById(R.id.edit_user_toolbar);
         setSupportActionBar(myToolbar);
-        if(getSupportActionBar() != null) {
+        boolean admin = Authentication.getAuthentication().getUser().isAdmin();
+        if(getSupportActionBar() != null & admin) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         usernameText = findViewById(R.id.edit_user_username);
@@ -40,6 +42,7 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
         lastName = findViewById(R.id.edit_user_last_name);
         nickname = findViewById(R.id.edit_user_nickname);
         adminBox = findViewById(R.id.edit_user_admin_box);
+        adminBox.setVisibility(admin? View.VISIBLE: View.INVISIBLE);
         progressBar = findViewById(R.id.edit_user_progress_bar);
         Intent intent = getIntent();
         String stringExtra = intent.getStringExtra("USER_ID");

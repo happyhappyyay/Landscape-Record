@@ -17,10 +17,12 @@ import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.adapter.RecyclerViewWorkDay;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
+import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.ArrayList;
@@ -200,7 +202,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
             int startServicePosition = 0;
 
             for (int i = 0; i < serviceString.length(); i++) {
-                if (serviceString.substring(i,i+1).equals("|")) {
+                if (serviceString.substring(i,i+1).equals(Util.DELIMITER)) {
                     endServicePosition = i;
                     String tempString = serviceString.substring(startServicePosition, endServicePosition) + ", ";
                     sb.append(tempString);
@@ -220,7 +222,22 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                databaseAccessMethod(db);
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(this);
+                databaseAccessMethod(db);
+            }
+        }
+        else {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            databaseAccessMethod(db);
+        }
+    }
+
+    public void databaseAccessMethod(DatabaseOperator db) {
         switch(timeSpanChoice) {
             case 0:
                 WorkDay selectedWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, calendarPosition);
@@ -249,7 +266,6 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
 
     @Override
     public void createCustomLog() {
-
     }
 
     @Override

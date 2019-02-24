@@ -57,10 +57,10 @@ public class RecyclerViewUser extends RecyclerView.Adapter {
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
-        public TextView logItem;
+        private TextView logItem;
 
 
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             logItem = view.findViewById(R.id.log_item_text);
         }

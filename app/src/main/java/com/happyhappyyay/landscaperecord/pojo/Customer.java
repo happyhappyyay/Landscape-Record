@@ -112,6 +112,18 @@ public class Customer implements DatabaseObjects<Customer> {
         return unpricedServices;
     }
 
+    public int retrieveNumberUnpricedServiceMonths() {
+        List<Integer> months = new ArrayList<>();
+        for (int i = 0; i < customerServices.size(); i++) {
+            Service service = customerServices.get(i);
+            int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
+            if(!service.isPriced() && !months.contains(serviceMonth)) {
+                months.add(serviceMonth);
+            }
+        }
+        return months.size();
+    }
+
     public boolean hasUnfinishedServicesForMonth(int month) {
         for (int i = 0; i < customerServices.size(); i++) {
             Service service = customerServices.get(i);

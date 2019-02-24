@@ -58,6 +58,7 @@
         <activity android:name=".activity.Dashboard"
             android:theme="@style/AppTheme"/>
         <activity android:name=".activity.Settings"
+            android:parentActivityName=".activity.AdminTools"
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.HourOperations"
             android:parentActivityName=".activity.ViewUsers"

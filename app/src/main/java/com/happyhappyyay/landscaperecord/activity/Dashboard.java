@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.R;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
+import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
@@ -114,49 +116,69 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
     }
 
     private void createNotificationsFromData() {
-        int counterVariable = 0;
-        int anotherCounterVariable = 0;
+        int checkedIn = 0;
+        int hoursRemaining = 0;
+        int inProgress = 0;
+        int unpaid = 0;
+        int unbilled = 0;
         for (User u: users) {
             if(u.getStartTime() > 0) {
-                counterVariable++;
+                checkedIn++;
             }
 
-            anotherCounterVariable += u.getHours();
+            hoursRemaining += u.getHours();
         }
-        checkedInNotification.setText(String.format(Locale.US, "%d", counterVariable));
-        if(counterVariable > 0) {
+        checkedInNotification.setText(String.format(Locale.US, "%d", checkedIn));
+        if(checkedIn > 0) {
             checkedInNotification.setTextColor(RED);
         }
         else {
             checkedInNotification.setTextColor(GREEN);
         }
         if(Authentication.getAuthentication().getUser().isAdmin()) {
-            hoursNotification.setText(String.format(Locale.US, "%d", anotherCounterVariable));
-            if(anotherCounterVariable > 0) {
+            hoursNotification.setText(String.format(Locale.US, "%d", hoursRemaining));
+            if(hoursRemaining > 0) {
                 hoursNotification.setTextColor(RED);
             }
             else {
                 hoursNotification.setTextColor(GREEN);
             }
         }
-        counterVariable = 0;
-        anotherCounterVariable = 0;
 
         for (Customer c: customers) {
+            unbilled += c.retrieveNumberUnpricedServiceMonths();
             for(Service s: c.getCustomerServices()) {
                 if(s.isPause()) {
-                    counterVariable++;
-                    }
+                    inProgress++;
+                }
+                if(s.isPriced() & !s.isPaid()) {
+                    unpaid++;
+                }
             }
         }
-        inProgressNotification.setText(String.format(Locale.US, "%d", counterVariable));
-        if(counterVariable > 0) {
+        inProgressNotification.setText(String.format(Locale.US, "%d", inProgress));
+        if(inProgress > 0) {
             inProgressNotification.setTextColor(RED);
         }
         else {
             inProgressNotification.setTextColor(GREEN);
         }
 
+        paymentNotification.setText(String.format(Locale.US, "%d", unpaid));
+        if(unpaid > 0) {
+            paymentNotification.setTextColor(RED);
+        }
+        else {
+            paymentNotification.setTextColor(GREEN);
+        }
+
+        billingNotification.setText(String.format(Locale.US, "%d", unbilled));
+        if(unbilled > 0) {
+            billingNotification.setTextColor(RED);
+        }
+        else {
+            billingNotification.setTextColor(GREEN);
+        }
     }
 
     @Override
@@ -184,7 +206,22 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
 
     @Override
     public void accessDatabaseMultipleTimes() {
-        AppDatabase db = AppDatabase.getAppDatabase(this);
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                databaseAccessMethod(db);
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(this);
+                databaseAccessMethod(db);
+            }
+        }
+        else {
+            AppDatabase db = AppDatabase.getAppDatabase(this);
+            databaseAccessMethod(db);
+        }
+    }
+
+    private void databaseAccessMethod(DatabaseOperator db) {
         users = Util.USER_REFERENCE.retrieveAllClassInstancesFromDatabase(db);
         customers = Util.CUSTOMER_REFERENCE.retrieveAllClassInstancesFromDatabase(db);
     }

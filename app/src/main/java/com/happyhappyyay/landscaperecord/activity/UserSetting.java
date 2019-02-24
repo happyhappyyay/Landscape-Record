@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,14 +11,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.utility.Authentication;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
 
-public class UserSetting extends AppCompatActivity implements MultiDatabaseAccess {
+public class UserSetting extends AppCompatActivity implements DatabaseAccess<LogActivity> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,32 +36,9 @@ public class UserSetting extends AppCompatActivity implements MultiDatabaseAcces
     }
 
     public void onClick(View view) {
-        Util.enactMultipleDatabaseOperations(this);
-    }
-
-    @Override
-    public void accessDatabaseMultipleTimes() {
-        Util.updateDatabases(this);
-    }
-
-    @Override
-    public void createCustomLog() {
-
-    }
-
-    @Override
-    public Context getContext() {
-        return null;
-    }
-
-    @Override
-    public String createLogInfo() {
-        return null;
-    }
-
-    @Override
-    public void onPostExecute(List databaseObjects) {
-
+        Intent intent = new Intent(getApplicationContext(), EditUser.class);
+        intent.putExtra("USER_ID", Authentication.getAuthentication().getUser().getUserId());
+        startActivity(intent);
     }
 
     @Override
@@ -71,5 +50,20 @@ public class UserSetting extends AppCompatActivity implements MultiDatabaseAcces
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return Util.toolbarItemSelection(this, item);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<LogActivity> databaseObjects) {
+
     }
 }
