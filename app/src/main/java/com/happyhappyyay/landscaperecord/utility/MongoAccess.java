@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+/*
+DATABASE PLAYGROUND
+ */
 
 public class MongoAccess {
 
@@ -104,8 +107,8 @@ public class MongoAccess {
             }
             time2 = System.currentTimeMillis();
             Customer customer = new Customer();
-            customer.setCustomerFirstName("Jorge");
-            customer.setCustomerLastName("Moo");
+            customer.setFirst("Jorge");
+            customer.setLast("Moo");
             Service service = new Service();
             service.setServices("So much food prep");
             Material material = new Material("wood","true",true);

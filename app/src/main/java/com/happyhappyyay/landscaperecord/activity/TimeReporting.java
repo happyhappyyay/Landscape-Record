@@ -28,6 +28,7 @@ import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
+import java.util.Locale;
 
 public class TimeReporting extends AppCompatActivity implements MultiDatabaseAccess<User> {
     public final static double MILLISECONDS_TO_HOURS = 3600000;
@@ -78,7 +79,7 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
     public void createCheckIn(View view) {
         if(progressBar.getVisibility() == View.INVISIBLE) {
             boolean authenticatedUser = false;
-            if (user.getUserId().equals(Authentication.getAuthentication().getUser().getUserId())) {
+            if (user.getId().equals(Authentication.getAuthentication().getUser().getId())) {
                 authenticatedUser = true;
             }
             long currentTime = System.currentTimeMillis();
@@ -87,12 +88,13 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
             if (!checkedIn) {
                 startTime = currentTime;
                 user.setStartTime(startTime);
-                Toast.makeText(getApplicationContext(), "Checked in!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_in),
+                        Toast.LENGTH_LONG).show();
                 startTimeChange = true;
             } else {
                 if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
-                    Toast.makeText(getApplicationContext(), "User never checked out. Notify admin" +
-                            " account to manually add hours.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_max_error),
+                            Toast.LENGTH_LONG).show();
                     resetStartTime();
                     startTimeChange = true;
                 }
@@ -106,7 +108,7 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
     public void createCheckOut(View view) {
         if(progressBar.getVisibility() == View.INVISIBLE) {
             boolean authenticatedUser = false;
-            if (user.getUserId().equals(Authentication.getAuthentication().getUser().getUserId())) {
+            if (user.getId().equals(Authentication.getAuthentication().getUser().getId())) {
                 authenticatedUser = true;
             }
             double currentTime = System.currentTimeMillis();
@@ -124,20 +126,22 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                                     break;
 
                                 case DialogInterface.BUTTON_NEGATIVE:
-                                    Toast.makeText(getApplicationContext(), "Notify admin" +
-                                            " account to manually add hours.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_notify_admin_error),
+                                            Toast.LENGTH_LONG).show();
                                     break;
                             }
                         }
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("The number of hours reported exceeds the likely amount. Is " +
-                            hours + " hours correct?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage(getString(R.string.time_reporting_exceeds_likely))
+                            .setPositiveButton(getString(R.string.yes),
+                            dialogClickListener)
+                            .setNegativeButton(getString(R.string.no), dialogClickListener).show();
                 } else {
                     addAccumulatedHours();
-                    Toast.makeText(getApplicationContext(), "Checked out! " + (hours) + user.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_out)
+                            + " " + (String.format(Locale.US, "%.2f",hours)) + user.toString(), Toast.LENGTH_LONG).show();
                 }
                 resetStartTime();
                 updateUser(authenticatedUser);
@@ -212,7 +216,9 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
         } else {
             workDay = new WorkDay(Util.retrieveStringCurrentDate());
             Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
-            LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), "Workday: " + Util.retrieveStringCurrentDate(), LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+            LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
+                    "Workday: " + Util.retrieveStringCurrentDate(), LogActivityAction.ADD.ordinal(),
+                    LogActivityType.WORKDAY.ordinal());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
         }
         workDay.addUserHourReference(user.toString(), currentHours);
@@ -273,7 +279,6 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         };
         Spinner spinner = findViewById(R.id.time_reporting_spinner);

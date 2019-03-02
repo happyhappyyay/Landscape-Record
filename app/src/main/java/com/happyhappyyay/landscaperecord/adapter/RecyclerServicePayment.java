@@ -42,7 +42,7 @@ public class RecyclerServicePayment extends Adapter {
 
     @Override
     public int getItemCount() {
-        return customer.getCustomerServices().size() + customer.getPayment().getPaymentReceiptAmount().size();
+        return customer.getServices().size() + customer.getPayment().getAmounts().size();
     }
 
     @Override
@@ -56,11 +56,11 @@ public class RecyclerServicePayment extends Adapter {
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
-        public TextView lineItemText, totalText;
-        public List<String> payments;
+        private TextView lineItemText, totalText;
+        private List<String> payments;
 
 
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             lineItemText = view.findViewById(R.id.service_payment_item_item);
             totalText = view.findViewById(R.id.service_payment_item_total);
@@ -72,9 +72,8 @@ public class RecyclerServicePayment extends Adapter {
         private List<String> sortStringsByDate(List<String> strings) {
             Collections.sort(strings, new Comparator<String>() {
                 public int compare(String service1, String service2) {
-                    if (Util.convertStringDateToMilliseconds(service1.substring(0,9)) > Util.convertStringDateToMilliseconds(service2.substring(0,9))) return -1;
-                    if (Util.convertStringDateToMilliseconds(service1.substring(0,9)) < Util.convertStringDateToMilliseconds(service2.substring(0,9))) return 1;
-                    return 0;
+                    return Long.compare(Util.convertStringDateToMilliseconds(service2.substring(0,9)),
+                            Util.convertStringDateToMilliseconds(service1.substring(0,9)));
                 }});
             return strings;
         }

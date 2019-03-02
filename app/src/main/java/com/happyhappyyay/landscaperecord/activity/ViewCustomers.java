@@ -112,5 +112,4 @@ public class ViewCustomers extends AppCompatActivity implements DatabaseAccess<C
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
     }
-
 }

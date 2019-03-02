@@ -19,19 +19,19 @@ public interface WorkDayDao {
     @Query("SELECT * FROM workDay")
     List<WorkDay> getAllWorkDays();
 
-    @Query("SELECT * FROM WorkDay WHERE workDayId = :workDayId")
+    @Query("SELECT * FROM WorkDay WHERE id = :workDayId")
     WorkDay findWorkDayById(String workDayId);
 
-    @Query("SELECT * FROM WorkDay WHERE currentDate = :date")
+    @Query("SELECT * FROM WorkDay WHERE date = :date")
     WorkDay findWorkDayByDate(String date);
 
-    @Query("SELECT * FROM workDay WHERE currentDateAsTime = :time")
+    @Query("SELECT * FROM workDay WHERE dateTime = :time")
     WorkDay findWorkDayByTime(long time);
 
-    @Query("SELECT * FROM workDay WHERE weekInMilli = :time")
+    @Query("SELECT * FROM workDay WHERE week = :time")
     List<WorkDay> findWorkWeekByTime(long time);
 
-    @Query("SELECT * FROM workDay WHERE monthInMilli = :time")
+    @Query("SELECT * FROM workDay WHERE month = :time")
     List<WorkDay> findWorkMonthByTime(long time);
 
     @Query("SELECT * FROM WorkDay WHERE modifiedTime > :modifiedTime")
@@ -42,7 +42,4 @@ public interface WorkDayDao {
 
     @Delete
     void deleteWorkDay(WorkDay workDay);
-
-    @Query("DELETE FROM workDay")
-    void deleteAllWorkDays();
 }

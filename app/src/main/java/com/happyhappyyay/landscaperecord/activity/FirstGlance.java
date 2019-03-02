@@ -70,7 +70,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
         if(progressBar.getVisibility() == View.INVISIBLE) {
             Button testButton = findViewById(R.id.first_glance_database_button);
             String testButtonText = testButton.getText().toString().toLowerCase();
-            String testText = "test";
+            String testText = getString(R.string.first_glance_test);
             if (testButtonText.equals(testText)) {
                 EditText databaseName = findViewById(R.id.first_glance_database_name);
                 String dbNameText = databaseName.getText().toString();
@@ -82,7 +82,6 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
                         MongoClientURI uri = new MongoClientURI(dbURIText);
                         MongoClient mongoClient = new MongoClient(uri);
                         MongoDatabase db = mongoClient.getDatabase(dbNameText);
-                        user = new User();
                         testButton.setText(getString(R.string.first_glance_start));
                         progressBar.setVisibility(View.INVISIBLE);
                         editor = sharedPref.edit();
@@ -90,16 +89,16 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
                         editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_name,this), dbNameText);
                         editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_uri, this), dbURIText);
                         editor.apply();
-                        Toast.makeText(this, "Connection was a success.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.first_glance_success), Toast.LENGTH_SHORT).show();
 
                     } catch (Exception e) {
                         progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(this, "Could not connect. Check internet connection is established. Also, check that the database name and uri are correct.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getString(R.string.first_glance_check_connection), Toast.LENGTH_LONG).show();
                         resetDatabaseSettings();
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(this, "Please complete the above fields to test the database connection.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.first_glance_complete_information), Toast.LENGTH_LONG).show();
                 }
 
             } else {
@@ -127,12 +126,8 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
             String lastNameText = lastName.getText().toString();
             EditText password = findViewById(R.id.first_glance_password);
             String passwordText = password.getText().toString();
-            if(!firstNameText.isEmpty() & !lastNameText.isEmpty() & !passwordText.isEmpty()) {
-                user = new User();
-                user.setFirstName(firstNameText);
-                user.setLastName(lastNameText);
-                user.setPassword(passwordText);
-                user.setName(firstNameText + " " + lastNameText);
+            if(!firstNameText.isEmpty() & !lastNameText.isEmpty() & passwordText.length() > 5) {
+                user = new User(firstNameText,lastNameText,passwordText);
                 user.setAdmin(true);
                 EditText nickname = findViewById(R.id.first_glance_nickname);
                 String nicknameText = nickname.getText().toString();
@@ -142,7 +137,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
                 confirmFirstUserSetup(user, nickname);
             }
             else {
-                Toast.makeText(this, "First name, last name, and password are required fields.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.first_glance_required_fields), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -153,12 +148,12 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        Toast.makeText(getApplicationContext(), "Settings saved. Please log in using your existing username and password.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.first_glance_settings_saved), Toast.LENGTH_LONG).show();
                         Util.enactMultipleDatabaseOperationsPostExecute(FirstGlance.this);
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        Toast.makeText(getApplicationContext(), "Create a first user. Enable database usage and provide your database settings under settings to setup database.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.first_glance_retry_connection), Toast.LENGTH_LONG).show();
                         resetDatabaseSettings();
                         break;
                 }
@@ -166,10 +161,8 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("If you do not have an existing user account in this database, you will be" +
-                " unable to access this application. Do you still wish to continue with providing " +
-                "these settings?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage(getString(R.string.first_glance_existing_warning)).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(getString(R.string.no), dialogClickListener).show();
     }
 
     private void confirmFirstUserSetup(User user, EditText nickname){
@@ -179,7 +172,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         insertUser();
-                        Toast.makeText(getApplicationContext(), "Settings saved. Please log in using your new username and password.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.first_glance_settings_saved), Toast.LENGTH_LONG).show();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -189,11 +182,11 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("You have entered username: " + user.getFirstName() + " " +
-                user.getLastName() + " password: " + user.getPassword() + " nickname: " + nickname.getText().toString() +
+        builder.setMessage("You have entered username: " + user.getFirst() + " " +
+                user.getLast() + " password: " + user.getPassword() + " nickname: " + nickname.getText().toString() +
                 ". Your username is your first name 'space' your last name. Is this information correct?").
-                setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+                setPositiveButton(getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(R.string.no), dialogClickListener).show();
     }
     private void insertUser() {
         progressBar.setVisibility(View.VISIBLE);
@@ -205,7 +198,6 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
         intent.putExtra(Util.retrieveStringFromResources(R.string.pref_key_after_first_time, this), true);
         startActivity(intent);
     }
-
 
     @Override
     public Context getContext() {
@@ -227,8 +219,8 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
                 confirmDatabaseSetup();
             }
             else {
-                Toast.makeText(this, "No users found in this database.", Toast.LENGTH_SHORT).show();
-                Toast.makeText(this,"Create a first user. Enable database usage and provide your database settings under settings to setup database.",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.first_glance_no_users), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getString(R.string.first_glance_retry_connection),Toast.LENGTH_LONG).show();
                 resetDatabaseSettings();
             }
         }
@@ -253,6 +245,5 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
 
     @Override
     public void createCustomLog() {
-
     }
 }

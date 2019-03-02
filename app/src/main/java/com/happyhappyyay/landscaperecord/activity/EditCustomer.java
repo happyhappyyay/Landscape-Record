@@ -20,6 +20,7 @@ import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
+import java.util.Locale;
 
 public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Customer> {
     private EditText customerFirstName, customerLastName, customerEmail, customerBusiness, customerAddress,
@@ -59,31 +60,31 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
         if(progressBar.getVisibility() == View.INVISIBLE) {
             if (!customerFirstName.getText().toString().isEmpty() & !customerLastName.getText().toString().isEmpty()
                     & !customerAddress.getText().toString().isEmpty()) {
-                customer.setCustomerFirstName(customerFirstName.getText().toString());
-                customer.setCustomerLastName(customerLastName.getText().toString());
+                customer.setFirst(customerFirstName.getText().toString());
+                customer.setLast(customerLastName.getText().toString());
 
                 if (!customerEmail.getText().toString().isEmpty()) {
-                    customer.setCustomerEmail(customerEmail.getText().toString());
+                    customer.setEmail(customerEmail.getText().toString());
                 }
 
                 if (!customerBusiness.getText().toString().isEmpty()) {
-                    customer.setCustomerBusiness(customerBusiness.getText().toString());
+                    customer.setBusiness(customerBusiness.getText().toString());
                 }
 
                 if (!customerCity.getText().toString().isEmpty()) {
-                    customer.setCustomerCity(customerCity.getText().toString());
+                    customer.setCity(customerCity.getText().toString());
                 }
 
                 if (!customerPhoneNumber.getText().toString().isEmpty()) {
-                    customer.setCustomerPhoneNumber(customerPhoneNumber.getText().toString());
+                    customer.setPhone(customerPhoneNumber.getText().toString());
                 }
 
                 if (daySpinner.getSelectedItem() != null) {
-                    customer.setCustomerDay(daySpinner.getSelectedItem().toString());
+                    customer.setDay(daySpinner.getSelectedItem().toString());
                 }
 
                 if (stateSpinner.getSelectedItem() != null) {
-                    customer.setCustomerState(stateSpinner.getSelectedItem().toString());
+                    customer.setState(stateSpinner.getSelectedItem().toString());
                 }
             }
             updateCustomer();
@@ -96,15 +97,15 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
     }
 
     private void loadCustomerInformation() {
-        customerFirstName.setText(customer.getCustomerFirstName());
-        customerLastName.setText(customer.getCustomerLastName());
-        customerBusiness.setText(customer.getCustomerBusiness());
-        customerCity.setText(customer.getCustomerCity());
-        customerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-        customerEmail.setText(customer.getCustomerEmail());
-        customerMileage.setText("0");
-        customerAddress.setText(customer.getCustomerAddress());
-        String compareValue = customer.getCustomerDay();
+        customerFirstName.setText(customer.getFirst());
+        customerLastName.setText(customer.getLast());
+        customerBusiness.setText(customer.getBusiness());
+        customerCity.setText(customer.getCity());
+        customerPhoneNumber.setText(customer.getPhone());
+        customerEmail.setText(customer.getEmail());
+        customerMileage.setText(customer.getMi() != null? String.format(Locale.US, "%.2f",customer.getMi()):"0");
+        customerAddress.setText(customer.getAddress());
+        String compareValue = customer.getDay();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.days_of_the_week, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daySpinner.setAdapter(adapter);
@@ -112,7 +113,7 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
             int spinnerPosition = adapter.getPosition(compareValue);
             daySpinner.setSelection(spinnerPosition);
         }
-        String compareStateValue = customer.getCustomerState();
+        String compareStateValue = customer.getState();
         ArrayAdapter<CharSequence> stateAdapter = ArrayAdapter.createFromResource(EditCustomer.this, R.array.US_states_list, android.R.layout.simple_spinner_item);
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(stateAdapter);
@@ -147,7 +148,6 @@ public class EditCustomer extends AppCompatActivity implements DatabaseAccess<Cu
             loadCustomerInformation();
         }
         progressBar.setVisibility(View.INVISIBLE);
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

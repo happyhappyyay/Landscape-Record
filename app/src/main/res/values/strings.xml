@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">Landscape Record</string>
-    <string name="checkInText">Check In</string>
-    <string name="checkOutText">Check Out</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="incorrect_date_format">Date format incorrect. Please reenter the date using
+        MM/DD/YYYY.</string>
+    <string name="check_in_text">Check In</string>
+    <string name="check_out_text">Check Out</string>
+    <string name="hrs">hrs</string>
+    <string name="mi">mi</string>
+    <string name="money">$</string>
     <string name="accountNameText">Account:</string>
     <string name="payment_check">Check</string>
     <string name="payment_cash">Cash</string>
@@ -22,7 +31,7 @@
     <string name="address_example">12300 Country Road</string>
     <string name="city_example">Chicago</string>
     <string name="name_text_field">Name</string>
-    <string name="phone_number_example">123-456-7890</string>
+    <string name="phone_number_example">123&#8211;456&#8211;7890</string>
     <string name="main_menu_time">Time Reporting\n\nCheck-in and check-out for employees. Accumulates employee hours.</string>
     <string name="main_menu_job">Job Reporting\n\nA full version of service reporting (for checklist style reporting, see menu bar above).</string>
     <string name="main_menu_payment">Payment Reporting</string>
@@ -35,6 +44,7 @@
     <string name="job_lawn_service">Lawn</string>
     <string name="job_landscaping_services">Landscaping</string>
     <string name="job_snow_services">Snow</string>
+    <string name="job_services_no_customer">No customer selected. Please select or create a customer.</string>
     <string name="user_options">Manage Users</string>
     <string name="add_user">Add User</string>
     <string name="delete_user">Delete User</string>
@@ -51,6 +61,7 @@
     <string name="login_page_logged">You are now logged in as</string>
     <string name="login_page_main_menu">Main Menu</string>
     <string name="login_page_settings">Settings</string>
+    <string name="login_page_failed">Could not log in with the provided credentials</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_dashboard">Dashboard</string>
@@ -114,6 +125,12 @@
     <string name="hours_operations_pay">Pay</string>
     <string name="hours_operations_add">Add</string>
     <string name="hour_operations_remove">Remove</string>
+    <string name="hour_operations_remaining">remaining.</string>
+    <string name="hour_operations_exceeds"> hours exceed hours recorded for work: </string>
+    <string name="hour_operations_paid">Hours paid: </string>
+    <string name="hour_operations_added_for"> hours added for </string>
+    <string name="hour_operations_removed_for"> hours removed for </string>
+    <string name="hour_operations_paid_for"> hours paid for </string>
     <string name="admin_tools_view_logs">View Logged Activity</string>
     <string name="log_item_text">Log</string>
     <string name="job_activity_fragment_other">Enter non-standard activity or notes</string>
@@ -123,6 +140,28 @@
     <string name="quick_sheet_title">Quick Sheet</string>
     <string name="quick_sheet_date">Date:</string>
     <string name="quick_sheet_dash">-</string>
+    <string name="quick_sheet_date_error">There was an error with the start - end date combination.
+        Please check the dates are correct.</string>
+    <string name="receive_payment_empty_check">The check number is blank. Please reenter the check
+        number.</string>
+    <string name="receive_payment_greater_than_zero">Please enter an amount greater than 0.</string>
+    <string name="receive_payment_enter_amount">Please enter in an amount for the payment.</string>
+    <string name="receive_payment_post_apply">If this is the correct amount, have admin apply paid
+        status to service.</string>
+    <string name="receive_payment_incorrect_service">Please apply payment to the correct service.</string>
+    <string name="receive_payment_amount_mismatch">The payment amount does not match the selected
+        service. Amount will be applied to the service anyway. Proceed with payment?</string>
+    <string name="receive_payment_complete_service_error">Complete service and then apply payment to
+        the correct service or apply to general account.</string>
+    <string name="receive_payment_no_finished_error">No, finished services found.
+        Credit account with payment?</string>
+    <string name="receive_payment_general_payment">General Payment</string>
+    <string name="receive_payment_paid"> PAID </string>
+    <string name="settings_fragment_select_file">Select a file</string>
+    <string name="settings_fragment_contacts_add">contacts added</string>
+    <string name="settings_fragment_import">IMPORT</string>
+    <string name="settings_invalid_connection">Database connection is not valid. Check connectivity
+        and database uri/database name.</string>
     <string name="view_services_text">Services</string>
     <string name="view_services_all">All</string>
     <string name="view_services_in_progress">In-Progress</string>
@@ -164,48 +203,6 @@
     <string name="pref_settings_import_contacts_summary">Upload a Comma-separated Values(.csv) file to import contacts. Headers needed:
         First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."</string>
     <string name="pref_settings_import_contacts">Import Contacts</string>
-    <!--                                   -->
-
-    <string name="view_work_day_title">View Work Activity</string>
-    <string name="activity_view_work_day_user_hour_title">User : Hours</string>
-    <string name="activity_view_work_day_customer_services_title">Customer : Service</string>
-    <string name="view_work_day_day_button">Day</string>
-    <string name="view_work_day_week_button">Week</string>
-    <string name="view_work_day_month_button">Month</string>
-    <string name="billing_item_company_name">Company Name</string>
-    <string name="billing_item_signature">Thank you.</string>
-    <string name="dashboard_payments">Payments</string>
-    <string name="user_settings_title">User Settings</string>
-    <string name="view_users_users_title">Users</string>
-    <string name="add_user_nickname">Nickname</string>
-    <string name="edit_user_title">Edit User</string>
-    <string name="edit_customer_title">Edit Customer</string>
-    <string name="dashboard_notification_users_in">Users Logged In</string>
-    <string name="payment_queue_title">Services &amp; Payments</string>
-    <string name="service_pricing_recycler_item_set">Set as Default Price</string>
-    <string name="services_pricing_title">Services Pricing</string>
-
-    <string name="fragment_landscaping_material_title"> Materials </string>
-    <string name="first_glance_title">First User</string>
-    <string name="first_glance_preexisting">Access preexisting MongoDB database</string>
-    <string name="first_glance_database">MongoDB Database Access</string>
-    <string name="first_glance_test">Test</string>
-    <string name="first_glance_user">Back to creating first user</string>
-    <string name="first_glance_logo">Landscape Record logo</string>
-    <string name="first_glance_start">Get Started</string>
-
-    <string name="billing_service_item_edit_text">Edit</string>
-    <string name="billing_preview_title">Bill Preview</string>
-    <string name="bill_creation_title">Create Invoice</string>
-    <string name="view_contacts_payment">Receive Payment</string>
-    <string name="view_users_pay">Adjust/Pay User Hours</string>
-    <string name="dynamic_text">TextView</string>
-    <string name="view_user_activity">Activity</string>
-    <string name="view_customers_title">Customers</string>
-    <string name="view_customers_create_invoice">Create Invoices</string>
-    <string name="time_reporting_title">Time Report</string>
-    <string name="admin_tools_settings">Settings\n\nView and edit settings related to application
-        (e.g., quick sheet preferences, online database access, mass contact import, etc).</string>
     <string name="pref_settings_export_data_title">Export Data</string>
     <string name="pref_settings_export_data_summary">Allows for the exporting of record information
         in .CSV format. Customer, Employee, Log, and Services information can be exported.</string>
@@ -229,5 +226,115 @@
     <string name="pref_settings_all_export_title">Export All</string>
     <string name="pref_settings_all_export_summary">Export records related to Customer, User, Logs, and Services. Output will
         contain the other four exports. Exports will be saved to the landscape-record directory.</string>
+    <!--                                   -->
+
+    <string name="view_work_day_title">View Work Activity</string>
+    <string name="activity_view_work_day_user_hour_title">User : Hours</string>
+    <string name="activity_view_work_day_customer_services_title">Customer : Service</string>
+    <string name="view_work_day_no_information">No information available for this date</string>
+    <string name="view_work_day_day_button">Day</string>
+    <string name="view_work_day_week_button">Week</string>
+    <string name="view_work_day_month_button">Month</string>
+    <string name="billing_item_company_name">Company Name</string>
+    <string name="billing_item_signature">Thank you.</string>
+    <string name="dashboard_payments">Payments</string>
+    <string name="user_settings_title">User Settings</string>
+    <string name="view_users_users_title">Users</string>
+    <string name="add_user_nickname">Nickname</string>
+    <string name="add_user_hour_input_error">Hours must be entered as whole (e.g., 5) or real
+        (e.g., 5.0) numbers.</string>
+    <string name="add_user_password_input_error">Password must be at least 6 characters.</string>
+    <string name="edit_user_title">Edit User</string>
+    <string name="edit_customer_title">Edit Customer</string>
+    <string name="dashboard_notification_users_in">Users Logged In</string>
+    <string name="payment_queue_title">Services &amp; Payments</string>
+    <string name="service_pricing_recycler_item_set">Set as Default Price</string>
+    <string name="services_pricing_title">Services Pricing</string>
+
+    <string name="fragment_landscaping_material_title"> Materials </string>
+    <string name="fragment_landscaping_materials">MATERIALS</string>
+    <string name="first_glance_title">First User</string>
+    <string name="first_glance_preexisting">Access preexisting MongoDB database</string>
+    <string name="first_glance_database">MongoDB Database Access</string>
+    <string name="first_glance_test">Test</string>
+    <string name="first_glance_user">Back to creating first user</string>
+    <string name="first_glance_logo">Landscape Record logo</string>
+    <string name="first_glance_start">Get Started</string>
+    <string name="first_glance_success">Connection was a success.</string>
+    <string name="first_glance_check_connection">Could not connect. Check internet connection is
+        established. Also, check that the database name and uri are correct.</string>
+    <string name="first_glance_complete_information">Please complete the above fields to test the
+        database connection.</string>
+    <string name="first_glance_required_fields">First name, last name, and password are
+        required fields.</string>
+    <string name="first_glance_settings_saved">Settings saved. Please log in using your existing
+        username and password.</string>
+    <string name="first_glance_retry_connection">Create a first user. Enable database usage and
+        provide your database settings under settings to setup database.</string>
+    <string name="first_glance_existing_warning">If you do not have an existing user account in this
+        database, you will be unable to access this application. Do you still wish to continue with
+        providing these settings?</string>
+    <string name="first_glance_no_users">No users found in this database.</string>
+
+    <string name="billing_service_item_edit_text">Edit</string>
+    <string name="billing_preview_title">Bill Preview</string>
+    <string name="bill_creation_title">Create Invoice</string>
+    <string name="billing_view_pager_attention">ATTN: </string>
+    <string name="billing_view_pager_in_progress">There are still jobs in-progress for this month. Proceed with
+        the invoice creation?</string>
+    <string name="create_document_thanks">Thank You!</string>
+    <string name="create_document_company">Company</string>
+    <string name="create_document_fail">Failed to create billing document</string>
+    <string name="create_document_success">Billing document created for </string>
+    <string name="create_document_container">Billing</string>
+    <string name="create_document_invoice_ext">Invoice.doc</string>
+    <string name="csv_last">Last Name</string>
+    <string name="csv_unpaid">Hours Unpaid</string>
+    <string name="csv_hours_total">Total Hours</string>
+    <string name="csv_business">Business</string>
+    <string name="csv_city">City</string>
+    <string name="csv_state">State</string>
+    <string name="csv_phone">Phone Number</string>
+    <string name="csv_email">E-Mail</string>
+    <string name="csv_account">Account Name</string>
+    <string name="csv_billed">Billed</string>
+    <string name="csv_date">Date</string>
+    <string name="csv_service">Service</string>
+    <string name="csv_man_hours">Man Hours</string>
+    <string name="csv_mileage">Mileage</string>
+    <string name="csv_id">Service ID</string>
+    <string name="csv_not_billed">Not Billed</string>
+    <string name="csv_employee">Employee</string>
+    <string name="csv_information">Information</string>
+    <string name="csv_first">First Name</string>
+    <string name="csv_export_fail">Data export failure. Please try again.</string>
+    <string name="csv_address">Address</string>
+    <string name="csv_import_fail">Error importing contacts</string>
+    <string name="customer_view_pager_delete">Are you sure you want to delete </string>
+    <string name="view_contacts_payment">Receive Payment</string>
+    <string name="view_users_pay">Adjust/Pay User Hours</string>
+    <string name="dynamic_text">TextView</string>
+    <string name="view_user_activity">Activity</string>
+    <string name="view_customers_title">Customers</string>
+    <string name="view_customers_create_invoice">Create Invoices</string>
+    <string name="time_reporting_title">Time Report</string>
+    <string name="time_reporting_checked_in">Checked In!</string>
+    <string name="time_reporting_checked_out">Checked Out!</string>
+    <string name="time_reporting_max_error">User never checked out. Notify admin account to manually add hours.</string>
+    <string name="time_reporting_notify_admin_error">Notify admin account to manually add hours.</string>
+    <string name="time_reporting_exceeds_likely">The number of hours reported exceeds the likely amount.
+        Is the number of hours correct: "</string>
+    <string name="recycler_view_customer_payments">PAYMENTS</string>
+    <string name="recycler_view_customer_services">SERVICES</string>
+    <string name="recycler_view_customer_paid">Paid</string>
+    <string name="recycler_view_customer_unpaid">Unpaid</string>
+    <string name="recycler_view_services_service_id">Service ID: </string>
+    <string name="recycler_view_users_not_checked_in">Not checked in</string>
+    <string name="admin_tools_settings">Settings\n\nView and edit settings related to application
+        (e.g., quick sheet preferences, online database access, mass contact import, etc).</string>
+    <string name="util_logged_out">Logged Out!</string>
+    <string name="util_enter_company">Enter Company Name in Settings</string>
+    <string name="util_enter_personal">Enter Personal Message in Settings</string>
+
 
 </resources>

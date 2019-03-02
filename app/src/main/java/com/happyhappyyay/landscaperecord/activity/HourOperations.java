@@ -27,6 +27,7 @@ import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.List;
+import java.util.Locale;
 
 import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_POSITION;
 
@@ -73,7 +74,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                     else {
                         dateText.setText("");
                         Toast.makeText(HourOperations.this,
-                                "Date format incorrect. Please reenter the date.",
+                                getString(R.string.incorrect_date_format),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -92,14 +93,16 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
             if (payHours > 0) {
                 if (user.getHours() - payHours >= 0) {
                     user.setHours(user.getHours() - payHours);
-                    Toast.makeText(getApplicationContext(), payHours + " hours paid for " +
-                                    user.getName() + ". " + user.getHours() + "remaining.",
+                    Toast.makeText(getApplicationContext(), payHours + " " + getString(R.string.hour_operations_paid_for) +
+                                    user.getName() + ". " + (String.format(Locale.US, "%.2f",user.getHours()))
+                                    + " " + getString(R.string.hour_operations_remaining),
                             Toast.LENGTH_LONG).show();
                     logActivityReference = 3;
                     updateUser();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Hours paid: " + payHours + " exceeds " +
-                            "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.hour_operations_paid) + payHours + " " +
+                            getString(R.string.hour_operations_exceeds) + " " + (String.format(Locale.US, "%.2f",user.getHours())),
+                            Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -110,8 +113,8 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
             double payHours = hourCheck();
             if (payHours > 0) {
                 user.setHours(user.getHours() + payHours);
-                Toast.makeText(getApplicationContext(), payHours + " hours added for " +
-                        user.getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), payHours + " " + getString(R.string.hour_operations_added_for) +
+                        " " + user.getName(), Toast.LENGTH_LONG).show();
                 logActivityReference = 0;
                 updateUser();
             }
@@ -124,14 +127,14 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
             if (payHours > 0) {
                 if (user.getHours() - payHours >= 0) {
                     user.setHours(user.getHours() - payHours);
-                    Toast.makeText(getApplicationContext(), payHours + " hours removed for " +
-                                    user.getName() + ". " + user.getHours() + "remaining.",
+                    Toast.makeText(getApplicationContext(), payHours + " " + getString(R.string.hour_operations_removed_for) +
+                                    " " + user.getName() + ". " + (String.format(Locale.US, "%.2f",user.getHours())) + " " + getString(R.string.hour_operations_remaining),
                             Toast.LENGTH_LONG).show();
                     logActivityReference = 1;
                     updateUser();
                 } else {
-                    Toast.makeText(getApplicationContext(), payHours + " exceeds " +
-                            "hours recorded for work: " + user.getHours(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), payHours + " " + getString(R.string.hour_operations_exceeds)
+                            + " " + user.getHours(), Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -162,8 +165,8 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
     }
 
     private void updateWorkDay(DatabaseOperator db) {
-        int payLogReference = LogActivityAction.valueOf("PAY").ordinal();
-        int deleteLogReference = LogActivityAction.valueOf("DELETE").ordinal();
+        int payLogReference = LogActivityAction.PAY.ordinal();
+        int deleteLogReference = LogActivityAction.DELETE.ordinal();
         if (logActivityReference != payLogReference) {
             boolean isNewWorkDay = false;
             WorkDay workDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, dateString);
@@ -180,13 +183,13 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
 
             if (isNewWorkDay) {
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
-                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), dateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
+                        dateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
                 Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
             }
             else {
                 Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
             }
-
         }
     }
 
@@ -229,13 +232,15 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
     public void createCustomLog() {
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+            LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
+                    hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
             log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             hours.setText("");
         } catch (Exception e) {
             AppDatabase db = AppDatabase.getAppDatabase(this);
-            LogActivity log = new LogActivity(user.getName(), user.getName() + " " + hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+            LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
+                    hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
             log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             hours.setText("");
@@ -280,6 +285,5 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
             Util.populateSpinner(spinner,listener,this,databaseObjects, true);
         }
             progressBar.setVisibility(View.INVISIBLE);
-
     }
 }

@@ -32,16 +32,16 @@ import static com.mongodb.client.model.Projections.excludeId;
 @Entity
 public class LogActivity implements DatabaseObjects<LogActivity> {
     @PrimaryKey @NonNull
-    private String logId = UUID.randomUUID().toString();
-    private String addInfo;
+    private String id = UUID.randomUUID().toString();
+    private String info;
     private int logActivityAction, logActivityType;
     private long modifiedTime;
     private String username;
     private String objId;
 
-    public LogActivity(String username, String addInfo, int logActivityAction, int logActivityType) {
+    public LogActivity(String username, String info, int logActivityAction, int logActivityType) {
         modifiedTime = System.currentTimeMillis();
-        this.addInfo = addInfo;
+        this.info = info;
         this.logActivityAction = logActivityAction;
         this.logActivityType = logActivityType;
         this.username = username;
@@ -73,7 +73,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
                 LogActivityType.WORKDAY.toString());
         activityAction += logActivityList.get(logActivityAction) + " ";
         activityAction += logTypeList.get(logActivityType) + " ";
-        activityAction += addInfo;
+        activityAction += info;
 
         return activityAction;
     }
@@ -86,20 +86,16 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         this.objId = objId;
     }
 
-    public @NonNull String getLogId() {
-        return logId;
-    }
-
-    public void setLogId(@NonNull String logId) {
-        this.logId = logId;
+    public String getInfo() {
+        return info;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getAddInfo() {
-        return addInfo;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public int getLogActivityAction() {
@@ -114,8 +110,16 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         this.username = username;
     }
 
-    public void setAddInfo(String addInfo) {
-        this.addInfo = addInfo;
+    @Override
+    public LogActivity retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getLogById(id);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.LOG).find(eq("id", id)).projection(excludeId()).first();
+        return OnlineDatabase.convertDocumentToObject(document, LogActivity.class);
     }
 
     public void setLogActivityAction(int logActivityAction) {
@@ -154,15 +158,17 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
     }
 
     @Override
-    public LogActivity retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
+    public void deleteClassInstanceFromDatabase(DatabaseOperator db, LogActivity objectToDelete) {
         if(db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
-            return ad.logDao().getLogById(id);
+            ad.logDao().deleteLog(objectToDelete);
         }
-        OnlineDatabase ad = (OnlineDatabase) db;
-        MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.LOG).find(eq("logId", id)).projection(excludeId()).first();
-        return OnlineDatabase.convertDocumentToObject(document, LogActivity.class);
+        else {
+            String idToDelete = objectToDelete.getId();
+            OnlineDatabase ad = (OnlineDatabase) db;
+            MongoDatabase od = ad.getMongoDb();
+            od.getCollection(OnlineDatabase.LOG).deleteOne(eq("id", idToDelete));
+        }
     }
 
     @Override
@@ -170,18 +176,10 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         return null;
     }
 
+    @NonNull
     @Override
-    public void deleteClassInstanceFromDatabase(DatabaseOperator db, LogActivity objectToDelete) {
-        if(db instanceof AppDatabase) {
-            AppDatabase ad = (AppDatabase) db;
-            ad.logDao().deleteLog(objectToDelete);
-        }
-        else {
-            String idToDelete = objectToDelete.getLogId();
-            OnlineDatabase ad = (OnlineDatabase) db;
-            MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.LOG).deleteOne(eq("logId", idToDelete));
-        }
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -250,11 +248,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
 
-
-    @Override
-    public String getId() {
-        return logId;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
-
-
 }

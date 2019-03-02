@@ -157,8 +157,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                     else {
                         dateText.setText("");
                         Toast.makeText(ViewServices.this,
-                                "Date format incorrect. Please reenter the date.",
-                                Toast.LENGTH_SHORT).show();
+                        getString(R.string.incorrect_date_format), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -172,7 +171,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                     if (!Util.checkDateFormat(dateString)) {
                         dateText.setText(Util.retrieveStringCurrentDate());
                         Toast.makeText(ViewServices.this,
-                                "Date format incorrect. Please reenter the date.",
+                                getString(R.string.incorrect_date_format),
                                 Toast.LENGTH_SHORT).show();
                         searchByDate = false;
                     } else {
@@ -223,7 +222,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
     private void populateSpinner(List<Customer> customers) {
         String[] arraySpinner = new String[customers.size()];
         for (int i = 0; i < customers.size(); i++) {
-            arraySpinner[i] = customers.get(i).getCustomerAddress();
+            arraySpinner[i] = customers.get(i).getAddress();
         }
 
 
@@ -244,12 +243,10 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
             customer = customers.get(position);
             adapter.setCustomer(customer);
             adapterPosition = position;
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override

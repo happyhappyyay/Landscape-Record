@@ -5,12 +5,12 @@ import android.os.Parcelable;
 
 public class Material implements Parcelable {
 
-    private String materialName;
-    private double materialPrice;
-    private String materialType;
-    private boolean addMaterial;
-    private double materialQuantity;
-    private String materialMeasurement;
+    private String name;
+    private double price;
+    private String type;
+    private boolean add;
+    private double quantity;
+    private String measurement;
 
     public static final Parcelable.Creator<Material> CREATOR = new Parcelable.Creator<Material>() {
         public Material createFromParcel(Parcel in) {
@@ -23,89 +23,89 @@ public class Material implements Parcelable {
     };
 
     public Material(String materialName, String materialType, boolean addMaterial) {
-        this.materialName = materialName;
-        this.materialType = materialType;
-        this.addMaterial = addMaterial;
+        this.name = materialName;
+        this.type = materialType;
+        this.add = addMaterial;
     }
 
     public Material(Parcel in) {
-        materialName = in.readString();
-        materialPrice = in.readDouble();
-        materialType = in.readString();
-        addMaterial = in.readByte() != 0;
-        materialQuantity = in.readDouble();
-        materialMeasurement = in.readString();
+        name = in.readString();
+        price = in.readDouble();
+        type = in.readString();
+        add = in.readByte() != 0;
+        quantity = in.readDouble();
+        measurement = in.readString();
     }
 
-    public String getMaterialName() {
-        return materialName;
+    public String getName() {
+        return name;
     }
 
-    public double getMaterialPrice() {
-        return materialPrice;
+    public double getPrice() {
+        return price;
     }
 
-    public void setMaterialPrice(double materialPrice) {
-        this.materialPrice = materialPrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public String getMaterialType() {
-        return materialType;
+    public String getType() {
+        return type;
     }
 
-    public double getMaterialQuantity() {
-        return materialQuantity;
+    public double getQuantity() {
+        return quantity;
     }
 
-    public void setMaterialQuantity(double materialQuantity) {
-        this.materialQuantity = materialQuantity;
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
     }
 
-    public String getMaterialMeasurement() {
-        return materialMeasurement;
+    public String getMeasurement() {
+        return measurement;
     }
 
-    public void setMaterialMeasurement(String materialMeasurement) {
-        this.materialMeasurement = materialMeasurement;
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
     }
 
-    public boolean isAddMaterial() {
-        return addMaterial;
+    public boolean isAdd() {
+        return add;
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        if(addMaterial) {
+        if(add) {
             stringBuilder.append("Add ");
         }
         else {
             stringBuilder.append("Remove ");
         }
 
-        if(materialName != null) {
-            stringBuilder.append(materialName);
+        if(name != null) {
+            stringBuilder.append(name);
             stringBuilder.append(" ");
         }
 
-        if(!materialType.toLowerCase().equals("other") & !materialType.isEmpty()) {
-            stringBuilder.append(materialType);
+        if(!type.toLowerCase().equals("other") & !type.isEmpty()) {
+            stringBuilder.append(type);
             stringBuilder.append(" ");
         }
 
-        if(materialQuantity > 0) {
-            stringBuilder.append(materialQuantity);
+        if(quantity > 0) {
+            stringBuilder.append(quantity);
             stringBuilder.append(" ");
         }
         else {
             stringBuilder.append("1 ");
         }
 
-        stringBuilder.append(materialMeasurement);
+        stringBuilder.append(measurement);
         stringBuilder.append(" ");
 
-        if(materialPrice > 0) {
-            stringBuilder.append(materialPrice);
+        if(price > 0) {
+            stringBuilder.append(price);
             stringBuilder.append(" ");
         }
 
@@ -119,11 +119,11 @@ public class Material implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(materialName);
-        parcel.writeDouble(materialPrice);
-        parcel.writeString(materialType);
-        parcel.writeByte((byte) (addMaterial? 1 : 0));
-        parcel.writeDouble(materialQuantity);
-        parcel.writeString(materialMeasurement);
+        parcel.writeString(name);
+        parcel.writeDouble(price);
+        parcel.writeString(type);
+        parcel.writeByte((byte) (add ? 1 : 0));
+        parcel.writeDouble(quantity);
+        parcel.writeString(measurement);
     }
 }

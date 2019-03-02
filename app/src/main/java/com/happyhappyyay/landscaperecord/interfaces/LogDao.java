@@ -18,7 +18,7 @@ public interface LogDao {
     @Query("SELECT * FROM LogActivity")
     List<LogActivity> getAllLogs();
 
-    @Query("SELECT * FROM LogActivity WHERE logId > :logId")
+    @Query("SELECT * FROM LogActivity WHERE id > :logId")
     LogActivity getLogById(String logId);
 
     @Query("SELECT * FROM LogActivity WHERE modifiedTime > :modifiedTime AND logActivityAction == :logActivityAction")
@@ -35,8 +35,4 @@ public interface LogDao {
 
     @Delete
     void deleteLog(LogActivity log);
-
-    @Query("DELETE FROM LogActivity")
-    void deleteAllLogs();
-
 }

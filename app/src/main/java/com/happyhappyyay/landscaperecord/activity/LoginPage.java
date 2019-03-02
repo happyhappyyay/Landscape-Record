@@ -94,8 +94,7 @@ public class LoginPage extends AppCompatActivity implements DatabaseAccess<User>
         if (!authorized) {
             username.setText("");
             password.setText("");
-            Toast.makeText(getApplicationContext(), "Could not log in with the provided " +
-                    "credentials", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.login_page_failed), Toast.LENGTH_LONG).show();
         }
         progressBar.setVisibility(View.INVISIBLE);
     }

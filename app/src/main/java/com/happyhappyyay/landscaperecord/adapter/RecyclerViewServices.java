@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class RecyclerViewServices extends Adapter {
-    private static final String TAG = "selected for work";
     private List<Customer> customers;
     private Customer customer;
     private List<Service> services;
@@ -58,12 +57,12 @@ public class RecyclerViewServices extends Adapter {
         switch (viewBy) {
             case ALL:
                 for(Customer c: customers) {
-                    services.addAll(c.getCustomerServices());
+                    services.addAll(c.getServices());
                 }
                 break;
             case IN_PROGRESS:
                 for(Customer c: customers) {
-                    for(Service s: c.getCustomerServices()) {
+                    for(Service s: c.getServices()) {
                         if (s.getEndTime() <= 0) {
                             services.add(s);
                         }
@@ -72,7 +71,7 @@ public class RecyclerViewServices extends Adapter {
                 break;
             case COMPLETED:
                 for(Customer c: customers) {
-                    for(Service s: c.getCustomerServices()) {
+                    for(Service s: c.getServices()) {
                         if (s.getEndTime() > 0) {
                             services.add(s);
                         }
@@ -165,7 +164,6 @@ public class RecyclerViewServices extends Adapter {
         notifyDataSetChanged();
     }
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -219,16 +217,17 @@ public class RecyclerViewServices extends Adapter {
             final Service service = services.get(position);
 
             String startToEndDate = service.convertStartTimeToDateString() + " - " + service.convertEndTimeToDateString();
-            String manHoursString = Double.toString(service.getManHours()) + "hrs";
-            String mileageString = Double.toString(service.getMileage()) + "mi";
+            String manHoursString = Double.toString(service.getManHours()) + context.getString(R.string.hrs);
+            String mileageString = Double.toString(service.getMi()) + context.getString(R.string.mi);
             String services = service.getServices();
-            String price = "$" + service.getPrice();
-            String paid = "$" + service.getAmountPaid() + "/";
-            String id = "Service ID: " + service.getServiceID();
+            String price = context.getString(R.string.money) + service.getPrice();
+            String paid = context.getString(R.string.money) + service.getAmountPaid() + "/";
+            String id = context.getString(R.string.recycler_view_services_service_id) + service.getId();
             customerText.setText(service.getCustomerName());
             dateText.setText(startToEndDate);
-            stateText.setText(service.isPause() ? "In-Progress": "Completed");
-            stateText.setTextColor(service.isPause() ? Color.GREEN : Color.RED);
+            stateText.setText(service.checkCompleted() ? context.getString(R.string.view_services_completed):context.getString(R.string.view_services_in_progress)
+                    );
+            stateText.setTextColor(service.checkCompleted() ? Color.RED : Color.GREEN );
             usernameText.setText(service.getUsername());
             manHoursText.setText(manHoursString);
             mileageText.setText(mileageString);

@@ -40,48 +40,32 @@ public class CustomerViewPager extends PagerAdapter implements DatabaseAccess<Cu
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-        //Abstract method in PagerAdapter
         @Override
         public int getCount() {
             return customers.size();
         }
 
-        //Abstract method in PagerAdapter
-
-        /**
-         * @return true if the value returned from {@link #instantiateItem(ViewGroup, int)} is the
-         * same object as the {@link View} added to the {@link android.support.v4.view.ViewPager}.
-         */
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return object == view;
         }
 
-        /**
-         * Instantiate the {@link View} which should be displayed at {@code position}. Here we
-         * inflate a layout from the apps resources and then change the text view to signify the position.
-         */
         @Override
         public @NonNull Object instantiateItem(@NonNull ViewGroup container, int position) {
-            // Inflate a new layout from our resources
-            // Retrieve a TextView from the inflated View, and update it's text
             View view = retrieveView(container,position);
-            // Add the newly created View to the ViewPager
+
             container.addView(view);
             Log.i(TAG, "instantiateItem() [position: " + position + "]" + " childCount:" + container.getChildCount());
-            // Return the View
             return view;
         }
 
         private View retrieveView(final ViewGroup container, final int position) {
-            // Inflate a new layout from our resources
             View view = mLayoutInflater.inflate(R.layout.view_customer, container, false);
-            // Retrieve a TextView from the inflated View, and update it's text
             final Customer customer = customers.get(position);
             this.customer = customer;
-            if(customer.getCustomerBusiness() != null) {
+            if(customer.getBusiness() != null) {
                 TextView businessName = view.findViewById(R.id.view_customer_business);
-                businessName.setText(customer.getCustomerBusiness());
+                businessName.setText(customer.getBusiness());
             }
             TextView customerTitle = view.findViewById(R.id.view_customer_name);
             TextView customerName = view.findViewById(R.id.view_customer_full_name);
@@ -91,19 +75,19 @@ public class CustomerViewPager extends PagerAdapter implements DatabaseAccess<Cu
             TextView emailText = view.findViewById(R.id.view_customer_email);
             TextView mileageText = view.findViewById(R.id.view_customer_mileage);
             customerTitle.setText(customer.getName());
-            dayText.setText(customer.getCustomerDay());
-            if(customer.getCustomerPhoneNumber() != null) {
-                phoneText.setText(customer.getCustomerPhoneNumber());
+            dayText.setText(customer.getDay());
+            if(customer.getPhone() != null) {
+                phoneText.setText(customer.getPhone());
             }
-            if(customer.getCustomerEmail() != null) {
-                emailText.setText(customer.getCustomerEmail());
+            if(customer.getEmail() != null) {
+                emailText.setText(customer.getEmail());
             }
-            if(customer.getCustomerMileage() != null) {
-                if(customer.getCustomerMileage() > 0) {
-                    mileageText.setText(String.format(Locale.US, "%.2f", customer.getCustomerMileage()));
+            if(customer.getMi() != null) {
+                if(customer.getMi() > 0) {
+                    mileageText.setText(String.format(Locale.US, "%.2f", customer.getMi()));
                 }
             }
-            customerName.setText(customer.getFullName());
+            customerName.setText(customer.createFullName());
             customerAddress.setText(customer.concatenateFullAddress());
             ImageView backArrow = view.findViewById(R.id.view_customer_back_arrow);
             ImageView forwardArrow = view.findViewById(R.id.view_customer_forward_arrow);
@@ -128,7 +112,7 @@ public class CustomerViewPager extends PagerAdapter implements DatabaseAccess<Cu
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(mContext, EditCustomer.class);
-                        intent.putExtra("CUSTOMER_ID", customer.getCustomerId());
+                        intent.putExtra("CUSTOMER_ID", customer.getId());
                         mContext.startActivity(intent);
                     }
                 });
@@ -153,9 +137,9 @@ public class CustomerViewPager extends PagerAdapter implements DatabaseAccess<Cu
                         };
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setMessage("Are you sure you want to delete customer " + customer.getName() + " ?")
-                                .setPositiveButton("Yes", dialogClickListener)
-                                .setNegativeButton("No", dialogClickListener).show();
+                        builder.setMessage(mContext.getString(R.string.customer_view_pager_delete) + customer.getName() + " ?")
+                                .setPositiveButton(mContext.getString(R.string.yes), dialogClickListener)
+                                .setNegativeButton(mContext.getString(R.string.no), dialogClickListener).show();
                     }
                 });
             }
@@ -168,37 +152,19 @@ public class CustomerViewPager extends PagerAdapter implements DatabaseAccess<Cu
             return view;
         }
 
-        /**
-         * Destroy the item from the {@link android.support.v4.view.ViewPager}. In our case this is simply removing the
-         * {@link View}.
-         */
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
             Log.i(TAG, "destroyItem() [position: " + position + "]" + " childCount:" + container.getChildCount());
         }
 
-        /**
-         * This method is only gets called when we invoke {@link #notifyDataSetChanged()} on this adapter.
-         * Returns the index of the currently active fragments.
-         * There could be minimum two and maximum three active fragments(suppose we have 3 or more  fragments to show).
-         * If there is only one fragment to show that will be only active fragment.
-         * If there are only two fragments to show, both will be in active state.
-         * PagerAdapter keeps left and right fragments of the currently visible fragment in ready/active state so that it could be shown immediate on swiping.
-         * Currently Active Fragments means one which is currently visible one is before it and one is after it.
-         *
-         * @param object Active Fragment reference
-         * @return Returns the index of the currently active fragments.
-         */
         @Override
         public int getItemPosition(@NonNull Object object) {
             Customer customer = (Customer) ((View) object).getTag();
             int position = customers.indexOf(customer);
             if (position >= 0) {
-                // The current data matches the data in this active fragment, so let it be as it is.
                 return position;
             } else {
-                // Returning POSITION_NONE means the current data does not match the data this fragment is showing right now.  Returning POSITION_NONE constant will force the fragment to redraw its view layout all over again and show new data.
                 return POSITION_NONE;
             }
         }

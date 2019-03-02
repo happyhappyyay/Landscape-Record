@@ -89,7 +89,7 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
     }
 
     private void invalidToast() {
-        Toast.makeText(this, "Database connection is not valid. Check connectivity and database uri/ database name.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.settings_invalid_connection), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -97,8 +97,6 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
         super.onResume();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         pref.registerOnSharedPreferenceChangeListener(this);
-
-
     }
     @Override
     protected void onPause(){
@@ -114,7 +112,6 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
 
     @Override
     public void createCustomLog() {
-
     }
 
     @Override
@@ -129,6 +126,5 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
 
     @Override
     public void onPostExecute(List databaseObjects) {
-
     }
 }

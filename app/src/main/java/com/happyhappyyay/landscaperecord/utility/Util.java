@@ -54,7 +54,6 @@ public class Util {
     public static final WorkDay WORK_DAY_REFERENCE = new WorkDay();
     public static final User USER_REFERENCE = new User();
     public static final String DELIMITER = "|";
-    public static final String DELETE = "Delete";
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -92,17 +91,21 @@ public class Util {
 
     public static boolean hasOnlineDatabaseEnabledAndValid(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getBoolean(retrieveStringFromResources(R.string.pref_key_database_usage, context), false) & OnlineDatabase.connectionIsValid(context);
+        return sharedPref.getBoolean(retrieveStringFromResources(R.string.pref_key_database_usage, context),
+                false) & OnlineDatabase.connectionIsValid(context);
     }
 
     public static String retrieveCompanyName(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString(retrieveStringFromResources(R.string.pref_key_company_name, context), "Enter Company Name in Settings");
+        return sharedPref.getString(retrieveStringFromResources(R.string.pref_key_company_name, context),
+                context.getString(R.string.util_enter_company));
     }
 
     public static String retrievePersonalMessage(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString(retrieveStringFromResources(R.string.pref_key_personal_message, context), "Enter Personal Message in Settings");
+        return sharedPref.getString(retrieveStringFromResources(R.string.pref_key_personal_message, context),
+                context.getString(R.string.util_enter_personal));
+
     }
 
     public static String retrieveStringFromResources(int resId, Context context) {
@@ -118,7 +121,7 @@ public class Util {
         Intent intent = new Intent(context, LoginPage.class);
         context.startActivity(intent);
         Authentication.getAuthentication().setUser(null);
-        Toast.makeText(context.getApplicationContext(), "Logged out! ", Toast.LENGTH_LONG).show();
+        Toast.makeText(context.getApplicationContext(), context.getString(R.string.util_logged_out), Toast.LENGTH_LONG).show();
     }
 
     private static void gotToContacts(Context context) {
@@ -148,10 +151,10 @@ public class Util {
             }
         }
         return false;
-
     }
 
-    public static <T extends DatabaseObjects<T>> void populateSpinner(Spinner spinner, AdapterView.OnItemSelectedListener listener, Context context, List<T> objects, boolean largeText) {
+    public static <T extends DatabaseObjects<T>> void populateSpinner(Spinner spinner,
+                  AdapterView.OnItemSelectedListener listener, Context context, List<T> objects, boolean largeText) {
         String[] arraySpinner = new String[objects.size()];
         int pos = 0;
         for (int i = 0; i < objects.size(); i++) {
@@ -203,12 +206,10 @@ public class Util {
         catch (Exception e) {
             e.printStackTrace();
         }
-
         return currentDateAsTime;
     }
 
     public static String convertLongToStringDate(long time) {
-
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
         return dateFormat.format(new Date(time));
     }
@@ -265,11 +266,9 @@ public class Util {
                         if(OnlineDatabase.hadFailedConnections()){
                             updateDatabases(access.getContext());
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
                     if(dbObjs == null) {
                         AppDatabase db = AppDatabase.getAppDatabase(access.getContext());
@@ -516,15 +515,6 @@ public class Util {
         return logType;
     }
 
-    private static List<Object> retrieveAllObjects(DatabaseOperator db){
-        List<Object> objects = new ArrayList<>();
-        objects.addAll(Util.CUSTOMER_REFERENCE.retrieveAllClassInstancesFromDatabase(db));
-        objects.addAll(Util.LOG_REFERENCE.retrieveAllClassInstancesFromDatabase(db));
-        objects.addAll(Util.USER_REFERENCE.retrieveAllClassInstancesFromDatabase(db));
-        objects.addAll(Util.WORK_DAY_REFERENCE.retrieveAllClassInstancesFromDatabase(db));
-        return objects;
-    }
-
     public static void updateDatabases(Context context) {
             OnlineDatabase od = OnlineDatabase.getOnlineDatabase(context);
             AppDatabase ad = AppDatabase.getAppDatabase(context);
@@ -544,10 +534,7 @@ public class Util {
         List<LogActivity> logs = LOG_REFERENCE.retrieveClassInstancesAfterModifiedTimeWithType(updatingDB, 0, LogActivityType.DATABASE.ordinal());
         long newestLogTime = 0;
         if(logs.size() > 0) {
-            int count = 0;
             for (int i = 0; i < logs.size(); i++) {
-                Log.d(TAG, "updateDatabase: " + count);
-                count++;
                 long logModifiedTime = logs.get(i).getModifiedTime();
                 if (logModifiedTime > newestLogTime) {
                     newestLogTime = logModifiedTime;
@@ -617,8 +604,8 @@ public class Util {
                 }
             }
 
-            LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getLogId());
-            LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getLogId());
+            LogActivity logO = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logs.get(i).getId());
+            LogActivity logU = LOG_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logs.get(i).getId());
             if (logO != null & logU == null) {
                 LOG_REFERENCE.insertClassInstanceFromDatabase(updatingDB, logO);
                 logCount++;
@@ -629,7 +616,7 @@ public class Util {
         List<User> users = USER_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         List<Customer> customers = CUSTOMER_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         List<WorkDay> workDays = WORK_DAY_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
-        Log.d(TAG, "updateDatabase: 10292922" +users.size() + " " + customers.size() + " " + workDays.size());
+        Log.d(TAG, "user" +users.size() + " customer" + customers.size() + " workday" + workDays.size());
         databaseObjects.addAll(users);
         databaseObjects.addAll(customers);
         databaseObjects.addAll(workDays);
@@ -662,11 +649,9 @@ public class Util {
             }
         }
 
-
         return new LogActivity(Authentication.getAuthentication().getUser().getName(), "ADD:"
                 + insertCount + " UPDATE:" + updateCount + " DELETE:" + deleteCount + " LOG:" + logCount,
                 LogActivityAction.UPDATE.ordinal(), LogActivityType.DATABASE.ordinal());
-
         }
 
     public static void verifyStoragePermissions(Activity activity) {

@@ -17,7 +17,6 @@ import android.widget.Spinner;
 
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.adapter.RecyclerMaterial;
-import com.happyhappyyay.landscaperecord.enums.MaterialType;
 import com.happyhappyyay.landscaperecord.interfaces.FragmentExchange;
 import com.happyhappyyay.landscaperecord.pojo.Material;
 import com.happyhappyyay.landscaperecord.utility.LandscapingMaterialsViewModel;
@@ -105,7 +104,7 @@ public class LandscapingMaterials extends Fragment {
 
     private boolean checkMaterialAddition() {
         String materialSpinnerText = materialTypeSpinner.getSelectedItem().toString().toLowerCase();
-        String other = MaterialType.OTHER.toString().toLowerCase();
+        String other = "other";
         return (!(materialNameEText.getText().toString().isEmpty() &
                 materialSpinnerText.equals(other))) && !materialQuantityEText.getText().toString().isEmpty();
     }
@@ -123,12 +122,12 @@ public class LandscapingMaterials extends Fragment {
         String measurement = materialMeasurementSpinner.getSelectedItem().toString();
         String type = materialTypeSpinner.getSelectedItem().toString();
         Material material = new Material(name, type, addMaterial);
-        material.setMaterialQuantity(quantity);
-        material.setMaterialMeasurement(measurement);
+        material.setQuantity(quantity);
+        material.setMeasurement(measurement);
 
         if (!materialPriceEText.getText().toString().isEmpty()) {
             double price = Double.parseDouble(materialPriceEText.getText().toString());
-            material.setMaterialPrice(price);
+            material.setPrice(price);
         }
 
         return material;

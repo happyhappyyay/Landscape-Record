@@ -31,7 +31,6 @@ public class RecyclerViewCustomers extends Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_item, parent, false);
         return new RecyclerViewCustomers.ListViewHolder(view);
-
     }
 
     @Override
@@ -77,13 +76,12 @@ public class RecyclerViewCustomers extends Adapter {
 
         public void bindView(int position) {
             Customer customer = customers.get(position);
-            String customerFullName = customer.getCustomerFirstName() + " " + customer.getCustomerLastName();
+            String customerFullName = customer.getFirst() + " " + customer.getLast();
             String customerFullAddress = customer.concatenateFullAddress();
-            String customerDayOfWeek = customer.getCustomerDay();
+            String customerDayOfWeek = customer.getDay();
             customerName.setText(customerFullName);
             customerAddress.setText(customerFullAddress);
             customerDay.setText(customerDayOfWeek);
         }
-
     }
 }

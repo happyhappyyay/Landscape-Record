@@ -34,23 +34,20 @@ import static com.mongodb.client.model.Projections.excludeId;
 @Entity
 public class WorkDay implements DatabaseObjects<WorkDay> {
     @PrimaryKey @NonNull
-    private String workDayId = UUID.randomUUID().toString();
-    private String dayOfWeek;
-    private String month;
-    private String year;
-    private String currentDate;
-    private long currentDateAsTime;
+    private String id = UUID.randomUUID().toString();
+    private String date;
+    private long dateTime;
     @TypeConverters(MapStringIntConverter.class)
     private Map<String, Integer> userHours;
     private List<Service> services;
-    private long weekInMilli;
-    private long monthInMilli;
-    private long yearInMilli;
+    private long week;
+    private long month;
+    private long year;
     private long modifiedTime;
 
-    public WorkDay (String currentDate) {
+    public WorkDay (String date) {
         services = new ArrayList<>();
-        findCalendarInformation(currentDate);
+        findCalendarInformation(date);
         modifiedTime = System.currentTimeMillis();
         userHours = new HashMap<>();
 
@@ -89,8 +86,12 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         services.add(service);
     }
 
-    public String getCurrentDate() {
-        return currentDate;
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public List<Service> getServices() {
@@ -101,108 +102,63 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         try {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
             Date date = dateFormat.parse(newDate);
-            currentDateAsTime = date.getTime();
-            currentDate = newDate;
+            dateTime = date.getTime();
+            this.date = newDate;
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
 
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            weekInMilli = cal.getTimeInMillis();
-            dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
+            week = cal.getTimeInMillis();
             cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-            monthInMilli = cal.getTimeInMillis();
-            month = new SimpleDateFormat("MMMM", Locale.US).format(date);
+            month = cal.getTimeInMillis();
             cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
-            yearInMilli = cal.getTimeInMillis();
-            year = new SimpleDateFormat("yyyy", Locale.US).format(date);
+            year = cal.getTimeInMillis();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public long getWeekInMilli() {
-        return weekInMilli;
+    public long getWeek() {
+        return week;
     }
 
-    public long getMonthInMilli() {
-        return monthInMilli;
+    public void setWeek(long week) {
+        this.week = week;
     }
 
-    public long getYearInMilli() {
-        return yearInMilli;
+    public long getMonth() {
+        return month;
     }
 
-    public boolean startOfTheWeek() {
-        return currentDateAsTime == weekInMilli;
+    public void setMonth(long month) {
+        this.month = month;
     }
 
-    public boolean startOfTheMonth() {
-        return currentDateAsTime == monthInMilli;
+    public long getYear() {
+        return year;
     }
 
-    public boolean startOfTheYear() {
-        return currentDateAsTime == yearInMilli;
-    }
-
-    public String getDayOfWeek() {
-        return dayOfWeek;
-    }
-
-    public @NonNull String getWorkDayId() {
-        return workDayId;
-    }
-
-    public void setWorkDayId(@NonNull String workDayId) {
-        this.workDayId = workDayId;
-    }
-
-    public long getCurrentDateAsTime() {
-        return currentDateAsTime;
-    }
-
-    public void setDayOfWeek(String dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public void setCurrentDate(String currentDate) {
-        this.currentDate = currentDate;
-    }
-
-    public void setCurrentDateAsTime(long currentDateAsTime) {
-        this.currentDateAsTime = currentDateAsTime;
+    public void setYear(long year) {
+        this.year = year;
     }
 
     public void setServices(List<Service> services) {
         this.services = services;
     }
 
-    public void setWeekInMilli(long weekInMilli) {
-        this.weekInMilli = weekInMilli;
+    public long getDateTime() {
+        return dateTime;
     }
 
-    public void setMonthInMilli(long monthInMilli) {
-        this.monthInMilli = monthInMilli;
+    public void setDateTime(long dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public void setYearInMilli(long yearInMilli) {
-        this.yearInMilli = yearInMilli;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
+    @NonNull
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -226,6 +182,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     @Override
     public String getName() {
         return null;
+    }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     @Override
@@ -260,7 +220,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("workDayId", id)).projection(excludeId()).first();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("id", id)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, WorkDay.class);
     }
 
@@ -272,7 +232,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDate", date)).projection(excludeId()).first();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("date", date)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, WorkDay.class);
     }
 
@@ -283,10 +243,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             ad.workDayDao().deleteWorkDay(objectToDelete);
         }
         else {
-            String idToDelete = objectToDelete.getWorkDayId();
+            String idToDelete = objectToDelete.getId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.WORK_DAY).deleteOne(eq("workDayId", idToDelete));
+            od.getCollection(OnlineDatabase.WORK_DAY).deleteOne(eq("id", idToDelete));
         }
     }
 
@@ -297,10 +257,10 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             ad.workDayDao().updateWorkDay(objectToUpdate);
         }
         else {
-            String idToUpdate = objectToUpdate.getWorkDayId();
+            String idToUpdate = objectToUpdate.getId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.WORK_DAY).replaceOne(eq("workDayId", idToUpdate),
+            od.getCollection(OnlineDatabase.WORK_DAY).replaceOne(eq("id", idToUpdate),
                     OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
         }
     }
@@ -318,11 +278,6 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
     }
 
-    @Override
-    public String getId() {
-        return workDayId;
-    }
-
     public WorkDay retrieveClassInstancesFromDatabaseByDay(DatabaseOperator db, long dateTime) {
         if (db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
@@ -330,7 +285,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("currentDateAsTime", dateTime)).projection(excludeId()).first();
+        Document document = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("dateTime", dateTime)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, WorkDay.class);
     }
 
@@ -341,7 +296,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("weekInMilli", weekInMilli)).projection(excludeId()).into(new ArrayList<Document>());
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("week", weekInMilli)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
 
@@ -352,8 +307,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("monthInMilli", monthInMilli)).projection(excludeId()).into(new ArrayList<Document>());
+        List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("month", monthInMilli)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
-
 }

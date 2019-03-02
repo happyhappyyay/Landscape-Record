@@ -39,7 +39,7 @@ public class RecyclerViewCustomer extends RecyclerView.Adapter {
     }
 
     private List<Object> createObjectList() {
-        List<Service> services = customer.getCustomerServices();
+        List<Service> services = customer.getServices();
         List<Object> objects = new ArrayList<>();
         if(services.size() > 0) {
             objects.add(TITLE_TEXT);
@@ -59,11 +59,12 @@ public class RecyclerViewCustomer extends RecyclerView.Adapter {
     private List<Service> sortServicesByStartTime(List<Service> services) {
         Collections.sort(services, new Comparator<Service>() {
             public int compare(Service service1, Service service2) {
-                if (service1.getStartTime() > service2.getStartTime()) return -1;
-                if (service1.getStartTime() < service2.getStartTime()) return 1;
-                if (service1.getEndTime() > service2.getEndTime()) return -1;
-                if (service1.getEndTime() < service2.getEndTime()) return 1;
-                return 0;
+                int moveInList = Long.compare(service2.getStartTime(), service1.getStartTime());
+                if (moveInList != 0) {return moveInList;
+                }
+                else {
+                    return Long.compare(service2.getEndTime(), service1.getEndTime());
+                }
             }
         });
         return services;
@@ -136,17 +137,17 @@ public class RecyclerViewCustomer extends RecyclerView.Adapter {
     private class TitleViewHolder extends RecyclerView.ViewHolder {
         TextView title;
 
-        public TitleViewHolder(View view) {
+        private TitleViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.view_customer_title_title);
         }
 
         public void bindView(int position) {
             if(objects.get(position + 1) instanceof Service) {
-                title.setText("SERVICES");
+                title.setText(context.getString(R.string.recycler_view_customer_services));
             }
             else {
-                title.setText("PAYMENTS");
+                title.setText(context.getString(R.string.recycler_view_customer_payments));
             }
         }
     }
@@ -154,7 +155,7 @@ public class RecyclerViewCustomer extends RecyclerView.Adapter {
     private class PaymentViewHolder extends RecyclerView.ViewHolder {
         TextView dateText, amountText, typeText;
 
-        public PaymentViewHolder(View view) {
+        private PaymentViewHolder(View view) {
             super(view);
             dateText = view.findViewById(R.id.view_customer_payment_date);
             amountText = view.findViewById(R.id.view_customer_payment_amount);
@@ -176,7 +177,7 @@ public class RecyclerViewCustomer extends RecyclerView.Adapter {
         TextView serviceText, dateText, priceText, paidText, stateText;
         Button editButton;
 
-        public ServiceViewHolder(View view) {
+        private ServiceViewHolder(View view) {
             super(view);
             serviceText = view.findViewById(R.id.view_customer_service_name);
             dateText = view.findViewById(R.id.view_customer_service_date);
@@ -197,17 +198,17 @@ public class RecyclerViewCustomer extends RecyclerView.Adapter {
                     dateText.setText(service.retrieveStartToEndString());
                     priceText.setText(String.format(Locale.US, "%.2f", customer.getPayment().returnServicePrice(service.getServices())));
                     if(service.isPaid()) {
-                        paidText.setText("Paid");
+                        paidText.setText(context.getString(R.string.recycler_view_customer_paid));
                     }
                     else {
-                        paidText.setText("Unpaid");
+                        paidText.setText(context.getString(R.string.recycler_view_customer_unpaid));
                     }
                     if(service.getEndTime() > 0) {
-                        stateText.setText("Completed");
+                        stateText.setText(context.getString(R.string.view_services_completed));
                         stateText.setTextColor(Color.RED);
                     }
                     else {
-                        stateText.setText("In-Progress");
+                        stateText.setText(context.getString(R.string.view_services_in_progress));
                         stateText.setTextColor(Color.GREEN);
                     }
                     editButton.setOnClickListener(new View.OnClickListener() {

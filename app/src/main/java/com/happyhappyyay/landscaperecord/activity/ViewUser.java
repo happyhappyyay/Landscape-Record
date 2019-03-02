@@ -111,7 +111,6 @@ public class ViewUser extends AppCompatActivity implements MultiDatabaseAccess<U
 
     @Override
     public void createCustomLog() {
-
     }
 
     @Override

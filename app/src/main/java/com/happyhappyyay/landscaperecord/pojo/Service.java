@@ -19,11 +19,11 @@ public class Service implements Parcelable {
             return new Service[size];
         }
     };
-    private int serviceID;
+    private int id;
     private String services, username, customerName;
     private double materialCost;
     private double manHours;
-    private double mileage;
+    private double mi;
     private double amountPaid;
     private double price;
     private List<Material> materials;
@@ -31,52 +31,35 @@ public class Service implements Parcelable {
     private long endTime;
     private static int idCount = 0;
     private boolean priced;
-    private boolean pause;
     private boolean paid;
 
     public Service() {
         materials = new ArrayList<>();
-        pause = true;
         priced = false;
-        serviceID = idCount++;
+        id = idCount++;
     }
 
     public Service(Parcel in) {
         idCount = in.readInt();
-        serviceID = in.readInt();
+        id = in.readInt();
         services = in.readString();
         username = in.readString();
         customerName = in.readString();
         materialCost = in.readDouble();
         manHours = in.readDouble();
-        mileage = in.readDouble();
+        mi = in.readDouble();
         amountPaid = in.readDouble();
         price = in.readDouble();
         materials = new ArrayList<>();
         in.readTypedList(materials, Material.CREATOR);
         startTime = in.readLong();
         endTime = in.readLong();
-        pause = in.readByte() != 0;
         priced = in.readByte() != 0;
         paid = in.readByte() != 0;
     }
 
     public void addMaterial(Material material) {
         materials.add(material);
-    }
-
-    public void removeMaterial(Material material) {
-        materials.remove(material);
-    }
-
-    public double calculateMaterialCost() {
-        materialCost = 0;
-        if (materials != null) {
-            for (Material material : materials) {
-                materialCost += material.getMaterialPrice();
-            }
-        }
-        return materialCost;
     }
 
     public String convertStartTimeToDateString() {
@@ -147,20 +130,12 @@ public class Service implements Parcelable {
         this.endTime = endTime;
     }
 
-    public int getServiceID() {
-        return serviceID;
+    public int getId() {
+        return id;
     }
 
-    public void setServiceID(int serviceID) {
-        this.serviceID = serviceID;
-    }
-
-    public boolean isPause() {
-        return pause;
-    }
-
-    public void setPause(boolean pause) {
-        this.pause = pause;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -179,16 +154,16 @@ public class Service implements Parcelable {
         this.customerName = customerName;
     }
 
-    public double getMileage() {
-        return mileage;
+    public double getMi() {
+        return mi;
     }
 
-    public void setMileage(double mileage) {
-        this.mileage = mileage;
+    public void setMi(double mi) {
+        this.mi = mi;
     }
 
-    public boolean isValid() {
-        return startTime > 0;
+    public boolean checkCompleted() {
+        return endTime > 0;
     }
 
     public boolean isPriced() {
@@ -239,19 +214,18 @@ public class Service implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(idCount);
-        parcel.writeInt(serviceID);
+        parcel.writeInt(id);
         parcel.writeString(services);
         parcel.writeString(username);
         parcel.writeString(customerName);
         parcel.writeDouble(materialCost);
         parcel.writeDouble(manHours);
-        parcel.writeDouble(mileage);
+        parcel.writeDouble(mi);
         parcel.writeDouble(amountPaid);
         parcel.writeDouble(price);
         parcel.writeTypedList(materials);
         parcel.writeLong(startTime);
         parcel.writeLong(endTime);
-        parcel.writeByte((byte) (pause? 1:0));
         parcel.writeByte((byte) (priced? 1:0));
         parcel.writeByte((byte) (paid? 1:0));
     }

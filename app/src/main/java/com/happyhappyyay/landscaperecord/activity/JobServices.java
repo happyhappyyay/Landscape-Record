@@ -140,8 +140,8 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                     List<Customer> customersByDay = new ArrayList<>();
                     if (position != 0) {
                         for (Customer c : allCustomers) {
-                            if (c.getCustomerDay() != null) {
-                                if (c.getCustomerDay().equals(daySpinner.getSelectedItem().toString())) {
+                            if (c.getDay() != null) {
+                                if (c.getDay().equals(daySpinner.getSelectedItem().toString())) {
                                     customersByDay.add(c);
                                 }
                             }
@@ -171,24 +171,24 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     private void setupViewPager(ViewPager viewPager) {
         FragmentPageAdapter fragAdapter = new FragmentPageAdapter(getSupportFragmentManager());
         if(lawnServices == null) {
-            fragAdapter.addFragment(new LawnServices(), "LAWN");
+            fragAdapter.addFragment(new LawnServices(), getString(R.string.job_lawn_service));
         }
         else {
-            fragAdapter.addFragment(lawnServices, "LAWN");
+            fragAdapter.addFragment(lawnServices, getString(R.string.job_lawn_service));
         }
 
         if(landscapeServices == null) {
-            fragAdapter.addFragment(new LandscapeServices(), "LANDSCAPE");
+            fragAdapter.addFragment(new LandscapeServices(), getString(R.string.job_landscaping_services));
         }
         else {
-            fragAdapter.addFragment(landscapeServices, "LANDSCAPE");
+            fragAdapter.addFragment(landscapeServices, getString(R.string.job_landscaping_services));
         }
 
         if(snowServices == null) {
-            fragAdapter.addFragment(new SnowServices(), "SNOW");
+            fragAdapter.addFragment(new SnowServices(), getString(R.string.job_snow_services));
         }
         else {
-            fragAdapter.addFragment(snowServices, "SNOW");
+            fragAdapter.addFragment(snowServices, getString(R.string.job_snow_services));
         }
 
         viewPager.setAdapter(fragAdapter);
@@ -223,7 +223,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                     }
                     service.setServices(services);
                     service.setCustomerName(customer.getName());
-                    service.setMileage(customer.getCustomerMileage() != null? customer.getCustomerMileage():0 );
+                    service.setMi(customer.getMi() != null? customer.getMi():0 );
                     service.setUsername(Authentication.getAuthentication().getUser().getName());
                     if(!manHours.getText().toString().isEmpty()) {
                         try {
@@ -238,17 +238,16 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                         customer.addService(service);
                     } else {
                         service.setEndTime(time);
-                        service.setPause(false);
                         customer.updateService(service);
                     }
                     progressBar.setVisibility(View.VISIBLE);
                     Util.enactMultipleDatabaseOperations(this);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Incorrect date format please use mm/dd/yyyy.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.incorrect_date_format), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "No customer selected. Please select or create a customer.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.job_services_no_customer), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -256,7 +255,7 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     private void populateSpinner(List<Customer> customers) {
         String[] arraySpinner = new String[customers.size()];
         for (int i = 0; i < customers.size(); i++) {
-            arraySpinner[i] = customers.get(i).getCustomerAddress();
+            arraySpinner[i] = customers.get(i).getAddress();
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -272,19 +271,18 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
 
     private void updateWorkDay(DatabaseOperator db) {
         WorkDay workDay;
-        WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.convertLongToStringDate(service.getStartTime()));
+        WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db,
+                Util.convertLongToStringDate(service.getStartTime()));
         if (tempWorkDay != null) {
             workDay = tempWorkDay;
             workDay.addServices(service);
             Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
-
         }
         else {
             workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
             workDay.addServices(service);
             Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
         }
-
     }
 
     @Override
@@ -336,7 +334,8 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     @Override
     public void createCustomLog() {
         Authentication authentication = Authentication.getAuthentication();
-        LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(), LogActivityAction.valueOf("UPDATE").ordinal(), LogActivityType.valueOf("CUSTOMER").ordinal());
+        LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),
+                LogActivityAction.UPDATE.ordinal(), LogActivityType.CUSTOMER.ordinal());
         log.setObjId(customer.getId());
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);

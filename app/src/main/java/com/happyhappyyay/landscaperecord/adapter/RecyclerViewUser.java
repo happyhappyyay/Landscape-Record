@@ -25,9 +25,7 @@ public class RecyclerViewUser extends RecyclerView.Adapter {
     private List<LogActivity> sortLogsByModifiedTime(List<LogActivity> logs) {
         Collections.sort(logs, new Comparator<LogActivity>() {
             public int compare(LogActivity log1, LogActivity log2) {
-                if (log1.getModifiedTime() > log2.getModifiedTime()) return -1;
-                if (log1.getModifiedTime() < log2.getModifiedTime()) return 1;
-                return 0;
+                return Long.compare(log2.getModifiedTime(), log1.getModifiedTime());
             }
         });
         return logs;
@@ -38,7 +36,6 @@ public class RecyclerViewUser extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.log_item, parent, false);
         return new RecyclerViewUser.ListViewHolder(view);
-
     }
 
     @Override
@@ -59,12 +56,10 @@ public class RecyclerViewUser extends RecyclerView.Adapter {
     private class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView logItem;
 
-
         private ListViewHolder(View view) {
             super(view);
             logItem = view.findViewById(R.id.log_item_text);
         }
-
         public void bindView(int position) {
             logItem.setText(logs.get(position).toString());
         }

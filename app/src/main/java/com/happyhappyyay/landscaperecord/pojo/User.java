@@ -1,6 +1,7 @@
 package com.happyhappyyay.landscaperecord.pojo;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -23,10 +24,10 @@ import static com.mongodb.client.model.Projections.excludeId;
 @Entity
 public class User implements DatabaseObjects<User> {
     @PrimaryKey @NonNull
-    private String userId = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString();
     private double hours;
-    private String firstName;
-    private String lastName;
+    private String first;
+    private String last;
     private String name;
     private String password;
     private boolean admin;
@@ -34,9 +35,17 @@ public class User implements DatabaseObjects<User> {
     private String nickname;
     private long modifiedTime;
 
-    public User() {
+    public User(String first, String last, String password) {
+        this.first = first;
+        this.last = last;
+        name = first + " " + last;
+        this.password = password;
         nickname = "";
         modifiedTime = System.currentTimeMillis();
+    }
+
+    @Ignore
+    public User() {
     }
 
     public boolean isAdmin() {
@@ -47,13 +56,8 @@ public class User implements DatabaseObjects<User> {
         this.admin = admin;
     }
 
-    @NonNull
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(@NonNull String userId) {
-        this.userId = userId;
+    public String getFirst() {
+        return first;
     }
 
     public double getHours() {
@@ -92,20 +96,21 @@ public class User implements DatabaseObjects<User> {
         this.nickname = nickname;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void setFirst(String first) {
+        this.first = first;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getLast() {
+        return last;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setLast(String last) {
+        this.last = last;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    @Override
+    public String getName() {
+        return first + " " + last;
     }
 
     @Override
@@ -121,12 +126,16 @@ public class User implements DatabaseObjects<User> {
     @Override
     public String toString() {
         return !getNickname().isEmpty() ? nickname : name;
-
     }
 
+    @NonNull
     @Override
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     @Override
@@ -162,7 +171,7 @@ public class User implements DatabaseObjects<User> {
         else {
         OnlineDatabase ad = (OnlineDatabase) db;
         MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.USER).find(eq("userId", id)).projection(excludeId()).first();
+        Document document = od.getCollection(OnlineDatabase.USER).find(eq("id", id)).projection(excludeId()).first();
         return OnlineDatabase.convertDocumentToObject(document, User.class);
         }
     }
@@ -186,10 +195,10 @@ public class User implements DatabaseObjects<User> {
             ad.userDao().deleteUser(objectToDelete);
         }
         else {
-            String idToDelete = objectToDelete.getUserId();
+            String idToDelete = objectToDelete.getId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.USER).deleteOne(eq("userId", idToDelete));
+            od.getCollection(OnlineDatabase.USER).deleteOne(eq("id", idToDelete));
         }
     }
 
@@ -200,10 +209,10 @@ public class User implements DatabaseObjects<User> {
             ad.userDao().updateUser(objectToUpdate);
         }
         else {
-            String idToUpdate = objectToUpdate.getUserId();
+            String idToUpdate = objectToUpdate.getId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.USER).replaceOne(eq("userId", idToUpdate),
+            od.getCollection(OnlineDatabase.USER).replaceOne(eq("id", idToUpdate),
                     OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
         }
     }
@@ -219,10 +228,5 @@ public class User implements DatabaseObjects<User> {
             MongoDatabase od = ad.getMongoDb();
             od.getCollection(OnlineDatabase.USER).insertOne(OnlineDatabase.convertFromObjectToDocument(objectToInsert));
         }
-    }
-
-    @Override
-    public String getId() {
-        return userId;
     }
 }

@@ -56,27 +56,27 @@ public class AddCustomer extends AppCompatActivity implements DatabaseAccess<Cus
                         toString(), addressText.getText().toString());
 
                 if (!emailText.getText().toString().isEmpty()) {
-                    customer.setCustomerEmail(emailText.getText().toString());
+                    customer.setEmail(emailText.getText().toString());
                 }
 
                 if (!businessText.getText().toString().isEmpty()) {
-                    customer.setCustomerBusiness(businessText.getText().toString());
+                    customer.setBusiness(businessText.getText().toString());
                 }
 
                 if (!cityText.getText().toString().isEmpty()) {
-                    customer.setCustomerCity(cityText.getText().toString());
+                    customer.setCity(cityText.getText().toString());
                 }
 
                 if (!phoneText.getText().toString().isEmpty()) {
-                    customer.setCustomerPhoneNumber(phoneText.getText().toString());
+                    customer.setPhone(phoneText.getText().toString());
                 }
 
                 if (daySpinner.getSelectedItem() != null) {
-                    customer.setCustomerDay(daySpinner.getSelectedItem().toString());
+                    customer.setDay(daySpinner.getSelectedItem().toString());
                 }
 
                 if (stateSpinner.getSelectedItem() != null) {
-                    customer.setCustomerState(stateSpinner.getSelectedItem().toString());
+                    customer.setState(stateSpinner.getSelectedItem().toString());
                 }
 
                 insertCustomer();
@@ -87,20 +87,6 @@ public class AddCustomer extends AppCompatActivity implements DatabaseAccess<Cus
     private void insertCustomer() {
         progressBar.setVisibility(View.VISIBLE);
         Util.insertObject(this, Util.CUSTOMER_REFERENCE, customer);
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                db.customerDao().insert(customer);
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                Toast.makeText(getApplicationContext(), "Customer account for " + customer.getName() +
-//                        " created.", Toast.LENGTH_LONG).show();
-//                finish();
-//            }
-//        }.execute();
     }
 
     @Override

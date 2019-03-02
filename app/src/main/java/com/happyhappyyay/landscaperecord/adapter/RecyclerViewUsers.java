@@ -19,7 +19,6 @@ import com.happyhappyyay.landscaperecord.utility.Util;
 import java.util.List;
 
 public class RecyclerViewUsers extends Adapter {
-    private static final String TAG = "selected for work";
     protected List<User> users;
     private Context context;
 
@@ -33,7 +32,6 @@ public class RecyclerViewUsers extends Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
         return new RecyclerViewUsers.ListViewHolder(view);
-
     }
 
     @Override
@@ -58,7 +56,7 @@ public class RecyclerViewUsers extends Adapter {
         private TextView username, userHours, userCheckIn;
         private ConstraintLayout constraintLayout;
 
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             username = view.findViewById(R.id.user_item_name);
             userHours = view.findViewById(R.id.user_item_hours);
@@ -78,16 +76,15 @@ public class RecyclerViewUsers extends Adapter {
 
         public void bindView(int position) {
             User user = users.get(position);
-            String hoursUnpaid = Math.round(user.getHours()) + " hrs";
-            String checkInText = "Not checked in";
+            String hoursUnpaid = Math.round(user.getHours()) + " " +context.getString(R.string.hrs);
+            String checkInText = context.getString(R.string.recycler_view_users_not_checked_in);
             if (user.getStartTime() > 0) {
-                checkInText = "Checked in " + Util.convertLongToStringDateTime(user.getStartTime());
+                checkInText = context.getString(R.string.check_in_text) + " " + Util.convertLongToStringDateTime(user.getStartTime());
             }
 
             username.setText(user.toString());
             userHours.setText(hoursUnpaid);
             userCheckIn.setText(checkInText);
         }
-
     }
 }

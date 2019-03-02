@@ -75,11 +75,11 @@ public class PaymentQueue extends AppCompatActivity implements AdapterView.OnIte
         String[] arraySpinner = new String[customers.size()];
         int pos = adapterPosition;
         for (int i = 0; i < customers.size(); i++) {
-            arraySpinner[i] = customers.get(i).getCustomerAddress();
+            arraySpinner[i] = customers.get(i).getAddress();
         }
 
         Spinner s = findViewById(R.id.payment_queue_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);

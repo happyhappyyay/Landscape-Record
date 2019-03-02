@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
 import com.happyhappyyay.landscaperecord.enums.LogActivityType;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
@@ -50,10 +51,12 @@ public class CSVReadWrite {
 
         List<String[]> writeInformation = new ArrayList<>();
         File file = new File("");
+        Context context = access.getContext();
         switch(writeType) {
             case EMPLOYEE_DATA:
                 final Pattern p = Pattern.compile("\\d+");
-                String[] headers = {"First Name", "Last Name", "Hours Unpaid", "Total Hours"};
+                String[] headers = {context.getString(R.string.csv_first), context.getString(R.string.csv_last),
+                        context.getString(R.string.csv_unpaid), context.getString(R.string.csv_hours_total)};
                 writeInformation.add(headers);
                 List<User> users = new ArrayList<>();
                 List<LogActivity> logs = new ArrayList<>();
@@ -73,7 +76,7 @@ public class CSVReadWrite {
                     double hours = 0;
                     for(int i = 0; i<logs.size(); i++) {
                         if(logs.get(i).getObjId().equals(u.getId())) {
-                            Matcher m = p.matcher(logs.get(i).getAddInfo());
+                            Matcher m = p.matcher(logs.get(i).getInfo());
                             String hourString = "0";
                             if (m.find()) {
                                 hourString = m.group(0);
@@ -86,14 +89,18 @@ public class CSVReadWrite {
                             }
                         }
                     }
-                    String[] userInfo = {u.getFirstName(), u.getLastName(), String.format(Locale.US,
+                    String[] userInfo = {u.getFirst(), u.getLast(), String.format(Locale.US,
                             "2%f", u.getHours()), String.format(Locale.US, "2%f", hours) };
                     writeInformation.add(userInfo);
                 }
                 break;
             case CUSTOMER_DATA:
-                headers = new String[]{"First Name", "Last Name", "Business", "Address", "City",
-                        "State", "Phone Number", "E-mail", "Paid", "Unpaid"};
+                headers = new String[]{context.getString(R.string.csv_first), context.getString(R.string.csv_last),
+                        context.getString(R.string.csv_business), context.getString(R.string.csv_address),
+                        context.getString(R.string.csv_city), context.getString(R.string.csv_state),
+                        context.getString(R.string.csv_phone), context.getString(R.string.csv_email),
+                        context.getString(R.string.recycler_view_customer_paid),
+                        context.getString(R.string.recycler_view_customer_unpaid)};
                 writeInformation.add(headers);
                 List<Customer> customers = new ArrayList<>();
                 for(int i = 0; i < databaseObjects.size(); i++) {
@@ -104,20 +111,23 @@ public class CSVReadWrite {
                 }
 
                 for(Customer c: customers) {
-                    String[] customerInfo = {c.getCustomerFirstName(), c.getCustomerLastName(),
-                            c.getCustomerBusiness()==null? "":c.getCustomerBusiness(),
-                            c.getCustomerAddress(), c.getCustomerCity()==null? "":c.getCustomerCity(),
-                            c.getCustomerState()==null? "":c.getCustomerState(),
-                            c.getCustomerPhoneNumber()==null? "":c.getCustomerPhoneNumber(),
-                            c.getCustomerEmail()==null? "":c.getCustomerEmail(),
-                            String.format(Locale.US, "%.2f", c.getPayment().getAmountPaid()),
-                            String.format(Locale.US, "%.2f", c.getPayment().getAmountRemaining())};
+                    String[] customerInfo = {c.getFirst(), c.getLast(),
+                            c.getBusiness()==null? "":c.getBusiness(),
+                            c.getAddress(), c.getCity()==null? "":c.getCity(),
+                            c.getState()==null? "":c.getState(),
+                            c.getPhone()==null? "":c.getPhone(),
+                            c.getEmail()==null? "":c.getEmail(),
+                            String.format(Locale.US, "%.2f", c.getPayment().getPaid()),
+                            String.format(Locale.US, "%.2f", c.getPayment().getOwed())};
                     writeInformation.add(customerInfo);
                 }
                 break;
             case SERVICES_DATA:
-                headers = new String[]{"Account Name", "Date", "Address", "Service", "Price", "Billed",
-                        "Paid", "Man Hours", "Mileage", "Service ID"};
+                headers = new String[]{context.getString(R.string.csv_account), context.getString(R.string.csv_date),
+                        context.getString(R.string.csv_address), context.getString(R.string.csv_service),
+                        context.getString(R.string.material_price), context.getString(R.string.csv_billed),
+                        context.getString(R.string.recycler_view_customer_paid), context.getString(R.string.csv_man_hours),
+                        context.getString(R.string.csv_mileage), context.getString(R.string.csv_service)};
                 writeInformation.add(headers);
                 customers = new ArrayList<>();
                 for(int i = 0; i < databaseObjects.size(); i++) {
@@ -128,24 +138,27 @@ public class CSVReadWrite {
                 }
 
                 for(Customer c: customers) {
-                    for(Service s: c.getCustomerServices()) {
+                    for(Service s: c.getServices()) {
                         String[] serviceInfo = {c.getName(),
                                 Util.convertLongToStringDate(s.getStartTime()) + " - " +
                                 (s.getEndTime() > 0? Util.convertLongToStringDate(s.getEndTime()):""),
                                 c.concatenateFullAddress(),
                                 s.getServices(), String.format(Locale.US, "2%f",
                                 c.getPayment().returnServicePrice(s.getServices())),
-                                s.isPriced()? "Billed": "Not Billed", s.isPaid()? "Paid": "Unpaid",
+                                s.isPriced()? context.getString(R.string.csv_billed): context.getString(R.string.csv_not_billed),
+                                s.isPaid()? context.getString(R.string.recycler_view_customer_paid)
+                                : context.getString(R.string.recycler_view_customer_unpaid),
                                 String.format(Locale.US, "2%f", s.getManHours()),
-                                String.format(Locale.US, "2%f", c.getCustomerMileage()),
-                                String.valueOf(s.getServiceID())};
+                                String.format(Locale.US, "2%f", c.getMi()),
+                                String.valueOf(s.getId())};
                         writeInformation.add(serviceInfo);
                     }
 
                 }
                 break;
             case LOG_DATA:
-                headers = new String[]{"Date", "Employee", "Information"};
+                headers = new String[]{context.getString(R.string.csv_date), context.getString(R.string.csv_employee),
+                        context.getString(R.string.csv_information)};
                 writeInformation.add(headers);
                 logs = new ArrayList<>();
                 for(int i = 0; i < databaseObjects.size(); i++) {
@@ -156,7 +169,7 @@ public class CSVReadWrite {
                 }
 
                 for(LogActivity l: logs) {
-                    String[] logInfo = {Util.convertLongToStringDate(l.getModifiedTime()), l.getUsername(), l.getAddInfo()};
+                    String[] logInfo = {Util.convertLongToStringDate(l.getModifiedTime()), l.getUsername(), l.getInfo()};
                     writeInformation.add(logInfo);
                 }
                 break;
@@ -193,7 +206,7 @@ public class CSVReadWrite {
         }
         catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(access.getContext(), "Data export failure. Please try again.", Toast.LENGTH_LONG).show();
+            Toast.makeText(access.getContext(), context.getString(R.string.csv_export_fail), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -214,37 +227,37 @@ public class CSVReadWrite {
 
                 if(customerInformation[3] != null) {
                     if (!customerInformation[3].equals("")) {
-                        customer.setCustomerCity(customerInformation[3]);
+                        customer.setCity(customerInformation[3]);
                     }
                 }
 
                 if(customerInformation[4] != null) {
                     if (!customerInformation[4].equals("")) {
-                        customer.setCustomerCity(customerInformation[4]);
+                        customer.setCity(customerInformation[4]);
                     }
                 }
 
                 if(customerInformation[5] != null) {
                     if (!customerInformation[5].equals("")) {
-                        customer.setCustomerCity(customerInformation[5]);
+                        customer.setCity(customerInformation[5]);
                     }
                 }
 
                 if(customerInformation[6] != null) {
                     if (!customerInformation[6].equals("")) {
-                        customer.setCustomerCity(customerInformation[6]);
+                        customer.setCity(customerInformation[6]);
                     }
                 }
 
                 if(customerInformation[7] != null) {
                     if (!customerInformation[7].equals("")) {
-                        customer.setCustomerCity(customerInformation[7]);
+                        customer.setCity(customerInformation[7]);
                     }
                 }
 
                 if(customerInformation[8] != null) {
                     if (!customerInformation[8].equals("")) {
-                        customer.setCustomerCity(customerInformation[8]);
+                        customer.setCity(customerInformation[8]);
                     }
                 }
 
@@ -255,7 +268,7 @@ public class CSVReadWrite {
         catch(Exception e)
         {
             e.printStackTrace();
-            Toast.makeText(context, "Error importing contacts", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.csv_import_fail), Toast.LENGTH_SHORT).show();
         }
     }
 

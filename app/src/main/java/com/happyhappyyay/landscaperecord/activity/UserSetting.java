@@ -37,7 +37,7 @@ public class UserSetting extends AppCompatActivity implements DatabaseAccess<Log
 
     public void onClick(View view) {
         Intent intent = new Intent(getApplicationContext(), EditUser.class);
-        intent.putExtra("USER_ID", Authentication.getAuthentication().getUser().getUserId());
+        intent.putExtra("USER_ID", Authentication.getAuthentication().getUser().getId());
         startActivity(intent);
     }
 

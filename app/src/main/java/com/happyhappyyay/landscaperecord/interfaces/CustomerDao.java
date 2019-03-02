@@ -19,10 +19,7 @@ public interface CustomerDao {
     @Query("SELECT * FROM customer")
     List<Customer> getAllCustomers();
 
-    @Query("SELECT * FROM Customer WHERE customerFirstName + ' ' + customerLastName OR customerBusiness = :customerName")
-    Customer findCustomerByName(String customerName);
-
-    @Query("SELECT * FROM Customer WHERE customerId = :customerId")
+    @Query("SELECT * FROM Customer WHERE id = :customerId")
     Customer findCustomerById(String customerId);
 
     @Query("SELECT * FROM Customer WHERE modifiedTime > :modifiedTime")
@@ -33,8 +30,4 @@ public interface CustomerDao {
 
     @Delete
     void deleteCustomer(Customer customer);
-
-    @Query("DELETE FROM customer")
-    void deleteAllCustomers();
-
 }

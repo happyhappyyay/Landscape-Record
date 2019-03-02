@@ -54,57 +54,55 @@ public class LandscapingOther extends Fragment {
     private void updateCheckBoxesAndExistingService() {
         String existingServices = mListener.getServices();
         final String SPACE = " ";
+        final String DUMP = (getString(R.string.land_services_dump));
         int lengthOfServiceString = existingServices.length();
         for (CheckBox c : checkBoxes) {
              String checkBoxText = c.getText().toString().toLowerCase();
             if (existingServices.toLowerCase().contains(checkBoxText)) {
                 int startIndex = existingServices.toLowerCase().indexOf(checkBoxText);
                 int endIndex = lengthOfServiceString;
-                switch (checkBoxText) {
-                    case "dump":
-                        for(int i = startIndex; i < lengthOfServiceString; i++ ) {
-                            if(Util.DELIMITER.equals(existingServices.substring(i, i+1))) {
-                                endIndex = i;
-                                break;
-                            }
-                        }
-                        String dumpPhraseStringEnd = existingServices.substring(startIndex + checkBoxText.length() + SPACE.length(),endIndex);
-                        int quantityEndIndex = 0;
-                        for(int i = 0; i < dumpPhraseStringEnd.length(); i++) {
-                            if(Character.isLetter(dumpPhraseStringEnd.charAt(i))) {
-                                quantityEndIndex = i;
-                                break;
-                            }
-                        }
-                        if(quantityEndIndex > 0) {
-                            dumpQuantity.setText(dumpPhraseStringEnd.substring(0, quantityEndIndex));
-                        }
-                        int measurementEndIndex = 0;
-                        String dumpStringAfterQuantity = dumpPhraseStringEnd.substring(quantityEndIndex);
-                        for(int i = 0; i < dumpStringAfterQuantity.length(); i++) {
-                            if(dumpStringAfterQuantity.substring(i, i+1).equals(SPACE)){
-                                measurementEndIndex = i;
-                                break;
-                            }
-                        }
-                        for(int i = 0; i < dumpMeasurementSpinner.getAdapter().getCount(); i++)
-                        if (dumpMeasurementSpinner.getAdapter().getItem(i).toString().equals(dumpStringAfterQuantity.substring(0,measurementEndIndex))) {
-                            dumpMeasurementSpinner.setSelection(i);
-                        }
-                        String dumpStringAfterMeasurement = dumpStringAfterQuantity.substring(measurementEndIndex + SPACE.length());
-                        for(int i = 0; i < dumpTypeSpinner.getAdapter().getCount(); i++)
-                            if (dumpTypeSpinner.getAdapter().getItem(i).toString().equals(dumpStringAfterMeasurement)) {
-                                dumpTypeSpinner.setSelection(i);
-                            }
-
-                        break;
-                    default:
-                        endIndex = checkBoxText.length() + Util.DELIMITER.length() + startIndex;
-                        if(endIndex > lengthOfServiceString) {
-                            endIndex = endIndex - Util.DELIMITER.length();
+                if (checkBoxText.equals(DUMP.toLowerCase())) {
+                    for (int i = startIndex; i < lengthOfServiceString; i++) {
+                        if (Util.DELIMITER.equals(existingServices.substring(i, i + 1))) {
+                            endIndex = i;
                             break;
                         }
+                    }
+                    String dumpPhraseStringEnd = existingServices.substring(startIndex + checkBoxText.length() + SPACE.length(), endIndex);
+                    int quantityEndIndex = 0;
+                    for (int i = 0; i < dumpPhraseStringEnd.length(); i++) {
+                        if (Character.isLetter(dumpPhraseStringEnd.charAt(i))) {
+                            quantityEndIndex = i;
+                            break;
+                        }
+                    }
+                    if (quantityEndIndex > 0) {
+                        dumpQuantity.setText(dumpPhraseStringEnd.substring(0, quantityEndIndex));
+                    }
+                    int measurementEndIndex = 0;
+                    String dumpStringAfterQuantity = dumpPhraseStringEnd.substring(quantityEndIndex);
+                    for (int i = 0; i < dumpStringAfterQuantity.length(); i++) {
+                        if (dumpStringAfterQuantity.substring(i, i + 1).equals(SPACE)) {
+                            measurementEndIndex = i;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < dumpMeasurementSpinner.getAdapter().getCount(); i++)
+                        if (dumpMeasurementSpinner.getAdapter().getItem(i).toString().equals(dumpStringAfterQuantity.substring(0, measurementEndIndex))) {
+                            dumpMeasurementSpinner.setSelection(i);
+                        }
+                    String dumpStringAfterMeasurement = dumpStringAfterQuantity.substring(measurementEndIndex + SPACE.length());
+                    for (int i = 0; i < dumpTypeSpinner.getAdapter().getCount(); i++)
+                        if (dumpTypeSpinner.getAdapter().getItem(i).toString().equals(dumpStringAfterMeasurement)) {
+                            dumpTypeSpinner.setSelection(i);
+                        }
                 }
+                else{
+                    endIndex = checkBoxText.length() + Util.DELIMITER.length() + startIndex;
+                    if (endIndex > lengthOfServiceString) {
+                        endIndex = endIndex - Util.DELIMITER.length();
+                    }
+            }
                 if(startIndex != -1) {
                     String existingServicesPreService = existingServices.substring(0, startIndex);
                     String existingServicesPostService = existingServices.substring(endIndex);
@@ -132,20 +130,19 @@ public class LandscapingOther extends Fragment {
 
     public void markedCheckBoxes() {
         StringBuilder servicesStringBuilder = new StringBuilder();
+        final String DUMP = (getString(R.string.land_services_dump));
         for (CheckBox c : checkBoxes) {
             if (c.isChecked()) {
                 String checkBoxText = c.getText().toString();
-                switch (checkBoxText.toLowerCase()) {
-                    case "dump":
-                        String dumpString = dumpQuantity.getText().toString();
-                        String dumpAmount = "Dump " + dumpString + dumpMeasurementSpinner.getSelectedItem().toString() +
-                                " " + dumpTypeSpinner.getSelectedItem().toString() + Util.DELIMITER;
-                        servicesStringBuilder.append(dumpAmount);
-                        break;
-                    default:
-                        String serviceString = checkBoxText + Util.DELIMITER;
-                        servicesStringBuilder.append(serviceString);
-                        break;
+                if (checkBoxText.toLowerCase().equals(DUMP.toLowerCase())) {
+                    String dumpString = dumpQuantity.getText().toString();
+                    String dumpAmount = DUMP + " " + dumpString + dumpMeasurementSpinner.getSelectedItem().toString() +
+                            " " + dumpTypeSpinner.getSelectedItem().toString() + Util.DELIMITER;
+                    servicesStringBuilder.append(dumpAmount);
+                }
+                else {
+                    String serviceString = checkBoxText + Util.DELIMITER;
+                    servicesStringBuilder.append(serviceString);
                 }
             }
         }

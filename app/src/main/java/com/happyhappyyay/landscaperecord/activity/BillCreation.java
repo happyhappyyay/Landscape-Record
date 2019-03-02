@@ -83,7 +83,7 @@ public class BillCreation extends AppCompatActivity implements DatabaseAccess<Cu
         int pos = customerSelectionPosition;
         for (int i = 0; i < customers.size() + ZERO_POSITION; i++) {
             if(i != 0) {
-                arraySpinner[i] = customers.get(i-ZERO_POSITION).getCustomerAddress();
+                arraySpinner[i] = customers.get(i-ZERO_POSITION).getAddress();
             }
             else {
                 arraySpinner[i] = ALL_CUSTOMERS;
@@ -131,7 +131,6 @@ public class BillCreation extends AppCompatActivity implements DatabaseAccess<Cu
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 
     @Override

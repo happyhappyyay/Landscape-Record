@@ -65,7 +65,7 @@ public class ServicePriceUnitTest {
         servicePrice.addServicePrice("pull weeds", -2.0);
         servicePrice.addServicePrice("CUT", 21.00, false);
         servicePrice.addServicePrice("pRunE",100.00, true);
-        Map<String, Double> defaultPrices = servicePrice.getServiceDefaultPricing();
+        Map<String, Double> defaultPrices = servicePrice.getDefaultPrices();
         List<String> strings = new ArrayList<>();
         Set< Map.Entry<String, Double> > mapSet = defaultPrices.entrySet();
         int count = 0;
@@ -97,7 +97,7 @@ public class ServicePriceUnitTest {
         servicePrice.addServicePrice("pull weeds", -2.0);
         servicePrice.addServicePrice("CUT", 21.00, false);
         servicePrice.addServicePrice("pRunE",100.00, true);
-        Map<String, Double> defaultPrices = servicePrice.getServiceDefaultPricing();
+        Map<String, Double> defaultPrices = servicePrice.getDefaultPrices();
         List<String> strings = new ArrayList<>();
         Set< Map.Entry<String, Double> > mapSet = defaultPrices.entrySet();
         int count = 0;

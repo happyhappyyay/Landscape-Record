@@ -28,70 +28,69 @@ import static com.mongodb.client.model.Projections.excludeId;
 @Entity
 public class Customer implements DatabaseObjects<Customer> {
     @PrimaryKey @NonNull
-    private String customerId = UUID.randomUUID().toString();
-    private String customerFirstName;
-    private String customerLastName;
-    private String customerAddress;
-    private String customerCity;
-    private String customerPhoneNumber;
-    private String customerEmail;
-    private String customerBusiness;
-    private String customerDay;
-    private String customerState;
-    private Double customerMileage;
+    private String id = UUID.randomUUID().toString();
+    private String first;
+    private String last;
+    private String address;
+    private String city;
+    private String phone;
+    private String email;
+    private String business;
+    private String day;
+    private String state;
+    private Double mi;
     private long modifiedTime;
 
     @TypeConverters(PaymentConverter.class)
     private Payment payment;
 
     @TypeConverters(ServiceListConverter.class)
-    private List<Service> customerServices;
+    private List<Service> services;
 
-    public Customer(String customerFirstName, String customerLastName, String customerAddress) {
-        this.customerFirstName = customerFirstName;
-        this.customerLastName = customerLastName;
-        this.customerAddress = customerAddress;
-        customerServices = new ArrayList<>();
+    public Customer(String first, String last, String address) {
+        this.first = first;
+        this.last = last;
+        this.address = address;
+        services = new ArrayList<>();
         payment = new Payment();
         modifiedTime = System.currentTimeMillis();
     }
 
     @Ignore
     public Customer() {
-        customerServices = new ArrayList<>();
+        services = new ArrayList<>();
     }
 
     public void addService(Service customerService) {
-        customerServices.add(customerService);
+        services.add(customerService);
     }
 
     public void updateService(Service customerService, int indexPosition) {
-        customerServices.set(indexPosition, customerService);
+        services.set(indexPosition, customerService);
     }
 
     public void updateService(Service existingService) {
-        for(int i = 0; i < customerServices.size(); i++) {
-            if (customerServices.get(i).getServiceID() == existingService.getServiceID()) {
-                customerServices.set(i, existingService);
+        for(int i = 0; i < services.size(); i++) {
+            if (services.get(i).getId() == existingService.getId()) {
+                services.set(i, existingService);
                 break;
             }
         }
-
     }
 
     public List<String> retrieveServicesWithPrices() {
         List<String> servicesWithPrices = new ArrayList<>();
-        for (int i = 0; i < customerServices.size(); i++) {
-            String services = customerServices.get(i).getServices();
-            Service service = customerServices.get(i);
+        for (int i = 0; i < services.size(); i++) {
+            String services = this.services.get(i).getServices();
+            Service service = this.services.get(i);
             servicesWithPrices.add(Util.convertLongToStringDate(service.getEndTime()) + " " + services + " $ " + payment.returnServicePrice(services));
         }
         return servicesWithPrices;
     }
 
     public boolean hasUnpricedServicesForMonth(int month) {
-        for (int i = 0; i < customerServices.size(); i++) {
-            Service service = customerServices.get(i);
+        for (int i = 0; i < services.size(); i++) {
+            Service service = services.get(i);
             int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
             if(!service.isPriced() && serviceMonth == month) {
                 return true;
@@ -102,11 +101,11 @@ public class Customer implements DatabaseObjects<Customer> {
 
     public List<Service> retrieveUnpricedServicesForMonth(int month) {
         List<Service> unpricedServices = new ArrayList<>();
-        for (int i = 0; i < customerServices.size(); i++) {
-            Service service = customerServices.get(i);
+        for (int i = 0; i < services.size(); i++) {
+            Service service = services.get(i);
             int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
             if(!service.isPriced() && serviceMonth == month) {
-                unpricedServices.add(customerServices.get(i));
+                unpricedServices.add(services.get(i));
             }
         }
         return unpricedServices;
@@ -114,8 +113,8 @@ public class Customer implements DatabaseObjects<Customer> {
 
     public int retrieveNumberUnpricedServiceMonths() {
         List<Integer> months = new ArrayList<>();
-        for (int i = 0; i < customerServices.size(); i++) {
-            Service service = customerServices.get(i);
+        for (int i = 0; i < services.size(); i++) {
+            Service service = services.get(i);
             int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
             if(!service.isPriced() && !months.contains(serviceMonth)) {
                 months.add(serviceMonth);
@@ -125,8 +124,8 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     public boolean hasUnfinishedServicesForMonth(int month) {
-        for (int i = 0; i < customerServices.size(); i++) {
-            Service service = customerServices.get(i);
+        for (int i = 0; i < services.size(); i++) {
+            Service service = services.get(i);
             int serviceMonth = Util.retrieveMonthFromLong(service.getStartTime());
             if(!service.isPriced() && serviceMonth == month && service.getEndTime() <= 0) {
                 return true;
@@ -135,96 +134,88 @@ public class Customer implements DatabaseObjects<Customer> {
         return false;
     }
 
-    public void removeService(Service customerService) {
-        customerServices.remove(customerService);
+    public String getFirst() {
+        return first;
     }
 
-    public String getCustomerFirstName() {
-        return customerFirstName;
+    public void setFirst(String first) {
+        this.first = first;
     }
 
-    public String getCustomerLastName() {
-        return customerLastName;
+    public String getLast() {
+        return last;
     }
 
-    public String getCustomerAddress() {
-        return customerAddress;
+    public void setLast(String last) {
+        this.last = last;
     }
 
-    public String getCustomerPhoneNumber() {
-        return customerPhoneNumber;
+    public String getAddress() {
+        return address;
     }
 
-    public void setCustomerPhoneNumber(String customerPhoneNumber) {
-        this.customerPhoneNumber = customerPhoneNumber;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getCustomerEmail() {
-        return customerEmail;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getCustomerBusiness() {
-        return customerBusiness;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCustomerBusiness(String customerBusiness) {
-        this.customerBusiness = customerBusiness;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getCustomerCity() {
-        return customerCity;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setCustomerCity(String customerCity) {
-        this.customerCity = customerCity;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
-    public List<Service> getCustomerServices() {
-        return customerServices;
+    public String getCity() {
+        return city;
     }
 
-    public void setCustomerServices(List<Service> customerServices) {
-        this.customerServices = customerServices;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public @NonNull String getCustomerId() {
-        return customerId;
+    public List<Service> getServices() {
+        return services;
     }
 
-    public void setCustomerId(@NonNull String customerId) {
-        this.customerId = customerId;
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
-    public String getCustomerDay() {
-        return customerDay;
+    public String getDay() {
+        return day;
     }
 
-    public void setCustomerDay(String customerDay) {
-        this.customerDay = customerDay;
+    public void setDay(String day) {
+        this.day = day;
     }
 
-    public String getCustomerState() {
-        return customerState;
+    public String getState() {
+        return state;
     }
 
-    public void setCustomerState(String customerState) {
-        this.customerState = customerState;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public void setCustomerFirstName(String customerFirstName) {
-        this.customerFirstName = customerFirstName;
-    }
-
-    public void setCustomerLastName (String customerLastName) {
-        this.customerLastName = customerLastName;
-    }
-
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
+    public Double getMi() {
+        return mi;
     }
 
     public Payment getPayment() {
@@ -235,12 +226,13 @@ public class Customer implements DatabaseObjects<Customer> {
         this.payment = payment;
     }
 
-    public Double getCustomerMileage() {
-        return customerMileage;
+    public void setMi(Double mi) {
+        this.mi = mi;
     }
 
-    public void setCustomerMileage(Double customerMileage) {
-        this.customerMileage = customerMileage;
+    @Override
+    public String toString() {
+        return (business == null ? first + " " + last : business) + " " + concatenateFullAddress();
     }
 
     @Override
@@ -254,13 +246,20 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     @Override
-    public String toString() {
-        return (customerBusiness == null ? customerFirstName + " " + customerLastName : customerBusiness) + " " + concatenateFullAddress();
+    public String getName() {
+        return business == null ? first + " " + last : business;
     }
 
     @Override
-    public String getName() {
-        return customerBusiness == null ? customerFirstName + " " + customerLastName : customerBusiness;
+    public Customer retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.customerDao().findCustomerById(id);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Document document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("id", id)).projection(excludeId()).first();
+        return OnlineDatabase.convertDocumentToObject(document, Customer.class);
     }
 
     @Override
@@ -288,35 +287,22 @@ public class Customer implements DatabaseObjects<Customer> {
     }
 
     @Override
-    public Customer retrieveClassInstanceFromDatabaseID(DatabaseOperator db, String id) {
-        if(db instanceof AppDatabase) {
-            AppDatabase ad = (AppDatabase) db;
-            return ad.customerDao().findCustomerById(id);
-        }
-        OnlineDatabase ad = (OnlineDatabase) db;
-        MongoDatabase od = ad.getMongoDb();
-        Document document = od.getCollection(OnlineDatabase.CUSTOMER).find(eq("customerId", id)).projection(excludeId()).first();
-        return OnlineDatabase.convertDocumentToObject(document, Customer.class);
-
-    }
-
-    @Override
-    public Customer retrieveClassInstanceFromDatabaseString(DatabaseOperator db, String string) {
-        return null;
-    }
-
-    @Override
     public void deleteClassInstanceFromDatabase(DatabaseOperator db, Customer objectToDelete) {
         if(db instanceof AppDatabase) {
             AppDatabase ad = (AppDatabase) db;
             ad.customerDao().deleteCustomer(objectToDelete);
         }
         else {
-            String idToDelete = objectToDelete.getCustomerId();
+            String idToDelete = objectToDelete.getId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.CUSTOMER).deleteOne(eq("customerId", idToDelete));
+            od.getCollection(OnlineDatabase.CUSTOMER).deleteOne(eq("id", idToDelete));
         }
+    }
+
+    @Override
+    public Customer retrieveClassInstanceFromDatabaseString(DatabaseOperator db, String string) {
+        return null;
     }
 
     @Override
@@ -326,12 +312,18 @@ public class Customer implements DatabaseObjects<Customer> {
             ad.customerDao().updateCustomer(objectToUpdate);
         }
         else {
-            String idToUpdate = objectToUpdate.getCustomerId();
+            String idToUpdate = objectToUpdate.getId();
             OnlineDatabase ad = (OnlineDatabase) db;
             MongoDatabase od = ad.getMongoDb();
-            od.getCollection(OnlineDatabase.CUSTOMER).replaceOne(eq("customerId", idToUpdate),
+            od.getCollection(OnlineDatabase.CUSTOMER).replaceOne(eq("id", idToUpdate),
                     OnlineDatabase.convertFromObjectToDocument(objectToUpdate));
         }
+    }
+
+    @NonNull
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -347,20 +339,19 @@ public class Customer implements DatabaseObjects<Customer> {
         }
     }
 
-    @Override
-    public String getId() {
-        return customerId;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     public String concatenateFullAddress() {
-        if(customerCity != null) {
-            return getCustomerAddress() + " " + getCustomerCity()
-                    + ", " + getCustomerState();
+        if(city != null) {
+            return getAddress() + " " + getCity()
+                    + ", " + getState();
         }
-            return getCustomerAddress() + " " + getCustomerState();
+            return getAddress() + " " + getState();
     }
 
-    public String getFullName() {
-        return customerFirstName + " " + customerLastName;
+    public String createFullName() {
+        return first + " " + last;
     }
 }

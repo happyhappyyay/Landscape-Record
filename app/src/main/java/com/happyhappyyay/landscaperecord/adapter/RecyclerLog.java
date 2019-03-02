@@ -10,14 +10,24 @@ import android.widget.TextView;
 import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class RecyclerLog extends RecyclerView.Adapter {
-    private static final String TAG = "selected for work";
-    protected List<LogActivity> logs;
+    private List<LogActivity> logs;
 
     public RecyclerLog(List<LogActivity> logs) {
-        this.logs = logs;
+        this.logs = sortLogsByModifiedTime(logs);
+    }
+
+    private List<LogActivity> sortLogsByModifiedTime(List<LogActivity> logs) {
+        Collections.sort(logs, new Comparator<LogActivity>() {
+            public int compare(LogActivity log1, LogActivity log2) {
+                return Long.compare(log2.getModifiedTime(), log1.getModifiedTime());
+            }
+        });
+        return logs;
     }
 
     @NonNull
@@ -42,7 +52,7 @@ public class RecyclerLog extends RecyclerView.Adapter {
         public TextView log;
 
 
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             log = view.findViewById(R.id.log_item_text);
         }

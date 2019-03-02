@@ -109,7 +109,6 @@ public class LandscapeServices extends Fragment implements FragmentExchange {
         final int NUM_PAGES = 2;
         private ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
-
         }
 
         @Override
@@ -117,12 +116,13 @@ public class LandscapeServices extends Fragment implements FragmentExchange {
             return position == 0? landscapingOther: landscapingMaterials;
         }
 
-        @Override    public CharSequence getPageTitle(int position) {
+        @Override
+        public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SERVICES";
+                    return getString(R.string.recycler_view_customer_services);
                 case 1:
-                    return "MATERIALS";
+                    return getString(R.string.fragment_landscaping_materials);
                 default:
                     return null;
             }

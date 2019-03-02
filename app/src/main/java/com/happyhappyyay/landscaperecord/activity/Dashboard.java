@@ -103,7 +103,6 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
         startActivity(intent);
     }
 
-
     private void setNotifications(){
         String checkedInDateTime = "Checked in at: " + Util.convertLongToStringDateTime(Authentication.getAuthentication().getUser().getStartTime());
         if (Authentication.getAuthentication().getUser().getStartTime() != 0) {
@@ -147,8 +146,8 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
 
         for (Customer c: customers) {
             unbilled += c.retrieveNumberUnpricedServiceMonths();
-            for(Service s: c.getCustomerServices()) {
-                if(s.isPause()) {
+            for(Service s: c.getServices()) {
+                if(!s.checkCompleted()) {
                     inProgress++;
                 }
                 if(s.isPriced() & !s.isPaid()) {
@@ -228,7 +227,6 @@ public class Dashboard extends AppCompatActivity implements MultiDatabaseAccess<
 
     @Override
     public void createCustomLog() {
-
     }
 
     @Override

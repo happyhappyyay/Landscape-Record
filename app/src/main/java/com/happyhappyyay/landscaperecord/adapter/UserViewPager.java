@@ -44,43 +44,28 @@ public class UserViewPager extends PagerAdapter implements DatabaseAccess<User> 
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-        //Abstract method in PagerAdapter
         @Override
         public int getCount() {
             return users.size();
         }
 
-        //Abstract method in PagerAdapter
-
-        /**
-         * @return true if the value returned from {@link #instantiateItem(ViewGroup, int)} is the
-         * same object as the {@link View} added to the {@link android.support.v4.view.ViewPager}.
-         */
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return object == view;
         }
 
-        /**
-         * Instantiate the {@link View} which should be displayed at {@code position}. Here we
-         * inflate a layout from the apps resources and then change the text view to signify the position.
-         */
         @Override
         public @NonNull Object instantiateItem(@NonNull ViewGroup container, int position) {
-            // Inflate a new layout from our resources
-            // Retrieve a TextView from the inflated View, and update it's text
             View view = retrieveView(container,position);
-            // Add the newly created View to the ViewPager
+
             container.addView(view);
             Log.i(TAG, "instantiateItem() [position: " + position + "]" + " childCount:" + container.getChildCount());
-            // Return the View
+
             return view;
         }
 
         private View retrieveView(final ViewGroup container, final int position) {
-            // Inflate a new layout from our resources
             View view = mLayoutInflater.inflate(R.layout.view_user, container, false);
-            // Retrieve a TextView from the inflated View, and update it's text
             final User user = users.get(position);
             List<LogActivity> userLogs = retrieveLogsForUser(user);
             this.user = user;
@@ -94,8 +79,8 @@ public class UserViewPager extends PagerAdapter implements DatabaseAccess<User> 
             TextView userHours = view.findViewById(R.id.view_user_hours);
             TextView username = view.findViewById(R.id.view_user_name);
             username.setText(user.toString());
-            userFirstName.setText(user.getFirstName());
-            userLastName.setText(user.getLastName());
+            userFirstName.setText(user.getFirst());
+            userLastName.setText(user.getLast());
             userPassword.setText(user.getPassword());
             userHours.setText(String.format(Locale.US, "%.2f",user.getHours()));
 
@@ -122,7 +107,7 @@ public class UserViewPager extends PagerAdapter implements DatabaseAccess<User> 
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(mContext, EditUser.class);
-                        intent.putExtra("USER_ID", user.getUserId());
+                        intent.putExtra("USER_ID", user.getId());
                         mContext.startActivity(intent);
                     }
                 });
@@ -147,9 +132,9 @@ public class UserViewPager extends PagerAdapter implements DatabaseAccess<User> 
                         };
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setMessage("Are you sure you want to delete user " + user.getName() + " ?")
-                                .setPositiveButton("Yes", dialogClickListener)
-                                .setNegativeButton("No", dialogClickListener).show();
+                        builder.setMessage(mContext.getString(R.string.customer_view_pager_delete) + user.getName() + " ?")
+                                .setPositiveButton(mContext.getString(R.string.yes), dialogClickListener)
+                                .setNegativeButton(mContext.getString(R.string.no), dialogClickListener).show();
                     }
                 });
             }
@@ -172,37 +157,19 @@ public class UserViewPager extends PagerAdapter implements DatabaseAccess<User> 
             return userLogs;
         }
 
-        /**
-         * Destroy the item from the {@link android.support.v4.view.ViewPager}. In our case this is simply removing the
-         * {@link View}.
-         */
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
             Log.i(TAG, "destroyItem() [position: " + position + "]" + " childCount:" + container.getChildCount());
         }
 
-        /**
-         * This method is only gets called when we invoke {@link #notifyDataSetChanged()} on this adapter.
-         * Returns the index of the currently active fragments.
-         * There could be minimum two and maximum three active fragments(suppose we have 3 or more  fragments to show).
-         * If there is only one fragment to show that will be only active fragment.
-         * If there are only two fragments to show, both will be in active state.
-         * PagerAdapter keeps left and right fragments of the currently visible fragment in ready/active state so that it could be shown immediate on swiping.
-         * Currently Active Fragments means one which is currently visible one is before it and one is after it.
-         *
-         * @param object Active Fragment reference
-         * @return Returns the index of the currently active fragments.
-         */
         @Override
         public int getItemPosition(@NonNull Object object) {
             User user = (User) ((View) object).getTag();
             int position = users.indexOf(user);
             if (position >= 0) {
-                // The current data matches the data in this active fragment, so let it be as it is.
                 return position;
             } else {
-                // Returning POSITION_NONE means the current data does not match the data this fragment is showing right now.  Returning POSITION_NONE constant will force the fragment to redraw its view layout all over again and show new data.
                 return POSITION_NONE;
             }
         }

@@ -31,7 +31,7 @@ public class RecyclerMaterial extends RecyclerView.Adapter {
         notifyItemInserted(position);
     }
 
-    public void removeAt(int position) {
+    private void removeAt(int position) {
         materials.remove(position);
         notifyItemRemoved(position);
     }
@@ -66,7 +66,7 @@ public class RecyclerMaterial extends RecyclerView.Adapter {
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameText;
+        private TextView nameText;
         private TextView typeText;
         private TextView priceText;
         private TextView additionText;
@@ -74,7 +74,7 @@ public class RecyclerMaterial extends RecyclerView.Adapter {
         private FloatingActionButton deleteButton;
 
 
-        public ListViewHolder(View view) {
+        private ListViewHolder(View view) {
             super(view);
             nameText = view.findViewById(R.id.landscaping_material_item_material_name);
             typeText = view.findViewById(R.id.landscaping_material_item_material_type);
@@ -87,13 +87,13 @@ public class RecyclerMaterial extends RecyclerView.Adapter {
         public void bindView(final int position) {
 
             final Material material = materials.get(position);
-            String quantity = Double.toString(material.getMaterialQuantity()) + material.getMaterialMeasurement();
-            String price = Double.toString(material.getMaterialPrice());
-            nameText.setText(material.getMaterialName());
-            typeText.setText(material.getMaterialType());
+            String quantity = Double.toString(material.getQuantity()) + material.getMeasurement();
+            String price = Double.toString(material.getPrice());
+            nameText.setText(material.getName());
+            typeText.setText(material.getType());
             priceText.setText(price);
             quantityText.setText(quantity);
-            additionText.setText(material.isAddMaterial() ? "Add" : "Remove");
+            additionText.setText(material.isAdd() ? "Add" : "Remove");
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

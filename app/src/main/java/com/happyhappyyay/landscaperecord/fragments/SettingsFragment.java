@@ -38,18 +38,16 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
     }
 
     public void performFileSearch() {
-
         Intent intent = new Intent()
                 .setType("*/*")
                 .setAction(Intent.ACTION_GET_CONTENT);
 
-        startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.settings_fragment_select_file)), 123);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.pref_settings);
         csvReadWrite = new CSVReadWrite();
         Preference button = findPreference(getString(R.string.pref_key_import_contacts));
@@ -115,9 +113,9 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
             Uri selectedFile = data.getData();
             csvReadWrite.csvRead(selectedFile, getActivity());
             List<Customer> customers = csvReadWrite.getCustomers();
-            insertCustomers(customers.toArray(new Customer[customers.size()]));
-            Toast.makeText(getActivity(), customers.size() + " contacts added", Toast.LENGTH_SHORT).show();
-
+            insertCustomers(customers.toArray(new Customer[0]));
+            Toast.makeText(getActivity(), customers.size() + " " + getString(R.string.settings_fragment_contacts_add),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -134,7 +132,7 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
 
     @Override
     public String createLogInfo() {
-        return "IMPORT" + " " + customer.getName();
+        return getString(R.string.settings_fragment_import) + " " + customer.getName();
     }
 
     @Override
@@ -160,6 +158,5 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
 
     @Override
     public void createCustomLog() {
-
     }
 }

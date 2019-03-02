@@ -22,7 +22,7 @@ public interface UserDao {
     @Query("SELECT * FROM User WHERE name = :username")
     User findUserByName(String username);
 
-    @Query("SELECT * FROM User WHERE userId = :userId")
+    @Query("SELECT * FROM User WHERE id = :userId")
     User findUserByID(String userId);
 
     @Query("SELECT * FROM User WHERE modifiedTime > :modifiedTime")
@@ -33,8 +33,4 @@ public interface UserDao {
 
     @Delete
     void deleteUser(User user);
-
-    @Query("DELETE FROM User")
-    void deleteAllUsers();
-
 }

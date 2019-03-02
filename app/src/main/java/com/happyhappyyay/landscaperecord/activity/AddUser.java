@@ -58,40 +58,31 @@ public class AddUser extends AppCompatActivity implements DatabaseAccess<User> {
         boolean error = false;
         if(progressBar.getVisibility() == View.INVISIBLE) {
             if (!firstName.getText().toString().isEmpty() & !lastName.getText().toString().isEmpty()) {
-                user = new User();
-                user.setFirstName(firstName.getText().toString());
-                user.setLastName(lastName.getText().toString());
-                user.setName(firstName.getText().toString() + " " + lastName.getText().toString());
                 if (password.getText().toString().length() > 5) {
-                    user.setPassword(password.getText().toString());
+                    user = new User(firstName.getText().toString(),lastName.getText().toString(),password.getText().toString());
+                    if (hours.getText().toString().isEmpty()) {
+                        user.setHours(0);
+                    } else {
+                            try {
+                                user.setHours(Double.parseDouble(hours.getText().toString()));
+
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.add_user_hour_input_error), Toast.LENGTH_LONG).show();
+                                hours.setText("");
+                                error = true;
+                            }
+                    }
+                    user.setAdmin(admin.isChecked());
+                    user.setNickname(nickname.getText().toString());
                 } else {
-                    Toast.makeText(getApplicationContext(), "Password must be at least 6 characters" +
-                            " long", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.add_user_password_input_error), Toast.LENGTH_LONG).show();
                     error = true;
                     password.setText("");
                 }
-                if (hours.getText().toString().isEmpty()) {
-                    user.setHours(0);
-                } else {
-                    if (!error) {
-                        try {
-                            user.setHours(Double.parseDouble(hours.getText().toString()));
 
-                        } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), "Hours must be entered as whole" +
-                                    " (e.g., 5) or real (e.g., 5.0) numbers", Toast.LENGTH_LONG).show();
-                            hours.setText("");
-                            error = true;
-                        }
-                    }
-
-                }
-                user.setAdmin(admin.isChecked());
-                user.setNickname(nickname.getText().toString());
                 if (!error) {
                     insertUser();
                 }
-
             }
         }
     }
@@ -102,25 +93,6 @@ public class AddUser extends AppCompatActivity implements DatabaseAccess<User> {
         Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
                 " created.", Toast.LENGTH_LONG).show();
         finish();
-
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                LogActivity log = new LogActivity("User", user.getName(),0, 0);
-//                db.userDao().insert(user);
-//                db.logDao().insert(log);
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                Toast.makeText(getApplicationContext(), "User account for " + user.getName() +
-//                        " created.", Toast.LENGTH_LONG).show();
-//
-//
-//                finish();
-//            }
-//        }.execute();
     }
 
     @Override

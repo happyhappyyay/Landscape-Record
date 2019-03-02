@@ -9,60 +9,60 @@ import java.util.Map;
 import java.util.Set;
 
 public class Payment {
-    private Map<String, Double> serviceDefaultPricing;
-    private List<String> paymentReceiptDates;
-    private List<Double> paymentReceiptAmount;
-    private Map<String, Double> servicesPriced;
+    private Map<String, Double> defaultPrices;
+    private List<String> dates;
+    private List<Double> amounts;
+    private Map<String, Double> servicePrices;
     private List<String> checkNumbers;
-    private Double amountPaid;
-    private Double amountRemaining;
+    private Double paid;
+    private Double owed;
 
     public Payment() {
-    paymentReceiptDates = new ArrayList<>();
-    paymentReceiptAmount = new ArrayList<>();
+    dates = new ArrayList<>();
+    amounts = new ArrayList<>();
     checkNumbers = new ArrayList<>();
-    amountPaid = 0.0;
-    amountRemaining = 0.0;
-    serviceDefaultPricing = new LinkedHashMap<>();
-    servicesPriced = new LinkedHashMap<>();
+    paid = 0.0;
+    owed = 0.0;
+    defaultPrices = new LinkedHashMap<>();
+    servicePrices = new LinkedHashMap<>();
     }
 
     public void addServicePrice(String service, Double price) {
-        if(serviceDefaultPricing.containsKey(service)){
-            servicesPriced.put(service, price);
-            amountRemaining += price;
+        if(defaultPrices.containsKey(service)){
+            servicePrices.put(service, price);
+            owed += price;
         }
         else {
-            serviceDefaultPricing.put(service, price);
-            servicesPriced.put(service, price);
-            amountRemaining += price;
+            defaultPrices.put(service, price);
+            servicePrices.put(service, price);
+            owed += price;
         }
     }
 
     public void addServicePrice(String service, Double price, boolean override) {
-        if(serviceDefaultPricing.containsKey(service)){
+        if(defaultPrices.containsKey(service)){
             if(override) {
-                serviceDefaultPricing.put(service, price);
+                defaultPrices.put(service, price);
             }
-            servicesPriced.put(service, price);
-            amountRemaining += price;
+            servicePrices.put(service, price);
+            owed += price;
         }
         else {
-            serviceDefaultPricing.put(service, price);
-            servicesPriced.put(service, price);
-            amountRemaining += price;
+            defaultPrices.put(service, price);
+            servicePrices.put(service, price);
+            owed += price;
         }
     }
 
     public List<String> retrieveAllPaymentReceipts() {
         String paymentInformation;
         List<String> strings = new ArrayList<>();
-        for (int i = 0; i < paymentReceiptDates.size(); i++) {
+        for (int i = 0; i < dates.size(); i++) {
             String type = "Cash";
             if (!checkNumbers.get(i).equals("CASH")) {
                 type = "Check";
             }
-            paymentInformation = paymentReceiptDates.get(i) + ":  $" + paymentReceiptAmount.get(i) + " " + type;
+            paymentInformation = dates.get(i) + ":  $" + amounts.get(i) + " " + type;
             strings.add(paymentInformation);
         }
         return strings;
@@ -70,7 +70,7 @@ public class Payment {
 
     public List<String> retrieveAllServicePrices() {
         List<String> strings = new ArrayList<>();
-        Set< Map.Entry<String, Double> > mapSet = servicesPriced.entrySet();
+        Set< Map.Entry<String, Double> > mapSet = servicePrices.entrySet();
         int count = 0;
 
         for (Map.Entry< String, Double> mapEntry:mapSet)
@@ -83,89 +83,89 @@ public class Payment {
     }
 
     public double returnServicePrice(String service) {
-        if (servicesPriced.containsKey(service)) {
-            return servicesPriced.get(service);
+        if (servicePrices.containsKey(service)) {
+            return servicePrices.get(service);
         }
         return 0;
     }
 
     public double returnDefaultServicePrice(String service) {
-        if (serviceDefaultPricing.containsKey(service)) {
-            return serviceDefaultPricing.get(service);
+        if (defaultPrices.containsKey(service)) {
+            return defaultPrices.get(service);
         }
         return 0;
     }
 
     public void payForServices(double amount, String date) {
         int index = 0;
-        if(paymentReceiptDates.size() > 0) {
+        if(dates.size() > 0) {
             index = sortPaymentReceiptsByDate(date);
         }
-        amountPaid += amount;
-        amountRemaining -= amount;
-        paymentReceiptAmount.add(index, amount);
-        paymentReceiptDates.add(index, date);
+        paid += amount;
+        owed -= amount;
+        amounts.add(index, amount);
+        dates.add(index, date);
         checkNumbers.add(index, "CASH");
     }
 
     public void payForServices(double amount, String date, String checkNumber) {
         int index = sortPaymentReceiptsByDate(date);
-        amountPaid += amount;
-        amountRemaining -= amount;
-        paymentReceiptAmount.add(index, amount);
-        paymentReceiptDates.add(index, date);
+        paid += amount;
+        owed -= amount;
+        amounts.add(index, amount);
+        dates.add(index, date);
         checkNumbers.add(index, checkNumber);
     }
 
     private int sortPaymentReceiptsByDate(String date) {
         long dateLong = Util.convertStringDateToMilliseconds(date);
 
-        for (int i = 0; i < paymentReceiptDates.size(); i++) {
-            long reciptLong = Util.convertStringDateToMilliseconds(paymentReceiptDates.get(i));
-            if (dateLong > reciptLong) {
+        for (int i = 0; i < dates.size(); i++) {
+            long receiptLong = Util.convertStringDateToMilliseconds(dates.get(i));
+            if (dateLong > receiptLong) {
                 return i;
             }
         }
-        return paymentReceiptDates.size();
+        return dates.size();
     }
 
     public List<String> getCheckNumbers() {
         return checkNumbers;
     }
 
-    public Double getAmountPaid() {
-        return amountPaid;
+    public Double getPaid() {
+        return paid;
     }
 
-    public Double getAmountRemaining() {
-        return amountRemaining;
+    public Double getOwed() {
+        return owed;
     }
 
-    public List<Double> getPaymentReceiptAmount() {
-        return paymentReceiptAmount;
+    public List<Double> getAmounts() {
+        return amounts;
     }
 
-    public Map<String, Double> getServiceDefaultPricing() {
-        return serviceDefaultPricing;
+    public Map<String, Double> getDefaultPrices() {
+        return defaultPrices;
     }
 
-    public void setServiceDefaultPricing(Map<String, Double> serviceDefaultPricing) {
-        this.serviceDefaultPricing = serviceDefaultPricing;
+    public void setDefaultPrices(Map<String, Double> defaultPrices) {
+        this.defaultPrices = defaultPrices;
     }
 
-    public Map<String, Double> getServicesPriced() {
-        return servicesPriced;
+    public Map<String, Double> getServicePrices() {
+        return servicePrices;
     }
 
-    public void setServicesPriced(Map<String, Double> servicesPriced) {
-        this.servicesPriced = servicesPriced;
+    public void setServicePrices(Map<String, Double> servicePrices) {
+        this.servicePrices = servicePrices;
     }
 
-    public List<String> getPaymentReceiptDates() {
-        return paymentReceiptDates;
+    public List<String> getDates() {
+        return dates;
     }
 
-    public void setPaymentReceiptDates(List<String> paymentReceiptDates) {
-        this.paymentReceiptDates = paymentReceiptDates;
+    public void setDates(List<String> dates) {
+        this.dates = dates;
     }
 }

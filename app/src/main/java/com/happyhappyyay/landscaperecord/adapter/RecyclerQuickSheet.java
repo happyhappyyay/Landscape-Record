@@ -43,7 +43,8 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
     private Context context;
     private Service service;
 
-    public RecyclerQuickSheet(List<Customer> customers, Context context, String startDateString, String endDateString) {
+    public RecyclerQuickSheet(List<Customer> customers, Context context, String startDateString,
+                              String endDateString) {
         this.customers = customers;
         if (this.customers == null) {
             this.customers = new ArrayList<>();
@@ -83,61 +84,10 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
     }
 
     @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
-    public String createLogInfo() {
-        return null;
-    }
-
-    @Override
-    public void onPostExecute(List<Customer> databaseObjects) {
-
-    }
-
-    @Override
-    public void accessDatabaseMultipleTimes() {
-        if (Util.hasOnlineDatabaseEnabledAndValid(context)) {
-            try {
-                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
-                databaseAccessMethod(db);
-
-            } catch (Exception e) {
-                AppDatabase db = AppDatabase.getAppDatabase(context);
-                databaseAccessMethod(db);
-            }
-        } else {
-            AppDatabase db = AppDatabase.getAppDatabase(context);
-            databaseAccessMethod(db);
-        }
-
-    }
-
-    private void databaseAccessMethod(DatabaseOperator db) {
-        WorkDay workDay;
-        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
-        if (service != null) {
-            WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
-            if (tempWorkDay != null) {
-                workDay = tempWorkDay;
-                workDay.addServices(service);
-                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
-            } else {
-                workDay = new WorkDay(endDateString);
-                workDay.addServices(service);
-                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
-                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), endDateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
-                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-            }
-        }
-    }
-
-    @Override
     public void createCustomLog() {
         String userName = Authentication.getAuthentication().getUser().getName();
-        LogActivity log = new LogActivity(userName, customer.getName(), LogActivityAction.ADD.ordinal(), LogActivityType.SERVICES.ordinal());
+        LogActivity log = new LogActivity(userName, customer.getName(), LogActivityAction.ADD.ordinal(),
+                LogActivityType.SERVICES.ordinal());
         try {
             OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
@@ -166,6 +116,60 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
 
     private boolean startAndEndDateMatch(long startTime, long endTime) {
         return startTime == endTime;
+    }
+
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    private void updateCustomer() {
+        Util.enactMultipleDatabaseOperations(this);
+    }
+
+    @Override
+    public String createLogInfo() {
+        return null;
+    }
+
+    @Override
+    public void onPostExecute(List<Customer> databaseObjects) {
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        if (Util.hasOnlineDatabaseEnabledAndValid(context)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
+                databaseAccessMethod(db);
+
+            } catch (Exception e) {
+                AppDatabase db = AppDatabase.getAppDatabase(context);
+                databaseAccessMethod(db);
+            }
+        } else {
+            AppDatabase db = AppDatabase.getAppDatabase(context);
+            databaseAccessMethod(db);
+        }
+    }
+
+    private void databaseAccessMethod(DatabaseOperator db) {
+        WorkDay workDay;
+        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
+        if (service != null) {
+            WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
+            if (tempWorkDay != null) {
+                workDay = tempWorkDay;
+                workDay.addServices(service);
+                Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
+            } else {
+                workDay = new WorkDay(endDateString);
+                workDay.addServices(service);
+                Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), endDateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            }
+        }
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
@@ -205,28 +209,28 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                                 }
                                 String servicesString = updateCheckBoxes();
                                 customer = customers.get(getAdapterPosition());
-                                List<Service> services = customer.getCustomerServices();
+                                List<Service> services = customer.getServices();
                                 int serviceListPosition = 0;
 //                            check for service pause and date then set inputs to services string
                                 for (int i = 0; i < services.size(); i++) {
                                     Service s = services.get(i);
                                     if (s.convertStartTimeToDateString().equals(startDateString)) {
                                         tempService = s;
-                                        if (s.isPause()) {
+                                        if (!s.checkCompleted()) {
                                             serviceListPosition = i;
                                         }
                                     }
                                 }
 //                            create new service if could not find existing service
                                 if (tempService == null) {
-                                    jobActionButton.setText("Finish");
+                                    jobActionButton.setText(context.getString(R.string.quick_sheet_item_finish));
                                     tempService = new Service();
-                                    tempService.setPause(true);
                                     tempService.setStartTime(startTime);
                                     tempService.setServices(servicesString);
                                     tempService.setCustomerName(customer.getName());
                                     tempService.setUsername(Authentication.getAuthentication().getUser().getName());
-                                    tempService.setMileage(customer.getCustomerMileage() != null? customer.getCustomerMileage():0);
+                                    tempService.setMi(customer.getMi() != null?
+                                            customer.getMi():0);
                                     customer.addService(tempService);
                                     updateCustomer();
                                 }
@@ -249,34 +253,37 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                                             tempService.setServices(servicesString + tempServiceString);
                                             tempService.setEndTime(endTime);
                                             tempService.setUsername(Authentication.getAuthentication().getUser().getName());
-                                            tempService.setMileage(customer.getCustomerMileage() != null? customer.getCustomerMileage():0);
+                                            tempService.setMi(customer.getMi() != null?
+                                                    customer.getMi():0);
                                             if(startAndEndDateMatch(startTime, endTime)) {
-                                                tempService.setManHours((tempService.getEndTime() - tempService.getStartTime()) / TimeReporting.MILLISECONDS_TO_HOURS);
+                                                tempService.setManHours((tempService.getEndTime()
+                                                        - tempService.getStartTime()) / TimeReporting.MILLISECONDS_TO_HOURS);
                                             }
-                                            tempService.setPause(false);
                                             customer.updateService(tempService, serviceListPosition);
                                             service = tempService;
                                             updateCustomer();
                                         } else {
                                             Toast.makeText(context,
-                                                    "There was an error with the start - end date " +
-                                                            "combination. Please check the dates are correct.",
+                                                    context.getString(R.string.quick_sheet_date_error),
                                                     Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
                             } else {
                                 Toast.makeText(context,
-                                        "Date format incorrect. Please reenter the date (mm/dd/yyyy).",
+                                        context.getString(R.string.incorrect_date_format),
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
             );
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            String quickSheetItem = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item1, context), "1");
-            String quickSheetItem1 = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item2, context), "2");
-            String quickSheetItem2 = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item3, context), "3");
+            String quickSheetItem = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item1,
+                    context), context.getString(R.string.lawn_services_cut));
+            String quickSheetItem1 = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item2,
+                    context), context.getString(R.string.lawn_services_spray_grass));
+            String quickSheetItem2 = sharedPref.getString(Util.retrieveStringFromResources(R.string.pref_key_quick_sheet_item3,
+                    context), context.getString(R.string.lawn_services_prune));
             checkBox1 = view.findViewById(R.id.quick_sheet_check_box1);
             checkBox1.setText(quickSheetItem);
             checkBox2 = view.findViewById(R.id.quick_sheet_check_box2);
@@ -288,17 +295,17 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
 
         public void bindView(int position) {
             Customer customer = customers.get(position);
-            name.setText(customer.getCustomerAddress());
+            name.setText(customer.getAddress());
             boolean existingService = false;
-            if (customer.getCustomerServices() != null) {
-                List<Service> services = customer.getCustomerServices();
+            if (customer.getServices() != null) {
+                List<Service> services = customer.getServices();
                 for (Service s : services) {
                     if (s.convertStartTimeToDateString().equals(startDateString)) {
                         existingService = true;
-                        if (s.isPause()) {
-                            jobActionButton.setText("Finish");
-                        } else {
+                        if (s.checkCompleted()) {
                             jobActionButton.setText("✓");
+                        } else {
+                            jobActionButton.setText(context.getString(R.string.quick_sheet_item_finish));
                         }
 
                         for (CheckBox c : checkBoxes) {
@@ -310,7 +317,7 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                         }
                     }
                     if (!existingService) {
-                        jobActionButton.setText("Start");
+                        jobActionButton.setText(context.getString(R.string.quick_sheet_item_start));
                         for (CheckBox c : checkBoxes) {
                             c.setChecked(false);
                         }
@@ -329,9 +336,5 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
             }
             return stringBuilder.toString();
         }
-    }
-
-    private void updateCustomer() {
-        Util.enactMultipleDatabaseOperations(this);
     }
 }

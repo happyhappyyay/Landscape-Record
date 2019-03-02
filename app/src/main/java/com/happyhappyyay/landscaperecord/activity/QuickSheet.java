@@ -55,7 +55,6 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         if (savedInstanceState != null) {
-            // Restore value of members from saved state
             endDateString = savedInstanceState.getString(DATE_STRING_END);
             startDateString = savedInstanceState.getString(DATE_STRING);
         }
@@ -67,8 +66,8 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
                 List<Customer> customersByDay = new ArrayList<>();
                 if (position != 0) {
                     for (Customer c : allCustomers) {
-                        if (c.getCustomerDay() != null) {
-                            if (c.getCustomerDay().equals(daySpinner.getSelectedItem().toString())) {
+                        if (c.getDay() != null) {
+                            if (c.getDay().equals(daySpinner.getSelectedItem().toString())) {
                                 customersByDay.add(c);
                             }
                         }
@@ -77,14 +76,11 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
                 } else {
                     updateCustomers(allCustomers);
                 }
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
-
         });
         startDateText = findViewById(R.id.quick_sheet_start_date_text);
         startDateText.setText(startDateString);

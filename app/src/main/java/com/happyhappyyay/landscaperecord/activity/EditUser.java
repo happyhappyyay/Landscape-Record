@@ -60,7 +60,8 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
             String nickname = this.nickname.getText().toString();
 
             if (!firstName.isEmpty() & !lastName.isEmpty()) {
-                user.setName(firstName + " " + lastName);
+                user.setFirst(firstName);
+                user.setLast(lastName);
                 user.setAdmin(adminBox.isChecked());
             }
             if (!nickname.isEmpty()) {
@@ -93,5 +94,4 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
             }
         }
     }
-
 }

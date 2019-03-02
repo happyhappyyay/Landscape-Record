@@ -119,7 +119,7 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     }
 
     private void noWorkDayMessage() {
-        Toast.makeText(getApplicationContext(), "No information available for this date", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.view_work_day_no_information), Toast.LENGTH_SHORT).show();
     }
 
     private void findWorkDayByDate() {
