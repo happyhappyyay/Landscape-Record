@@ -281,7 +281,12 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         else {
             workDay = new WorkDay(Util.convertLongToStringDate(service.getStartTime()));
             workDay.addServices(service);
+            Authentication authentication = Authentication.getAuthentication();
+            LogActivity log = new LogActivity(authentication.getUser().getName(), workDay.getDate(),
+                    LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+            log.setObjId(workDay.getId());
             Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
         }
     }
 
@@ -319,16 +324,12 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                 Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
                 updateWorkDay(db);
             } catch (Exception e) {
-                AppDatabase db = AppDatabase.getAppDatabase(this);
-                Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
-                updateWorkDay(db);
+                e.printStackTrace();
             }
         }
-        else {
-            AppDatabase db = AppDatabase.getAppDatabase(this);
-            Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
-            updateWorkDay(db);
-        }
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
+        updateWorkDay(db);
     }
 
     @Override
@@ -337,15 +338,18 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
         LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),
                 LogActivityAction.UPDATE.ordinal(), LogActivityType.CUSTOMER.ordinal());
         log.setObjId(customer.getId());
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-            finish();
-        } catch (Exception e) {
-            AppDatabase db = AppDatabase.getAppDatabase(this);
-            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-            finish();
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+        finish();
     }
 
     @Override

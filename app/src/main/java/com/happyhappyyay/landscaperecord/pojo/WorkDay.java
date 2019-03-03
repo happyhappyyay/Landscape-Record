@@ -106,11 +106,12 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             this.date = newDate;
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
-
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             week = cal.getTimeInMillis();
+            cal.setTime(date);
             cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
             month = cal.getTimeInMillis();
+            cal.setTime(date);
             cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
             year = cal.getTimeInMillis();
         }

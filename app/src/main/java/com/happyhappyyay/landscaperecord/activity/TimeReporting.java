@@ -141,7 +141,8 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                 } else {
                     addAccumulatedHours();
                     Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_out)
-                            + " " + (String.format(Locale.US, "%.2f",hours)) + user.toString(), Toast.LENGTH_LONG).show();
+                            + " " + (String.format(Locale.US, "%.2f",hours)) + " " + user.toString(),
+                            Toast.LENGTH_LONG).show();
                 }
                 resetStartTime();
                 updateUser(authenticatedUser);
@@ -165,7 +166,7 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
             Authentication.getAuthentication().setUser(user);
         }
         progressBar.setVisibility(View.VISIBLE);
-        Util.enactMultipleDatabaseOperations(this);
+        Util.enactMultipleDatabaseOperationsPostExecute(this);
     }
 
     private void findAllUsers() {
@@ -197,14 +198,11 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
                 databaseAccessMethod(db);
             } catch (Exception e) {
-                AppDatabase db = AppDatabase.getAppDatabase(this);
-                databaseAccessMethod(db);
+                e.printStackTrace();
             }
         }
-        else {
-            AppDatabase db = AppDatabase.getAppDatabase(this);
-            databaseAccessMethod(db);
-        }
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        databaseAccessMethod(db);
     }
 
     private void databaseAccessMethod(DatabaseOperator db) {
@@ -219,6 +217,7 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
             LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
                     "Workday: " + Util.retrieveStringCurrentDate(), LogActivityAction.ADD.ordinal(),
                     LogActivityType.WORKDAY.ordinal());
+            log.setObjId(workDay.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
         }
         workDay.addUserHourReference(user.toString(), currentHours);
@@ -234,7 +233,6 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
             AppDatabase db = AppDatabase.getAppDatabase(this);
             customLogMethod(db);
         }
-        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void customLogMethod(DatabaseOperator db) {
@@ -263,26 +261,29 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
 
     @Override
     public void onPostExecute(final List<User> databaseObjects) {
-        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
-            List<User> usersInside;
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                if (usersInside != null) {
-                    user = usersInside.get(pos);
-                    adapterPosition = pos;
-                } else {
-                    usersInside = databaseObjects;
-                    user = usersInside.get(adapterPosition);
-                    parent.setSelection(adapterPosition);
-                }
-                startTime = user.getStartTime();
-                updateCheckInStatus();
-            }
+        if(databaseObjects != null) {
+            AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+                List<User> usersInside;
 
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        };
-        Spinner spinner = findViewById(R.id.time_reporting_spinner);
-        Util.populateSpinner(spinner,listener,this,databaseObjects, true);
+                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                    if (usersInside != null) {
+                        user = usersInside.get(pos);
+                        adapterPosition = pos;
+                    } else {
+                        usersInside = databaseObjects;
+                        user = usersInside.get(adapterPosition);
+                        parent.setSelection(adapterPosition);
+                    }
+                    startTime = user.getStartTime();
+                    updateCheckInStatus();
+                }
+
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            };
+            Spinner spinner = findViewById(R.id.time_reporting_spinner);
+            Util.populateSpinner(spinner, listener, this, databaseObjects, true);
+        }
         progressBar.setVisibility(View.INVISIBLE);
     }
 }

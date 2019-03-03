@@ -31,6 +31,7 @@ import java.util.List;
 public class FirstGlance extends AppCompatActivity implements MultiDatabaseAccess<User> {
     private ConstraintLayout userLayout;
     private ConstraintLayout databaseLayout;
+    private TextView importDb;
     private ProgressBar progressBar;
     private User user;
     private SharedPreferences.Editor editor;
@@ -43,6 +44,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
         userLayout = findViewById(R.id.first_glance_layout_user);
         databaseLayout = findViewById(R.id.first_glance_layout_database);
         progressBar = findViewById(R.id.first_glance_progress_bar);
+        importDb = findViewById(R.id.first_glance_import);
         TextView mongoText = findViewById(R.id.first_glance_mongo_text);
         mongoText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +71,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
     public void onDatabaseSubmit(View view) {
         if(progressBar.getVisibility() == View.INVISIBLE) {
             Button testButton = findViewById(R.id.first_glance_database_button);
-            String testButtonText = testButton.getText().toString().toLowerCase();
+            String testButtonText = testButton.getText().toString();
             String testText = getString(R.string.first_glance_test);
             if (testButtonText.equals(testText)) {
                 EditText databaseName = findViewById(R.id.first_glance_database_name);
@@ -83,6 +85,8 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
                         MongoClient mongoClient = new MongoClient(uri);
                         MongoDatabase db = mongoClient.getDatabase(dbNameText);
                         testButton.setText(getString(R.string.first_glance_start));
+                        user = new User();
+                        user.setName("NEW_DEVICE");
                         progressBar.setVisibility(View.INVISIBLE);
                         editor = sharedPref.edit();
                         editor.putBoolean(Util.retrieveStringFromResources(R.string.pref_key_database_usage, this), true);
@@ -103,6 +107,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
 
             } else {
                 progressBar.setVisibility(View.VISIBLE);
+                Authentication.getAuthentication().setUser(user);
                 Util.findAllObjects(this, Util.USER_REFERENCE);
             }
         }
@@ -114,6 +119,7 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
         editor.putString(Util.retrieveStringFromResources(R.string.pref_key_database_uri, this), " ");
         editor.putBoolean(Util.retrieveStringFromResources(R.string.pref_key_database_usage, this), false);
         editor.apply();
+        OnlineDatabase.getOnlineDatabase(this).resetDatabaseInstance();
         Button testButton = findViewById(R.id.first_glance_database_button);
         testButton.setText(getString(R.string.first_glance_test));
     }
@@ -148,6 +154,8 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
+                        progressBar.setVisibility(View.VISIBLE);
+                        importDb.setVisibility(View.VISIBLE);
                         Toast.makeText(getApplicationContext(), getString(R.string.first_glance_settings_saved), Toast.LENGTH_LONG).show();
                         Util.enactMultipleDatabaseOperationsPostExecute(FirstGlance.this);
                         break;
@@ -238,7 +246,6 @@ public class FirstGlance extends AppCompatActivity implements MultiDatabaseAcces
     @Override
     public void accessDatabaseMultipleTimes() {
         if(OnlineDatabase.connectionIsValid(this)){
-            OnlineDatabase.getOnlineDatabase(this).resetDatabaseInstance();
             Util.updateDatabases(this);
         }
     }

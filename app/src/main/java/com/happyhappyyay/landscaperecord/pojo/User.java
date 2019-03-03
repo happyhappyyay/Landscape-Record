@@ -110,7 +110,7 @@ public class User implements DatabaseObjects<User> {
 
     @Override
     public String getName() {
-        return first + " " + last;
+        return name;
     }
 
     @Override

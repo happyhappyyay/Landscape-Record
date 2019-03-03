@@ -132,7 +132,7 @@ public class UserViewPager extends PagerAdapter implements DatabaseAccess<User> 
                         };
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setMessage(mContext.getString(R.string.customer_view_pager_delete) + user.getName() + " ?")
+                        builder.setMessage(mContext.getString(R.string.customer_view_pager_delete) + " " + user.getName() + " ?")
                                 .setPositiveButton(mContext.getString(R.string.yes), dialogClickListener)
                                 .setNegativeButton(mContext.getString(R.string.no), dialogClickListener).show();
                     }

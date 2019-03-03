@@ -12,21 +12,21 @@
             <ListPreference
                 android:defaultValue="@string/lawn_services_cut"
                 android:entries="@array/work_activities"
-                android:entryValues="@array/work_activities_values"
+                android:entryValues="@array/work_activities"
                 android:key="@string/pref_key_quick_sheet_item1"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title1" />
             <ListPreference
                 android:defaultValue="@string/lawn_services_spray_grass"
                 android:entries="@array/work_activities"
-                android:entryValues="@array/work_activities_values"
+                android:entryValues="@array/work_activities"
                 android:key="@string/pref_key_quick_sheet_item2"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title2" />
             <ListPreference
                 android:defaultValue="@string/lawn_services_prune"
                 android:entries="@array/work_activities"
-                android:entryValues="@array/work_activities_values"
+                android:entryValues="@array/work_activities"
                 android:key="@string/pref_key_quick_sheet_item3"
                 android:summary="%s"
                 android:title="@string/pref_settings_quick_sheet_items_selection_title3" />
@@ -36,7 +36,7 @@
             android:key="@string/pref_key_company_name"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/pref_settings_company_name_summary"
+            android:summary="@string/pref_setting_company_summary"
             android:title="@string/billing_item_company_name" />
         <EditTextPreference
             android:layout_width="wrap_content"

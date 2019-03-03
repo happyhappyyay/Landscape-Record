@@ -89,9 +89,11 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
             @Override
             public void afterTextChanged(Editable s) {
                 String customDateString = startDateText.getText().toString();
-                adapter.setStartDateString(customDateString);
-                startDateString = customDateString;
-                adapter.notifyDataSetChanged();
+                if(adapter != null) {
+                    adapter.setStartDateString(customDateString);
+                    startDateString = customDateString;
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -111,10 +113,12 @@ public class QuickSheet extends AppCompatActivity implements DatabaseAccess<Cust
 
             @Override
             public void afterTextChanged(Editable s) {
-                String customDateString = endDateText.getText().toString();
-                adapter.setEndDateString(customDateString);
-                endDateString = customDateString;
-                adapter.notifyDataSetChanged();
+                if(adapter != null) {
+                    String customDateString = endDateText.getText().toString();
+                    adapter.setEndDateString(customDateString);
+                    endDateString = customDateString;
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override

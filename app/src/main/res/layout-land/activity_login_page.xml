@@ -7,7 +7,7 @@
     tools:context=".activity.LoginPage">
 
     <ProgressBar
-        android:id="@+id/login_page_progress_bar2"
+        android:id="@+id/login_page_progress_bar"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

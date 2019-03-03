@@ -335,6 +335,8 @@
     <string name="util_logged_out">Logged Out!</string>
     <string name="util_enter_company">Enter Company Name in Settings</string>
     <string name="util_enter_personal">Enter Personal Message in Settings</string>
+    <string name="first_glance_importing">Importing database...</string>
+    <string name="pref_setting_company_summary">The company name that will appear on billing documents.</string>
 
 
 </resources>

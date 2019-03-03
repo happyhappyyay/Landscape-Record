@@ -88,14 +88,17 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
         String userName = Authentication.getAuthentication().getUser().getName();
         LogActivity log = new LogActivity(userName, customer.getName(), LogActivityAction.ADD.ordinal(),
                 LogActivityType.SERVICES.ordinal());
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
-            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-        } catch (Exception e) {
-            AppDatabase db = AppDatabase.getAppDatabase(context);
-            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+        if(Util.hasOnlineDatabaseEnabledAndValid(context)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(context);
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            } catch (Exception e) {
+                e.printStackTrace();
 
+            }
         }
+        AppDatabase db = AppDatabase.getAppDatabase(context);
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
     }
 
     private long retrieveStartTime(long startTime) {
@@ -144,13 +147,11 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                 databaseAccessMethod(db);
 
             } catch (Exception e) {
-                AppDatabase db = AppDatabase.getAppDatabase(context);
-                databaseAccessMethod(db);
+                e.printStackTrace();
             }
-        } else {
-            AppDatabase db = AppDatabase.getAppDatabase(context);
-            databaseAccessMethod(db);
         }
+        AppDatabase db = AppDatabase.getAppDatabase(context);
+        databaseAccessMethod(db);
     }
 
     private void databaseAccessMethod(DatabaseOperator db) {
@@ -166,7 +167,9 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
                 workDay = new WorkDay(endDateString);
                 workDay.addServices(service);
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
-                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), endDateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
+                        endDateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                log.setId(workDay.getId());
                 Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             }
         }

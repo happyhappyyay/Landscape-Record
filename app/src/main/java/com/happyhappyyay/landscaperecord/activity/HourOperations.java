@@ -185,6 +185,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                 Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
                 LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
                         dateString, LogActivityAction.ADD.ordinal(), LogActivityType.WORKDAY.ordinal());
+                log.setObjId(workDay.getId());
                 Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
             }
             else {
@@ -216,35 +217,34 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                 Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
                 updateWorkDay(db);
             } catch (Exception e) {
-                AppDatabase db = AppDatabase.getAppDatabase(this);
-                Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
-                updateWorkDay(db);
+                e.printStackTrace();
             }
         }
-        else {
             AppDatabase db = AppDatabase.getAppDatabase(this);
             Util.USER_REFERENCE.updateClassInstanceFromDatabase(db, user);
             updateWorkDay(db);
-        }
     }
 
     @Override
     public void createCustomLog() {
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
-                    hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
-            log.setObjId(user.getId());
-            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-            hours.setText("");
-        } catch (Exception e) {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
+                        hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
+                log.setObjId(user.getId());
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+                hours.setText("");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
             AppDatabase db = AppDatabase.getAppDatabase(this);
             LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
                     hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
             log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
             hours.setText("");
-        }
         progressBar.setVisibility(View.INVISIBLE);
     }
 

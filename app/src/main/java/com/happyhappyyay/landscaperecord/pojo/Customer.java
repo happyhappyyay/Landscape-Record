@@ -115,9 +115,11 @@ public class Customer implements DatabaseObjects<Customer> {
         List<Integer> months = new ArrayList<>();
         for (int i = 0; i < services.size(); i++) {
             Service service = services.get(i);
-            int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
-            if(!service.isPriced() && !months.contains(serviceMonth)) {
-                months.add(serviceMonth);
+            if(service.getEndTime() > 0) {
+                int serviceMonth = Util.retrieveMonthFromLong(service.getEndTime());
+                if (!service.isPriced() && !months.contains(serviceMonth)) {
+                    months.add(serviceMonth);
+                }
             }
         }
         return months.size();

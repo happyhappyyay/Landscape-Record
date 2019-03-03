@@ -81,13 +81,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:ems="10"
         android:hint="@string/contact_first_name_hint"
         android:inputType="textPersonName"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/contact_last_name_text"
         app:layout_constraintStart_toEndOf="@+id/contact_name"
+        android:autofillHints=""
         app:layout_constraintTop_toBottomOf="@+id/new_contact_toolbar" />
 
     <EditText
@@ -101,6 +101,7 @@
         android:inputType="textPersonName"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:autofillHints=""
         app:layout_constraintTop_toBottomOf="@+id/new_contact_toolbar" />
 
     <EditText
@@ -113,6 +114,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/textView7"
         app:layout_constraintStart_toStartOf="@+id/contact_business_text"
+        android:autofillHints=""
         app:layout_constraintTop_toBottomOf="@+id/contact_email_text" />
 
     <EditText
@@ -127,6 +129,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/contact_address_text"
+        android:autofillHints=""
         app:layout_constraintTop_toBottomOf="@+id/contact_address_text" />
 
     <EditText
@@ -139,6 +142,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/textView5"
+        android:importantForAutofill="no"
         app:layout_constraintTop_toBottomOf="@+id/contact_phone_number_text" />
 
     <TextView
@@ -164,6 +168,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView6"
+        android:autofillHints=""
         app:layout_constraintTop_toBottomOf="@+id/contact_first_name_text" />
 
     <EditText
@@ -179,6 +184,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintStart_toStartOf="@+id/contact_state_spinner"
+        android:autofillHints=""
         app:layout_constraintTop_toBottomOf="@+id/contact_email_text" />
 
     <Spinner
@@ -252,6 +258,7 @@
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView22"
         app:layout_constraintEnd_toEndOf="parent"
+        android:importantForAutofill="no"
         app:layout_constraintStart_toEndOf="@+id/textView22" />
 
     <ProgressBar

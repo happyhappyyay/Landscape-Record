@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:background="@drawable/rounded_layout"
         android:gravity="bottom|center"
+        android:onClick="startPayments"
         android:text="0"
         android:textColor="@color/colorPrimary"
         android:textSize="36sp"
@@ -44,6 +45,7 @@
 
         android:background="@drawable/rounded_layout"
         android:gravity="bottom|center"
+        android:onClick="startTimeReporting"
         android:text="0"
         android:textColor="@color/colorPrimary"
         android:textSize="36sp"
@@ -139,6 +141,7 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/rounded_layout"
         android:gravity="bottom|center"
+        android:onClick="startViewServices"
         android:text="1"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="36sp"
@@ -157,6 +160,7 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_layout"
         android:gravity="bottom|center"
+        android:onClick="startManageUsers"
         android:text="1"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="36sp"
@@ -173,6 +177,7 @@
         android:layout_marginStart="8dp"
         android:background="@drawable/rounded_layout"
         android:gravity="bottom|center"
+        android:onClick="startBillCreation"
         android:text="0"
         android:textColor="@color/colorPrimary"
         android:textSize="36sp"
@@ -180,6 +185,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/dashboard_main_menu"
         app:layout_constraintEnd_toStartOf="@+id/dashboard_payments_notification"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_notifications_notification" />
 

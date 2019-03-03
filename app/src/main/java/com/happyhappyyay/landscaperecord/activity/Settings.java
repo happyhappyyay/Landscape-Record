@@ -52,7 +52,6 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
         String databaseNameKey = getString(R.string.pref_key_database_name);
         String prefName = sharedPreferences.getString(databaseNameKey, null);
         String prefURI = sharedPreferences.getString(databaseURIKey, null);
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         if(s.equals(databaseUsageKey)) {
             if(sharedPreferences.getBoolean(s, true)){
                 if(OnlineDatabase.connectionIsValid(this)) {

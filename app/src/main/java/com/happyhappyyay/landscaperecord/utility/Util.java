@@ -63,22 +63,21 @@ public class Util {
     private static final String TAG = "selected";
 
     public static boolean toolbarItemSelection(Activity activity, MenuItem item) {
-        Context context = activity.getApplicationContext();
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(activity);
                 return true;
             case R.id.menu_add_contact:
-                gotToContacts(context);
+                gotToContacts(activity);
                 return true;
             case R.id.menu_add_service:
-                goToQuickSheet(context);
+                goToQuickSheet(activity);
                 return true;
             case R.id.menu_dashboard:
-                goToDashboard(context);
+                goToDashboard(activity);
                 return true;
             case R.id.menu_logout:
-                goToLogout(context);
+                goToLogout(activity);
                 return true;
             default:
                 return false;
@@ -482,8 +481,7 @@ public class Util {
             }
             @Override
             protected void onPostExecute(Void aVoid) {
-                List<T> objects = new ArrayList<>();
-                access.onPostExecute(objects);
+                access.onPostExecute(null);
             }
         }.execute();
     }
