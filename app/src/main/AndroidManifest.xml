@@ -13,6 +13,10 @@
         android:roundIcon="@mipmap/first_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.AddExpense"
+        android:parentActivityName=".activity.MainMenu" />
+        <activity android:name=".activity.ViewExpenses"
+        android:parentActivityName=".activity.MainMenu"/>
         <activity
             android:name=".activity.LoginPage"
             android:label="@string/app_name"
@@ -26,7 +30,7 @@
         <activity
             android:name=".activity.MainMenu"
             android:parentActivityName=".activity.Dashboard"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.TimeReporting"
             android:parentActivityName=".activity.MainMenu"
@@ -34,75 +38,90 @@
         <activity
             android:name=".activity.ReceivePayment"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.AddCustomer"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.JobServices"
-            android:theme="@style/AppTheme"
             android:parentActivityName=".activity.MainMenu"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.AdminTools"
             android:parentActivityName=".activity.MainMenu"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.AddUser"
             android:parentActivityName=".activity.ViewUsers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.ViewUser"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ViewUser"
             android:parentActivityName=".activity.ViewUsers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.Dashboard"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.Settings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.Dashboard"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.Settings"
             android:parentActivityName=".activity.AdminTools"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activity.HourOperations"
+        <activity
+            android:name=".activity.HourOperations"
             android:parentActivityName=".activity.ViewUsers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.ViewActivityLogs"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ViewActivityLogs"
             android:parentActivityName=".activity.AdminTools"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.QuickSheet"
             android:parentActivityName=".activity.Dashboard"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name=".activity.ViewServices"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.ViewServices"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.ViewWorkDay"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ViewWorkDay"
             android:parentActivityName=".activity.AdminTools"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.EditUser"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.EditUser"
             android:parentActivityName=".activity.ViewUsers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.ViewCustomers"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ViewCustomers"
             android:parentActivityName=".activity.MainMenu"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.ViewCustomer"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ViewCustomer"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.EditCustomer"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.EditCustomer"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.ViewUsers"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ViewUsers"
             android:parentActivityName=".activity.MainMenu"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.PaymentQueue"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.PaymentQueue"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.BillCreation"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.BillCreation"
             android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity android:name=".utility.testDatabase" />
-        <activity android:name=".activity.UserSetting"
+        <activity
+            android:name=".activity.UserSetting"
             android:parentActivityName=".activity.Dashboard"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.FirstGlance"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.FirstGlance" />
     </application>
 
 </manifest>

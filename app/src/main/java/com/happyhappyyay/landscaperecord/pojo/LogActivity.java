@@ -70,7 +70,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
                 LogActivityType.CUSTOMER.toString(), LogActivityType.PAYMENT.toString(),
                 LogActivityType.HOURS.toString(), LogActivityType.JOB.toString(),
                 LogActivityType.SERVICES.toString(), LogActivityType.DATABASE.toString(),
-                LogActivityType.WORKDAY.toString());
+                LogActivityType.WORKDAY.toString(), LogActivityType.EXPENSE.toString());
         activityAction += logActivityList.get(logActivityAction) + " ";
         activityAction += logTypeList.get(logActivityType) + " ";
         activityAction += info;

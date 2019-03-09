@@ -13,15 +13,17 @@ import com.happyhappyyay.landscaperecord.converter.ServiceListConverter;
 import com.happyhappyyay.landscaperecord.converter.StringListConverter;
 import com.happyhappyyay.landscaperecord.interfaces.CustomerDao;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.ExpenseDao;
 import com.happyhappyyay.landscaperecord.interfaces.LogDao;
 import com.happyhappyyay.landscaperecord.interfaces.UserDao;
 import com.happyhappyyay.landscaperecord.interfaces.WorkDayDao;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
+import com.happyhappyyay.landscaperecord.pojo.Expense;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 
-@Database(entities = {User.class, Customer.class, LogActivity.class, WorkDay.class}, version = 1)
+@Database(entities = {User.class, Customer.class, LogActivity.class, WorkDay.class, Expense.class}, version = 1)
 @TypeConverters({ServiceListConverter.class, IntegerListConverter.class, PaymentConverter.class,
         StringListConverter.class, MapStringIntConverter.class})
 public abstract class AppDatabase extends RoomDatabase implements DatabaseOperator {
@@ -42,4 +44,6 @@ public abstract class AppDatabase extends RoomDatabase implements DatabaseOperat
     public abstract LogDao logDao();
 
     public abstract WorkDayDao workDayDao();
+
+    public abstract ExpenseDao expenseDao();
 }

@@ -28,7 +28,7 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="onAddClick"
-        app:layout_constraintBottom_toTopOf="@+id/view_users_hours_text"
+        app:layout_constraintBottom_toBottomOf="@+id/view_users_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_twotone_add_24px" />
 
@@ -49,10 +49,9 @@
         android:id="@+id/view_users_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view_users_hours_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_users_toolbar">
 

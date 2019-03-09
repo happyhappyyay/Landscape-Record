@@ -8,8 +8,6 @@ public enum LogActivityType {
     JOB,
     SERVICES,
     DATABASE,
-    WORKDAY
-
-    
-
+    WORKDAY,
+    EXPENSE
 }

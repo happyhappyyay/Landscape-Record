@@ -32,13 +32,13 @@
     <string name="city_example">Chicago</string>
     <string name="name_text_field">Name</string>
     <string name="phone_number_example">123&#8211;456&#8211;7890</string>
-    <string name="main_menu_time">Time Reporting\n\nCheck-in and check-out for employees. Accumulates employee hours.</string>
-    <string name="main_menu_job">Job Reporting\n\nA full version of service reporting (for checklist style reporting, see menu bar above).</string>
+    <string name="main_menu_time">Time Reporting\nCheck-in and check-out for employees. Accumulates employee hours.</string>
+    <string name="main_menu_job">Job Reporting\nA full version of service reporting (for checklist style reporting, see menu bar above).</string>
     <string name="main_menu_payment">Payment Reporting</string>
     <string name="main_menu_contact">New Contact</string>
     <string name="main_menu_admin">Admin Tools</string>
-    <string name="main_menu_users">Employees\n\nA list of all employees. Add, edit, and view information regarding employees.</string>
-    <string name="main_menu_contacts">Customers\n\nA list of all customers. Add, edit, and view information regarding customers.</string>
+    <string name="main_menu_users">Employees\nA list of all employees. Add, edit, and view information regarding employees.</string>
+    <string name="main_menu_contacts">Customers\nA list of all expenses. Add, edit, and view information regarding expenses.</string>
     <string name="admin_tools_workday">View Workday\n\nLook at services and employee hours for past workdays. Sort by day, week, or month.</string>
     <string name="admin_tools_logs">View Activity Logs\n\nLook at the logs of employee activity, starting with the most recent.</string>
     <string name="job_lawn_service">Lawn</string>
@@ -310,7 +310,10 @@
     <string name="csv_export_fail">Data export failure. Please try again.</string>
     <string name="csv_address">Address</string>
     <string name="csv_import_fail">Error importing contacts</string>
-    <string name="customer_view_pager_delete">Are you sure you want to delete </string>
+    <string name="customer_view_pager_delete">Deleting a customer also involves deleting all the associated
+        Services and Payments. This CANNOT be undone. Are you sure you want to delete </string>
+    <string name="user_view_pager_delete">Deleting an employee also involves deleting all the associated
+        Expenses. This CANNOT be undone. Are you sure you want to delete </string>
     <string name="view_contacts_payment">Receive Payment</string>
     <string name="view_users_pay">Adjust/Pay User Hours</string>
     <string name="dynamic_text">TextView</string>
@@ -324,19 +327,37 @@
     <string name="time_reporting_notify_admin_error">Notify admin account to manually add hours.</string>
     <string name="time_reporting_exceeds_likely">The number of hours reported exceeds the likely amount.
         Is the number of hours correct: "</string>
+    <string name="view_expenses_check">Check Number</string>
+    <string name="view_expenses_four">Four digits or blank</string>
+    <string name="add_expense_four_error">Please enter the last four digits or leave blank.</string>
+    <string name="add_expense_add">Expense added.</string>
+    <string name="add_expense_correct_double_format">Please enter a dollar amount in the correct format
+        (e.g., 0.1, 1, 1.0, or 1.00).</string>
     <string name="recycler_view_customer_payments">PAYMENTS</string>
     <string name="recycler_view_customer_services">SERVICES</string>
     <string name="recycler_view_customer_paid">Paid</string>
     <string name="recycler_view_customer_unpaid">Unpaid</string>
     <string name="recycler_view_services_service_id">Service ID: </string>
     <string name="recycler_view_users_not_checked_in">Not checked in</string>
+    <string name="recycler_view_expenses_delete">Are you sure you want to delete expense: </string>
     <string name="admin_tools_settings">Settings\n\nView and edit settings related to application
         (e.g., quick sheet preferences, online database access, mass contact import, etc).</string>
     <string name="util_logged_out">Logged Out!</string>
     <string name="util_enter_company">Enter Company Name in Settings</string>
     <string name="util_enter_personal">Enter Personal Message in Settings</string>
-    <string name="first_glance_importing">Importing database...</string>
+    <string name="first_glance_importing">Importing database&#8230;</string>
     <string name="pref_setting_company_summary">The company name that will appear on billing documents.</string>
+    <string name="activity_view_expenses_title">View Expenses</string>
+    <string name="activity_add_expense">Add Expense</string>
+    <string name="activity_add_expense_price">100.00</string>
+    <string name="activity_add_expense_name">Gas Station</string>
+    <string name="activity_add_expense_optional">Optional</string>
+    <string name="activity_add_expense_credit">Credit Card</string>
+    <string name="activity_add_expense_debit">Debit Card</string>
+    <string name="activity_add_expense_number">Last 4 digits</string>
+    <string name="add_user_new_type">Add new expense type</string>
+    <string name="add_expense_show_add">Show Add Type</string>
+    <string name="Expenses_title">Expenses</string>
 
 
 </resources>

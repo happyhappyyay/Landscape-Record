@@ -25,6 +25,7 @@ import com.happyhappyyay.landscaperecord.activity.QuickSheet;
 import com.happyhappyyay.landscaperecord.activity.ReceivePayment;
 import com.happyhappyyay.landscaperecord.activity.TimeReporting;
 import com.happyhappyyay.landscaperecord.activity.ViewCustomers;
+import com.happyhappyyay.landscaperecord.activity.ViewExpenses;
 import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
 import com.happyhappyyay.landscaperecord.enums.LogActivityType;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
@@ -32,6 +33,7 @@ import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
+import com.happyhappyyay.landscaperecord.pojo.Expense;
 import com.happyhappyyay.landscaperecord.pojo.LogActivity;
 import com.happyhappyyay.landscaperecord.pojo.User;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;
@@ -53,6 +55,7 @@ public class Util {
     public static final LogActivity LOG_REFERENCE = new LogActivity();
     public static final WorkDay WORK_DAY_REFERENCE = new WorkDay();
     public static final User USER_REFERENCE = new User();
+    public static final Expense EXPENSE_REFERENCE = new Expense();
     public static final String DELIMITER = "|";
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -75,6 +78,9 @@ public class Util {
                 return true;
             case R.id.menu_dashboard:
                 goToDashboard(activity);
+                return true;
+            case R.id.menu_expenses:
+                goToExpenses(activity);
                 return true;
             case R.id.menu_logout:
                 goToLogout(activity);
@@ -133,6 +139,11 @@ public class Util {
         context.startActivity(intent);
     }
 
+    private static void goToExpenses(Context context) {
+        Intent intent = new Intent(context, ViewExpenses.class);
+        context.startActivity(intent);
+    }
+
     public static boolean checkDateFormat(String date) {
         if(!date.equals("") && !date.equals(" ")) {
             try {
@@ -166,6 +177,9 @@ public class Util {
             }
             else if (objects.get(i) instanceof Customer) {
                 arraySpinner[i] = ((Customer) objects.get(i)).concatenateFullAddress();
+            }
+            else {
+                arraySpinner[i] = objects.get(i).getName();
             }
         }
         int layoutReference = largeText? R.layout.spinner_item: R.layout.support_simple_spinner_dropdown_item;
@@ -510,6 +524,12 @@ public class Util {
         if (object instanceof Customer) {
                 logType = LogActivityType.CUSTOMER;
             }
+        if (object instanceof Expense) {
+            logType = LogActivityType.EXPENSE;
+        }
+        if(object instanceof WorkDay) {
+            logType = LogActivityType.WORKDAY;
+        }
         return logType;
     }
 
@@ -571,6 +591,14 @@ public class Util {
                             insertCount++;
                         }
                         break;
+                    case 8:
+                        Expense expenseO = EXPENSE_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        Expense expenseU = EXPENSE_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (expenseO != null & expenseU == null) {
+                            EXPENSE_REFERENCE.insertClassInstanceFromDatabase(updatingDB, expenseO);
+                            insertCount++;
+                        }
+                        break;
                 }
             } else if (logs.get(i).getLogActivityAction() == LogActivityAction.DELETE.ordinal()) {
                 switch (logs.get(i).getLogActivityType()) {
@@ -599,6 +627,14 @@ public class Util {
                             deleteCount++;
                         }
                         break;
+                    case 8:
+                        Expense expenseO = EXPENSE_REFERENCE.retrieveClassInstanceFromDatabaseID(originalDB, logObjId);
+                        Expense expenseU = EXPENSE_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, logObjId);
+                        if (expenseO == null & expenseU != null) {
+                            EXPENSE_REFERENCE.deleteClassInstanceFromDatabase(updatingDB, expenseU);
+                            deleteCount++;
+                        }
+                        break;
                 }
             }
 
@@ -614,10 +650,12 @@ public class Util {
         List<User> users = USER_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         List<Customer> customers = CUSTOMER_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         List<WorkDay> workDays = WORK_DAY_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
+        List<Expense> expenses = EXPENSE_REFERENCE.retrieveClassInstancesAfterModifiedTime(originalDB, newestLogTime);
         Log.d(TAG, "user" +users.size() + " customer" + customers.size() + " workday" + workDays.size());
         databaseObjects.addAll(users);
         databaseObjects.addAll(customers);
         databaseObjects.addAll(workDays);
+        databaseObjects.addAll(expenses);
 
         for(int i = 0; i < databaseObjects.size(); i++) {
             DatabaseObjects databaseObject = databaseObjects.get(i);
@@ -642,6 +680,13 @@ public class Util {
                 if(workDay != null) {
                     databaseObject.setModifiedTime(System.currentTimeMillis());
                     WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(updatingDB, (WorkDay) databaseObject);
+                    updateCount++;
+                }
+            } else if (databaseObject instanceof Expense) {
+                Expense expense = EXPENSE_REFERENCE.retrieveClassInstanceFromDatabaseID(updatingDB, databaseObject.getId());
+                if (expense != null) {
+                    databaseObject.setModifiedTime(System.currentTimeMillis());
+                    EXPENSE_REFERENCE.updateClassInstanceFromDatabase(updatingDB, (Expense) databaseObject);
                     updateCount++;
                 }
             }

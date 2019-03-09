@@ -32,6 +32,7 @@ public abstract class OnlineDatabase implements DatabaseOperator {
     public final static String USER = "User";
     public final static String WORK_DAY = "WorkDay";
     public final static String LOG = "Log";
+    public final static String EXPENSE = "Expense";
     private static OnlineDatabase instance;
     private static MongoClient mongoClient;
     private static String databaseName;
