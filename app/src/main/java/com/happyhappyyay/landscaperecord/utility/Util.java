@@ -376,6 +376,51 @@ public class Util {
         }.execute();
     }
 
+    public static <T extends DatabaseObjects<T>> void insertObjects(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final List<T> objectsToInsert)
+    {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+
+            protected Void doInBackground(Void... Voids) {
+                for(T objectToInsert: objectsToInsert) {
+                    AppDatabase adb = AppDatabase.getAppDatabase(access.getContext());
+                    LogActivity log = new LogActivity();
+                    if (access.createLogInfo() != null) {
+                        Authentication authentication = Util.getAuthentication();
+                        LogActivityType logType = findLogTypeInt(access, object);
+                        log = new LogActivity(authentication.getUser().getName(), objectToInsert.getName(), LogActivityAction.ADD.ordinal(), logType.ordinal());
+                        log.setObjId(objectToInsert.getId());
+                    }
+                    if (hasOnlineDatabaseEnabledAndValid(access.getContext())) {
+                        try {
+                            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(access.getContext());
+                            object.insertClassInstanceFromDatabase(db, objectToInsert);
+                            if (access.createLogInfo() != null) {
+                                db.getMongoDb().getCollection(LOG).insertOne(convertFromObjectToDocument(log));
+                            }
+                            if (OnlineDatabase.hadFailedConnections()) {
+                                updateDatabases(access.getContext());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    object.insertClassInstanceFromDatabase(adb, objectToInsert);
+                    if (access.createLogInfo() != null) {
+                        adb.logDao().insert(log);
+                    }
+                }
+
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                access.onPostExecute(null);
+            }
+        }.execute();
+    }
+
     public static <T extends DatabaseObjects<T>> void insertObject(final DatabaseAccess<T> access, final DatabaseObjects<T> object, final T objectToInsert)
     {
         new AsyncTask<Void, Void, Void>() {

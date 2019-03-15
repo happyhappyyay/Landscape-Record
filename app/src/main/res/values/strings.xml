@@ -312,6 +312,7 @@
     <string name="csv_import_fail">Error importing contacts</string>
     <string name="customer_view_pager_delete">Deleting a customer also involves deleting all the associated
         Services and Payments. This CANNOT be undone. Are you sure you want to delete </string>
+    <string name="preference_settings_import_title">Import</string>
     <string name="user_view_pager_delete">Deleting an employee also involves deleting all the associated
         Expenses. This CANNOT be undone. Are you sure you want to delete </string>
     <string name="view_contacts_payment">Receive Payment</string>
@@ -358,6 +359,7 @@
     <string name="add_user_new_type">Add new expense type</string>
     <string name="add_expense_show_add">Show Add Type</string>
     <string name="Expenses_title">Expenses</string>
+    <string name="progress_bar_importing">Importing...</string>
 
 
 </resources>

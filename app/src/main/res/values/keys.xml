@@ -23,5 +23,6 @@
     <string name="pref_key_service_export">pref_key_service_export</string>
     <string name="pref_key_all_export">pref_key_all_export</string>
     <string name="pref_key_expense_type">pref_key_expense_type</string>
+    <string name="pref_key_import_category">pref_key_import_category</string>
     <!--                 -->
 </resources>

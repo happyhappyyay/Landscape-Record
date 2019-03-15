@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Customer;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.CSVReadWrite;
+import com.happyhappyyay.landscaperecord.utility.Loading;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
@@ -25,8 +27,9 @@ import static android.app.Activity.RESULT_OK;
 
 public class SettingsFragment extends PreferenceFragment implements MultiDatabaseAccess<Customer> {
     private CSVReadWrite csvReadWrite;
-    private Customer customer;
+    private List<Customer> customers;
     private List<Object> objects;
+    private Preference preferenceLoad;
 
     private static List<Object> databaseAccessMethod(DatabaseOperator db){
         List<Object> objects = new ArrayList<>();
@@ -54,7 +57,9 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                performFileSearch();
+                if(preferenceLoad == null) {
+                    performFileSearch();
+                }
                 return true;
             }
         });
@@ -62,8 +67,10 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         customerButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Util.verifyStoragePermissions(getActivity());
-                csvReadWrite.csvWrite(CSVReadWrite.CUSTOMER_DATA, SettingsFragment.this,objects);
+                if(preferenceLoad == null) {
+                    Util.verifyStoragePermissions(getActivity());
+                    csvReadWrite.csvWrite(CSVReadWrite.CUSTOMER_DATA, SettingsFragment.this, objects);
+                }
                 return true;
             }
         });
@@ -71,8 +78,10 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         userButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Util.verifyStoragePermissions(getActivity());
-                csvReadWrite.csvWrite(CSVReadWrite.EMPLOYEE_DATA, SettingsFragment.this, objects);
+                if(preferenceLoad == null) {
+                    Util.verifyStoragePermissions(getActivity());
+                    csvReadWrite.csvWrite(CSVReadWrite.EMPLOYEE_DATA, SettingsFragment.this, objects);
+                }
                 return true;
             }
         });
@@ -80,8 +89,10 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         logButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Util.verifyStoragePermissions(getActivity());
-                csvReadWrite.csvWrite(CSVReadWrite.LOG_DATA, SettingsFragment.this, objects);
+                if(preferenceLoad == null) {
+                    Util.verifyStoragePermissions(getActivity());
+                    csvReadWrite.csvWrite(CSVReadWrite.LOG_DATA, SettingsFragment.this, objects);
+                }
                 return true;
             }
         });
@@ -89,8 +100,10 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         servicesButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Util.verifyStoragePermissions(getActivity());
-                csvReadWrite.csvWrite(CSVReadWrite.SERVICES_DATA, SettingsFragment.this, objects);
+                if(preferenceLoad == null) {
+                    Util.verifyStoragePermissions(getActivity());
+                    csvReadWrite.csvWrite(CSVReadWrite.SERVICES_DATA, SettingsFragment.this, objects);
+                }
                 return true;
             }
         });
@@ -98,8 +111,10 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         allButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Util.verifyStoragePermissions(getActivity());
-                csvReadWrite.csvWrite(CSVReadWrite.ALL_DATA, SettingsFragment.this, objects);
+                if(preferenceLoad == null) {
+                    Util.verifyStoragePermissions(getActivity());
+                    csvReadWrite.csvWrite(CSVReadWrite.ALL_DATA, SettingsFragment.this, objects);
+                }
                 return true;
             }
         });
@@ -112,17 +127,15 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
         if(requestCode==123 && resultCode==RESULT_OK) {
             Uri selectedFile = data.getData();
             csvReadWrite.csvRead(selectedFile, getActivity());
-            List<Customer> customers = csvReadWrite.getCustomers();
-            insertCustomers(customers.toArray(new Customer[0]));
-            Toast.makeText(getActivity(), customers.size() + " " + getString(R.string.settings_fragment_contacts_add),
-                    Toast.LENGTH_SHORT).show();
+            preferenceLoad = new Loading(getActivity());
+            ((PreferenceCategory)findPreference(getString(R.string.pref_key_import_category))).addPreference(preferenceLoad);
+            customers = csvReadWrite.getCustomers();
+            insertCustomers(customers);
         }
     }
 
-    private void insertCustomers(Customer... customers) {
-        for(final Customer c: customers) {
-            customer = c;
-            Util.insertObject(this,Util.CUSTOMER_REFERENCE, c);        }
+    private void insertCustomers(List<Customer> customers) {
+            Util.insertObjects(this,Util.CUSTOMER_REFERENCE, customers);
     }
 
     @Override
@@ -132,11 +145,15 @@ public class SettingsFragment extends PreferenceFragment implements MultiDatabas
 
     @Override
     public String createLogInfo() {
-        return getString(R.string.settings_fragment_import) + " " + customer.getName();
+        return "";
     }
 
     @Override
     public void onPostExecute(List<Customer> databaseObjects) {
+        Toast.makeText(getActivity(), customers.size() + " " + getString(R.string.settings_fragment_contacts_add),
+                Toast.LENGTH_SHORT).show();
+        ((PreferenceCategory)findPreference(getString(R.string.pref_key_import_category))).removePreference(preferenceLoad);
+        getActivity().finish();
     }
 
     @Override
