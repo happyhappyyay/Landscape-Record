@@ -1,11 +1,11 @@
 package com.happyhappyyay.landscaperecord.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,9 +32,9 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private int monthSelection;
-    private Activity activity;
+    private AppCompatActivity activity;
 
-    public BillingViewPager(Activity activity, List<Customer> customers, int monthSelection) {
+    public BillingViewPager(AppCompatActivity activity, List<Customer> customers, int monthSelection) {
         mContext = activity.getApplicationContext();
         this.customers = customers;
         this.activity = activity;
@@ -100,7 +100,7 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
             RecyclerView recyclerView = view.findViewById(R.id.billing_preview_recycler);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
             recyclerView.setLayoutManager(layoutManager);
-            final RecyclerServicePricing adapter = new RecyclerServicePricing(customers.get(position), mContext, monthSelection);
+            final RecyclerServicePricing adapter = new RecyclerServicePricing(customers.get(position), activity, monthSelection);
             recyclerView.setAdapter(adapter);
             Button button = view.findViewById(R.id.billing_preview_confirm);
             button.setOnClickListener(new View.OnClickListener() {
@@ -117,9 +117,7 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
                                         CreateDocument createDocument = new CreateDocument();
                                         try {
                                             createDocument.createADocument(mContext, customer, services);
-                                            for(Service s: services) {
-                                                s.setPriced(true);
-                                            }
+                                            customer.updateServices(adapter.getPricedServices());
                                             customers.remove(position);
                                             updateCustomer(customer);
                                         }

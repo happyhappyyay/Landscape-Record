@@ -7,7 +7,9 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.happyhappyyay.landscaperecord.converter.IntegerListConverter;
+import com.happyhappyyay.landscaperecord.converter.MapStringDoubleConverter;
 import com.happyhappyyay.landscaperecord.converter.MapStringIntConverter;
+import com.happyhappyyay.landscaperecord.converter.MapStringStringConverter;
 import com.happyhappyyay.landscaperecord.converter.PaymentConverter;
 import com.happyhappyyay.landscaperecord.converter.ServiceListConverter;
 import com.happyhappyyay.landscaperecord.converter.StringListConverter;
@@ -25,7 +27,7 @@ import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 
 @Database(entities = {User.class, Customer.class, LogActivity.class, WorkDay.class, Expense.class}, version = 1)
 @TypeConverters({ServiceListConverter.class, IntegerListConverter.class, PaymentConverter.class,
-        StringListConverter.class, MapStringIntConverter.class})
+        StringListConverter.class, MapStringIntConverter.class, MapStringDoubleConverter.class, MapStringStringConverter.class})
 public abstract class AppDatabase extends RoomDatabase implements DatabaseOperator {
     private static AppDatabase instance;
 

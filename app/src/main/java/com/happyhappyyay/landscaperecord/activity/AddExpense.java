@@ -16,21 +16,29 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
-import com.happyhappyyay.landscaperecord.interfaces.DatabaseAccess;
+import com.happyhappyyay.landscaperecord.enums.LogActivityAction;
+import com.happyhappyyay.landscaperecord.enums.LogActivityType;
+import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
+import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
 import com.happyhappyyay.landscaperecord.pojo.Expense;
+import com.happyhappyyay.landscaperecord.pojo.LogActivity;
+import com.happyhappyyay.landscaperecord.pojo.WorkDay;
+import com.happyhappyyay.landscaperecord.utility.AppDatabase;
+import com.happyhappyyay.landscaperecord.utility.Authentication;
+import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AddExpense extends AppCompatActivity implements DatabaseAccess<Expense>, AdapterView.OnItemSelectedListener {
+public class AddExpense extends AppCompatActivity implements MultiDatabaseAccess<Expense>, AdapterView.OnItemSelectedListener {
     private int paymentPosition, adapterPosition;
     private EditText number, date, type;
     private Spinner spinner;
     private CheckBox checkBox;
     private Button button;
-    private String name;
+    private Expense expense;
 
 
 
@@ -128,10 +136,9 @@ public class AddExpense extends AppCompatActivity implements DatabaseAccess<Expe
         if(!error){
             try {
                 double amount = Double.parseDouble(price.getText().toString());
-                Expense expense = new Expense(name.getText().toString(), Util.convertStringDateToMilliseconds(date.getText().toString()), amount,
+                expense = new Expense(name.getText().toString(), Util.convertStringDateToMilliseconds(date.getText().toString()), amount,
                         spinner.getSelectedItem().toString(), getString(pType) + " " + numberText);
-                this.name = expense.getName();
-                Util.insertObject(this,Util.EXPENSE_REFERENCE,expense);
+                Util.enactMultipleDatabaseOperationsPostExecute(this);
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -197,10 +204,7 @@ public class AddExpense extends AppCompatActivity implements DatabaseAccess<Expe
 
     @Override
     public String createLogInfo() {
-        if(name != null) {
-            return name;
-        }
-        return "";
+        return expense.getName();
     }
 
     @Override
@@ -217,5 +221,61 @@ public class AddExpense extends AppCompatActivity implements DatabaseAccess<Expe
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void accessDatabaseMultipleTimes() {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                databaseAccessMethod(db);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        databaseAccessMethod(db);
+    }
+
+    private void databaseAccessMethod(DatabaseOperator db) {
+        WorkDay workDay;
+        String name = Authentication.getAuthentication().getUser().getName();
+        Util.EXPENSE_REFERENCE.insertClassInstanceFromDatabase(db,expense);
+        WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, Util.retrieveStringCurrentDate());
+        if (tempWorkDay != null) {
+            workDay = tempWorkDay;
+        } else {
+            workDay = new WorkDay(Util.retrieveStringCurrentDate());
+            Util.WORK_DAY_REFERENCE.insertClassInstanceFromDatabase(db, workDay);
+            LogActivity log = new LogActivity(name,
+                    "Workday: " + Util.retrieveStringCurrentDate(), LogActivityAction.ADD.ordinal(),
+                    LogActivityType.WORKDAY.ordinal());
+            log.setObjId(workDay.getId());
+            Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
+        }
+        workDay.addExpense(name, expense);
+        Util.WORK_DAY_REFERENCE.updateClassInstanceFromDatabase(db, workDay);
+    }
+
+    @Override
+    public void createCustomLog() {
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                customLogMethod(db);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        customLogMethod(db);
+    }
+
+    private void customLogMethod(DatabaseOperator db) {
+        LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
+                expense.getName(), LogActivityAction.ADD.ordinal(),
+                LogActivityType.EXPENSE.ordinal());
+        log.setObjId(expense.getId());
+        Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db,log);
     }
 }

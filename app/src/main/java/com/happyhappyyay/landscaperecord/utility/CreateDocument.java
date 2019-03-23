@@ -52,6 +52,7 @@ public class CreateDocument {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(context, context.getString(R.string.create_document_fail), Toast.LENGTH_LONG).show();
+                throw new RuntimeException();
             }
         }
     }

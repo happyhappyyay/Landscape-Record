@@ -284,7 +284,8 @@
         the invoice creation?</string>
     <string name="create_document_thanks">Thank You!</string>
     <string name="create_document_company">Company</string>
-    <string name="create_document_fail">Failed to create billing document</string>
+    <string name="create_document_fail">Failed to create billing document. Ensure that there is adequate space and
+    storage permission is granted when prompted.</string>
     <string name="create_document_success">Billing document created for </string>
     <string name="create_document_container">Billing</string>
     <string name="create_document_invoice_ext">Invoice.doc</string>
@@ -312,7 +313,7 @@
     <string name="csv_import_fail">Error importing contacts</string>
     <string name="customer_view_pager_delete">Deleting a customer also involves deleting all the associated
         Services and Payments. This CANNOT be undone. Are you sure you want to delete </string>
-    <string name="preference_settings_import_title">Import</string>
+    <string name="preference_settings_import_title">Import/Export</string>
     <string name="user_view_pager_delete">Deleting an employee also involves deleting all the associated
         Expenses. This CANNOT be undone. Are you sure you want to delete </string>
     <string name="view_contacts_payment">Receive Payment</string>
@@ -359,7 +360,7 @@
     <string name="add_user_new_type">Add new expense type</string>
     <string name="add_expense_show_add">Show Add Type</string>
     <string name="Expenses_title">Expenses</string>
-    <string name="progress_bar_importing">Importing...</string>
+    <string name="progress_bar_importing">Importing Contacts&#8230;</string>
 
 
 </resources>

@@ -19,17 +19,13 @@ import com.happyhappyyay.landscaperecord.R;
 import com.happyhappyyay.landscaperecord.adapter.RecyclerViewWorkDay;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.interfaces.MultiDatabaseAccess;
-import com.happyhappyyay.landscaperecord.pojo.Service;
 import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAccess<WorkDay> {
     private WorkDay workDay;
@@ -128,96 +124,23 @@ public class ViewWorkDay extends AppCompatActivity implements MultiDatabaseAcces
     }
 
     private void setupViewWorkDayAdapter() {
-        List<String> userWithHours = new ArrayList<>();
-        List<String> customerWithServices = new ArrayList<>();
-        List<Service> services = new ArrayList<>();
+        List<WorkDay> workDays = new ArrayList<>();
 
         if (workDay != null) {
-            services = workDay.getServices();
-            userWithHours = createStringFromUserHourReferences(workDay);
-            if (services != null) {
-                customerWithServices = removeCustomerServicesStopCharacters(services);
-            }
+            workDays.add(workDay);
+
         }
-        else if (workDays != null) {
-            for (WorkDay w: workDays) {
-                services.addAll(w.getServices());
-            }
-            userWithHours = createStringFromUserHourReferences(workDays);
-            if (!services.isEmpty()) {
-                customerWithServices = removeCustomerServicesStopCharacters(services);
-            }
+        else if (this.workDays != null) {
+            workDays.addAll(this.workDays);
         }
         else {
             noWorkDayMessage();
         }
 
-        RecyclerViewWorkDay adapter = new RecyclerViewWorkDay(userWithHours, customerWithServices);
+        RecyclerViewWorkDay adapter = new RecyclerViewWorkDay(workDays);
         recyclerView.setAdapter(adapter);
         workDay = null;
-        workDays = null;
-    }
-
-    public List<String> createStringFromUserHourReferences(WorkDay workDay) {
-        return workDay.retrieveUsersHoursAsString();
-    }
-
-    public List<String> createStringFromUserHourReferences(List<WorkDay> workDays) {
-        Map<String, Integer> userHours = new HashMap<>();
-        for(WorkDay w: workDays) {
-            Set< Map.Entry<String, Integer> > mapSet = w.getUserHours().entrySet();
-            for (Map.Entry< String, Integer> mapEntry:mapSet)
-            {
-                String key = mapEntry.getKey();
-                Integer value = mapEntry.getValue();
-                if(userHours.containsKey(key)) {
-                    userHours.put(key,userHours.get(key) + value);
-                }
-                else {
-                    userHours.put(key, value);
-                }
-            }
-        }
-
-        List<String> strings = new ArrayList<>();
-        Set< Map.Entry<String, Integer> > mapSet = userHours.entrySet();
-        int count = 0;
-
-        for (Map.Entry< String, Integer> mapEntry:mapSet)
-        {
-            String hourEntry = mapEntry.getKey() + " : " + mapEntry.getValue();
-            strings.add(count, hourEntry);
-            count++;
-        }
-        return strings;
-    }
-
-    public List<String> removeCustomerServicesStopCharacters(List<Service> services) {
-        List<String> customerServices = new ArrayList<>();
-        for (Service s: services) {
-            String serviceString = s.getServices();
-            String serviceStringWithoutSeparators;
-            StringBuilder sb = new StringBuilder();
-            int endServicePosition;
-            int startServicePosition = 0;
-
-            for (int i = 0; i < serviceString.length(); i++) {
-                if (serviceString.substring(i,i+1).equals(Util.DELIMITER)) {
-                    endServicePosition = i;
-                    String tempString = serviceString.substring(startServicePosition, endServicePosition) + ", ";
-                    sb.append(tempString);
-                    startServicePosition = i+1;
-                }
-            }
-            serviceStringWithoutSeparators = sb.toString();
-            if (serviceStringWithoutSeparators.length() > 2) {
-                serviceStringWithoutSeparators = serviceStringWithoutSeparators.substring(0, serviceStringWithoutSeparators.length()-2);
-            }
-            String customerService = s.getCustomerName() + ":" +
-                    System.getProperty ("line.separator") + serviceStringWithoutSeparators;
-            customerServices.add(customerService);
-        }
-        return customerServices;
+        this.workDays = null;
     }
 
     @Override

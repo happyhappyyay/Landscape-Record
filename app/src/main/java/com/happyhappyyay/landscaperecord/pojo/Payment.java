@@ -54,6 +54,10 @@ public class Payment {
         }
     }
 
+    public void addDefaultServicePrice(String service, Double price){
+            defaultPrices.put(service, price);
+    }
+
     public List<String> retrieveAllPaymentReceipts() {
         String paymentInformation;
         List<String> strings = new ArrayList<>();

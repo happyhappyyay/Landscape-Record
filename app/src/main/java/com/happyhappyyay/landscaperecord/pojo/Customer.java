@@ -78,6 +78,16 @@ public class Customer implements DatabaseObjects<Customer> {
         }
     }
 
+    public void updateServices(List<Service> existingServices) {
+        for(int i = 0; i < services.size(); i++) {
+            for(Service s: existingServices) {
+                if (services.get(i).getId() == s.getId()) {
+                    services.set(i, s);
+                }
+            }
+        }
+    }
+
     public List<String> retrieveServicesWithPrices() {
         List<String> servicesWithPrices = new ArrayList<>();
         for (int i = 0; i < services.size(); i++) {

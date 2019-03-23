@@ -3,14 +3,13 @@ package com.happyhappyyay.landscaperecord.pojo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
-import com.happyhappyyay.landscaperecord.converter.MapStringIntConverter;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseObjects;
 import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
+import com.happyhappyyay.landscaperecord.utility.Util;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
@@ -37,16 +36,19 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
     private String id = UUID.randomUUID().toString();
     private String date;
     private long dateTime;
-    @TypeConverters(MapStringIntConverter.class)
     private Map<String, Integer> userHours;
-    private List<Service> services;
+    private Map<String, Double> payments;
+    private Map<String, Double> expenses;
+    private Map<String, String> services;
     private long week;
     private long month;
     private long year;
     private long modifiedTime;
 
     public WorkDay (String date) {
-        services = new ArrayList<>();
+        services = new HashMap<>();
+        payments = new HashMap<>();
+        expenses = new HashMap<>();
         findCalendarInformation(date);
         modifiedTime = System.currentTimeMillis();
         userHours = new HashMap<>();
@@ -55,8 +57,6 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
 
     @Ignore
     public WorkDay() {
-        services = new ArrayList<>();
-        userHours = new HashMap<>();
     }
 
     public void addUserHourReference (String userReference, int hours) {
@@ -82,8 +82,63 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         return strings;
     }
 
+    public List<String> retrieveServicesAsString() {
+        List<String> strings = new ArrayList<>();
+        Set< Map.Entry<String, String> > mapSet = services.entrySet();
+
+        for (Map.Entry< String, String> mapEntry:mapSet)
+        {
+            String customerName = mapEntry.getKey().substring(0, mapEntry.getKey().indexOf(Util.DELIMITER));
+            String serviceEntry = customerName + " : " + mapEntry.getValue();
+            strings.add(serviceEntry);
+        }
+        return strings;
+    }
+
+    public List<String> retrievePaymentsAsString() {
+        List<String> strings = new ArrayList<>();
+        Set< Map.Entry<String, Double>> mapSet = payments.entrySet();
+
+        for (Map.Entry< String, Double> mapEntry:mapSet)
+        {
+            int split = mapEntry.getKey().indexOf(Util.DELIMITER);
+            String username = mapEntry.getKey().substring(0,split);
+            String customerName = mapEntry.getKey().substring(split);
+            String paymentEntry = username + "accepted : " +customerName + " $" + mapEntry.getValue();
+            strings.add(paymentEntry);
+        }
+        return strings;
+    }
+
+    public List<String> retrieveExpensesAsString() {
+        List<String> strings = new ArrayList<>();
+        Set< Map.Entry<String, Double> > mapSet = expenses.entrySet();
+
+        for (Map.Entry< String, Double> mapEntry:mapSet)
+        {
+            int firstSplit = mapEntry.getKey().indexOf(Util.DELIMITER);
+            int secondSplit = mapEntry.getKey().substring(firstSplit).indexOf(Util.DELIMITER);
+            String username = mapEntry.getKey().substring(secondSplit);
+            String expenseName = mapEntry.getKey().substring(firstSplit, secondSplit);
+            String priceEntry = username + " : " + expenseName + ": $" + mapEntry.getValue();
+            strings.add(priceEntry);
+        }
+        return strings;
+    }
+
     public void addServices(Service service) {
-        services.add(service);
+        String key = service.getCustomerName() + Util.DELIMITER + service.getId();
+        services.put(key, service.getServices());
+    }
+
+    public void addPayment(String username, Customer customer, double amount ) {
+        String key = username + Util.DELIMITER + customer.getName();
+        payments.put(key, amount);
+    }
+
+    public void addExpense(String username, Expense expense) {
+        String key = expense.getId() + Util.DELIMITER + expense.getName() + Util.DELIMITER + username;
+        expenses.put(key, expense.getPrice());
     }
 
     public String getDate() {
@@ -92,10 +147,6 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public List<Service> getServices() {
-        return services;
     }
 
     private void findCalendarInformation(String newDate) {
@@ -120,6 +171,30 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         }
     }
 
+    public Map<String, Double> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(Map<String, Double> payments) {
+        this.payments = payments;
+    }
+
+    public Map<String, Double> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(Map<String, Double> expenses) {
+        this.expenses = expenses;
+    }
+
+    public Map<String, String> getServices() {
+        return services;
+    }
+
+    public void setServices(Map<String, String> services) {
+        this.services = services;
+    }
+
     public long getWeek() {
         return week;
     }
@@ -142,10 +217,6 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
 
     public void setYear(long year) {
         this.year = year;
-    }
-
-    public void setServices(List<Service> services) {
-        this.services = services;
     }
 
     public long getDateTime() {

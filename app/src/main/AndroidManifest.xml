@@ -109,10 +109,6 @@
             android:parentActivityName=".activity.MainMenu"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activity.PaymentQueue"
-            android:parentActivityName=".activity.ViewCustomers"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activity.BillCreation"
             android:parentActivityName=".activity.ViewCustomers"
             android:theme="@style/AppTheme" />

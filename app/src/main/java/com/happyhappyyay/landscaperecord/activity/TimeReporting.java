@@ -226,13 +226,16 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
 
     @Override
     public void createCustomLog() {
-        try {
-            OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-            customLogMethod(db);
-        } catch(Exception e) {
-            AppDatabase db = AppDatabase.getAppDatabase(this);
-            customLogMethod(db);
+        if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
+            try {
+                OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
+                customLogMethod(db);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        customLogMethod(db);
     }
 
     private void customLogMethod(DatabaseOperator db) {

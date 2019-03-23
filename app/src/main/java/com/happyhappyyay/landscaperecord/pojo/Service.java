@@ -29,7 +29,7 @@ public class Service implements Parcelable {
     private List<Material> materials;
     private long startTime;
     private long endTime;
-    private static int idCount = 0;
+    private static int idCount;
     private boolean priced;
     private boolean paid;
 
