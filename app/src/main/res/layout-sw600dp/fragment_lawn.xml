@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout5"
+    android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -12,15 +12,14 @@
         android:id="@+id/gridLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginStart="8dp">
 
         <CheckBox
             android:id="@+id/lawn_services_prune"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_prune"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="1"
             app:layout_row="4" />
 
@@ -29,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_clean_up"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="2"
             app:layout_row="4" />
 
@@ -38,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_aerate"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="1"
             app:layout_row="2" />
 
@@ -47,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_cut"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="1"
             app:layout_row="0" />
 
@@ -56,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_spray_rocks"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="1"
             app:layout_row="1" />
 
@@ -65,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_spray_grass"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="2"
             app:layout_row="0" />
 
@@ -74,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/law_services_pull_weed"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="2"
             app:layout_row="2" />
 
@@ -83,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_fertilize"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="2"
             app:layout_row="1" />
 
@@ -92,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_rake"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="2"
             app:layout_row="3" />
 
@@ -101,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lawn_services_leaves"
-            android:textSize="18sp"
+            android:textSize="36sp"
             app:layout_column="1"
             app:layout_row="3" />
 

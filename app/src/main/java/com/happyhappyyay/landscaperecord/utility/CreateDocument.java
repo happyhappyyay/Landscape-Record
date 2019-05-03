@@ -48,7 +48,7 @@ public class CreateDocument {
                 PrintWriter writer = new PrintWriter(txtFile);
                 writer.println(createBillingDocument(customer, services, context));
                 writer.close();
-                Toast.makeText(context, context.getString(R.string.create_document_success) + customer.getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, context.getString(R.string.create_document_success) +" " + customer.getName(), Toast.LENGTH_LONG).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(context, context.getString(R.string.create_document_fail), Toast.LENGTH_LONG).show();

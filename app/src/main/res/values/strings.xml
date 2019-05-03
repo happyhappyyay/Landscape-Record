@@ -289,6 +289,8 @@
     <string name="create_document_success">Billing document created for </string>
     <string name="create_document_container">Billing</string>
     <string name="create_document_invoice_ext">Invoice.doc</string>
+    <string name="billing_view_pager_zeros">There are one or more items with a set price of zero. Proceed
+    with invoice creation?</string>
     <string name="csv_last">Last Name</string>
     <string name="csv_unpaid">Hours Unpaid</string>
     <string name="csv_hours_total">Total Hours</string>

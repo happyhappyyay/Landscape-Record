@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/landscaping_material_item_delete"
+        android:layout_width="80dp"
+        android:layout_height="74dp"
+        android:clickable="true"
+        android:scaleType="center"
+        app:fabSize="auto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landscaping_material_item_material_name"
+        app:srcCompat="@drawable/ic_twotone_delete_72px" />
+
+    <TextView
+        android:id="@+id/landscaping_material_item_add_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="36sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/landscaping_material_item_material_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="36sp"
+        app:layout_constraintStart_toEndOf="@+id/landscaping_material_item_add_remove"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/landscaping_material_item_material_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="30sp"
+        app:layout_constraintStart_toEndOf="@+id/landscaping_material_item_material_type"
+        app:layout_constraintTop_toBottomOf="@+id/landscaping_material_item_material_name" />
+
+    <TextView
+        android:id="@+id/landscaping_material_item_material_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landscaping_material_item_add_remove" />
+
+    <TextView
+        android:id="@+id/landscaping_material_item__material_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="30sp"
+        app:layout_constraintStart_toEndOf="@+id/landscaping_material_item_material_amount"
+        app:layout_constraintTop_toBottomOf="@+id/landscaping_material_item_material_name" />
+</android.support.constraint.ConstraintLayout>

@@ -138,6 +138,37 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
                                 .setPositiveButton(mContext.getString(R.string.yes), dialogClickListener)
                                 .setNegativeButton(mContext.getString(R.string.no), dialogClickListener).show();
                     }
+                    else if(checkForZeroPricedItems(adapter.getPricedServices())) {
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        Util.verifyStoragePermissions(activity);
+                                        CreateDocument createDocument = new CreateDocument();
+                                        try {
+                                            createDocument.createADocument(mContext, customer, services);
+                                            customer.updateServices(adapter.getPricedServices());
+                                            customers.remove(position);
+                                            updateCustomer(customer);
+                                        }
+                                        catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        break;
+
+                                    case DialogInterface.BUTTON_NEGATIVE:
+
+                                        break;
+                                }
+                            }
+                        };
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage(mContext.getString(R.string.billing_view_pager_zeros))
+                                .setPositiveButton(mContext.getString(R.string.yes), dialogClickListener)
+                                .setNegativeButton(mContext.getString(R.string.no), dialogClickListener).show();
+                    }
                     else {
                         Util.verifyStoragePermissions(activity);
                         CreateDocument createDocument = new CreateDocument();
@@ -174,6 +205,15 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
                 return POSITION_NONE;
             }
         }
+
+    private boolean checkForZeroPricedItems(List<Service> services){
+        for(Service s: services){
+            if(s.getPrice() == 0){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void updateCustomersSelection(List<Customer> customers) {
         this.customers = customers;
