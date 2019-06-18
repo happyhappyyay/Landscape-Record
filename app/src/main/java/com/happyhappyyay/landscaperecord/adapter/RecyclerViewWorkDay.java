@@ -13,7 +13,10 @@ import com.happyhappyyay.landscaperecord.pojo.WorkDay;
 import com.happyhappyyay.landscaperecord.utility.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RecyclerViewWorkDay extends Adapter {
     private List<WorkDay> workDays;
@@ -29,21 +32,57 @@ public class RecyclerViewWorkDay extends Adapter {
         strings = createStringsList();
     }
 
+    private Map<String,Integer> combineMaps(Map<String,Integer> collection, Map<String,Integer> addition){
+        Set< Map.Entry<String, Integer> > mapSet = addition.entrySet();
+
+        for (Map.Entry< String, Integer> mapEntry:mapSet)
+        {
+            String userReference = mapEntry.getKey();
+            if(collection.containsKey(userReference)) {
+                collection.put(userReference,collection.get(userReference) + mapEntry.getValue());
+            }
+            else {
+                collection.put(userReference, mapEntry.getValue());
+            }
+        }
+        return collection;
+    }
+
+    private List<String> translateFromMapToList(Map<String,Integer> collection){
+        List<String> strings = new ArrayList<>();
+        Set< Map.Entry<String, Integer> > mapSet = collection.entrySet();
+        int count = 0;
+
+        for (Map.Entry< String, Integer> mapEntry:mapSet)
+        {
+            String priceEntry = mapEntry.getKey() + " : " + mapEntry.getValue();
+            strings.add(count, priceEntry);
+            count++;
+        }
+        return strings;
+    }
+
     private List<String> createStringsList(){
         List<String> temp = new ArrayList<>();
-        List<String> hours = new ArrayList<>();
+        Map<String,Integer> hours = new HashMap<>();
         List<String> services = new ArrayList<>();
         List<String> payments = new ArrayList<>();
         List<String> expenses = new ArrayList<>();
         for (WorkDay w: workDays) {
-            hours.addAll(w.retrieveUsersHoursAsString());
+            if(hours.size() > 0) {
+                Map<String, Integer> tempHours = w.getUserHours();
+                hours = combineMaps(hours, tempHours);
+            }
+            else {
+                hours.putAll(w.getUserHours());
+            }
             services.addAll(removeCustomerServicesStopCharacters(w.retrieveServicesAsString()));
             payments.addAll(w.retrievePaymentsAsString());
             expenses.addAll(w.retrievePaymentsAsString());
         }
         if(hours.size() > 0) {
             temp.add(USER_HOURS);
-            temp.addAll(hours);
+            temp.addAll(translateFromMapToList(hours));
         }
         if(services.size() > 0){
             temp.add(SERVICES);
