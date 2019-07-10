@@ -104,7 +104,7 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
             int split = mapEntry.getKey().indexOf(Util.DELIMITER);
             String username = mapEntry.getKey().substring(0,split);
             String customerName = mapEntry.getKey().substring(split);
-            String paymentEntry = username + "accepted : " +customerName + " $" + mapEntry.getValue();
+            String paymentEntry = username + " accepted : " +customerName + " $" + mapEntry.getValue();
             strings.add(paymentEntry);
         }
         return strings;

@@ -62,6 +62,7 @@ public class EditUser extends AppCompatActivity implements DatabaseAccess<User> 
             if (!firstName.isEmpty() & !lastName.isEmpty()) {
                 user.setFirst(firstName);
                 user.setLast(lastName);
+                user.setName(firstName +" " + lastName);
                 user.setAdmin(adminBox.isChecked());
             }
             if (!nickname.isEmpty()) {

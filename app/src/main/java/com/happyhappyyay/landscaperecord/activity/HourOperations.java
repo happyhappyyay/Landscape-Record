@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.happyhappyyay.landscaperecord.R;
@@ -34,6 +35,7 @@ import static com.happyhappyyay.landscaperecord.activity.TimeReporting.ADAPTER_P
 public class HourOperations extends AppCompatActivity implements MultiDatabaseAccess <User> {
 
     private EditText hours;
+    private TextView totalHours;
     private User user;
     private int adapterPosition;
     private EditText dateText;
@@ -48,6 +50,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
         setContentView(R.layout.activity_hour_operations);
         Toolbar myToolbar = findViewById(R.id.hour_operations_toolbar);
         setSupportActionBar(myToolbar);
+        totalHours = findViewById(R.id.hour_operations_num_hours);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -88,11 +91,17 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
     }
 
     public void payHours(View view) {
+        double ROUNDING_CORRECTION = -0.01;
         if(progressBarIsInvisible()) {
             double payHours = hourCheck();
             if (payHours > 0) {
-                if (user.getHours() - payHours >= 0) {
-                    user.setHours(user.getHours() - payHours);
+                if (user.getHours() - payHours >= ROUNDING_CORRECTION) {
+                    if(user.getHours() - payHours <= 0){
+                        user.setHours(0);
+                    }
+                    else {
+                        user.setHours(user.getHours() - payHours);
+                    }
                     Toast.makeText(getApplicationContext(), payHours + " " + getString(R.string.hour_operations_paid_for) +
                                     user.getName() + ". " + (String.format(Locale.US, "%.2f",user.getHours()))
                                     + " " + getString(R.string.hour_operations_remaining),
@@ -100,7 +109,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                     logActivityReference = 3;
                     updateUser();
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.hour_operations_paid) + payHours + " " +
+                    Toast.makeText(getApplicationContext(), getString(R.string.hour_operations_paid) + " " + payHours + " " +
                             getString(R.string.hour_operations_exceeds) + " " + (String.format(Locale.US, "%.2f",user.getHours())),
                             Toast.LENGTH_LONG).show();
                 }
@@ -274,6 +283,8 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                         parent.setSelection(adapterPosition);
                         user = usersInside.get(adapterPosition);
                     }
+                    String totHours = Math.round(user.getHours()*100)/100.00 + " hrs";
+                    totalHours.setText(totHours);
                 }
 
                 @Override
