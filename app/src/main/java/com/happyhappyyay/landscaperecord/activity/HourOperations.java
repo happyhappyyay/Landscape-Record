@@ -77,7 +77,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                     else {
                         dateText.setText("");
                         Toast.makeText(HourOperations.this,
-                                getString(R.string.incorrect_date_format),
+                                R.string.incorrect_date_format,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -170,7 +170,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
 
     private void updateUser() {
         progressBar.setVisibility(View.VISIBLE);
-        Util.enactMultipleDatabaseOperations(this);
+        Util.enactMultipleDatabaseOperationsPostExecute(this);
     }
 
     private void updateWorkDay(DatabaseOperator db) {
@@ -205,6 +205,13 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
 
     public void findAllUsers() {
         Util.findAllObjects(this, Util.USER_REFERENCE);
+    }
+
+    public void updateTotalHoursText(){
+        if(user != null) {
+            String totHours = Math.round(user.getHours() * 100) / 100.00 + " hrs";
+            totalHours.setText(totHours);
+        }
     }
 
     @Override
@@ -243,7 +250,6 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                         hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
                 log.setObjId(user.getId());
                 Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-                hours.setText("");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -253,7 +259,6 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                     hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
             log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-            hours.setText("");
         progressBar.setVisibility(View.INVISIBLE);
     }
 
@@ -283,8 +288,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                         parent.setSelection(adapterPosition);
                         user = usersInside.get(adapterPosition);
                     }
-                    String totHours = Math.round(user.getHours()*100)/100.00 + " hrs";
-                    totalHours.setText(totHours);
+                    updateTotalHoursText();
                 }
 
                 @Override
@@ -294,6 +298,10 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
             };
             Spinner spinner = findViewById(R.id.hour_operations_spinner);
             Util.populateSpinner(spinner,listener,this,databaseObjects, true);
+        }
+        else{
+            hours.setText("");
+            updateTotalHoursText();
         }
             progressBar.setVisibility(View.INVISIBLE);
     }

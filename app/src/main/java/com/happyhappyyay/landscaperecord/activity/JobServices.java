@@ -244,10 +244,10 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
                     Util.enactMultipleDatabaseOperations(this);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.incorrect_date_format), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.incorrect_date_format, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.job_services_no_customer), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.job_services_no_customer, Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -67,7 +67,7 @@ public class AddUser extends AppCompatActivity implements DatabaseAccess<User> {
                                 user.setHours(Double.parseDouble(hours.getText().toString()));
 
                             } catch (Exception e) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.add_user_hour_input_error), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.add_user_hour_input_error, Toast.LENGTH_LONG).show();
                                 hours.setText("");
                                 error = true;
                             }
@@ -75,7 +75,7 @@ public class AddUser extends AppCompatActivity implements DatabaseAccess<User> {
                     user.setAdmin(admin.isChecked());
                     user.setNickname(nickname.getText().toString());
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.add_user_password_input_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.add_user_password_input_error, Toast.LENGTH_LONG).show();
                     error = true;
                     password.setText("");
                 }
