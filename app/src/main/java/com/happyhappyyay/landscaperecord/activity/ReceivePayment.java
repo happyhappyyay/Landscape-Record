@@ -149,7 +149,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                                 checkForPaymentMatch(checkType);
                             }
                             else {
-                                Toast.makeText(this, R.string.receive_payment_empty_check,
+                                Toast.makeText(this, getString(R.string.receive_payment_empty_check),
                                         Toast.LENGTH_LONG).show();
                             }
 
@@ -158,10 +158,10 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                         }
                     }
                 } else {
-                    Toast.makeText(this, R.string.receive_payment_greater_than_zero, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.receive_payment_greater_than_zero), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, R.string.receive_payment_enter_amount, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.receive_payment_enter_amount), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -203,7 +203,7 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                                     customer.getPayment().payForServices(Double.parseDouble(paymentAmount.getText()
                                             .toString()), dateString);
                                 }
-                                Toast.makeText(getApplicationContext(), R.string.receive_payment_post_apply,
+                                Toast.makeText(getApplicationContext(), getString(R.string.receive_payment_post_apply),
                                         Toast.LENGTH_LONG).show();
                                 service.addServiceAmountPaid(Double.parseDouble(paymentAmount.getText().toString()));
                                 if(priceOfService == service.getAmountPaid()) {
@@ -221,9 +221,9 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.receive_payment_amount_mismatch)
-                        .setPositiveButton(R.string.yes, dialogClickListener)
-                        .setNegativeButton(R.string.no, dialogClickListener).show();
+                builder.setMessage(getString(R.string.receive_payment_amount_mismatch))
+                        .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(getString(R.string.no), dialogClickListener).show();
             }
         }
         else {
@@ -239,22 +239,22 @@ public class ReceivePayment extends AppCompatActivity implements AdapterView.OnI
                                 customer.getPayment().payForServices(Double.parseDouble(paymentAmount
                                         .getText().toString()), dateString);
                             }
-                            Toast.makeText(getApplicationContext(), R.string.receive_payment_post_apply,
+                            Toast.makeText(getApplicationContext(), getString(R.string.receive_payment_post_apply),
                                     Toast.LENGTH_LONG).show();
                             Util.updateObject(ReceivePayment.this, Util.CUSTOMER_REFERENCE, customer);
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE:
-                            Toast.makeText(getApplicationContext(), R.string.receive_payment_complete_service_error,
+                            Toast.makeText(getApplicationContext(), getString(R.string.receive_payment_complete_service_error),
                                     Toast.LENGTH_LONG).show();
                             break;
                     }
                 }
             };
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.receive_payment_no_finished_error)
-                    .setPositiveButton(R.string.yes, dialogClickListener)
-                    .setNegativeButton(R.string.no, dialogClickListener).show();
+            builder.setMessage(getString(R.string.receive_payment_no_finished_error))
+                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                    .setNegativeButton(getString(R.string.no), dialogClickListener).show();
         }
     }
 

@@ -92,12 +92,12 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
             if (!checkedIn) {
                 startTime = currentTime;
                 user.setStartTime(startTime);
-                Toast.makeText(getApplicationContext(), R.string.time_reporting_checked_in,
+                Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_in),
                         Toast.LENGTH_LONG).show();
                 startTimeChange = true;
             } else {
                 if (hours >= MAX_NUMBER_OF_ATTEMPTED_HOURS) {
-                    Toast.makeText(getApplicationContext(), R.string.time_reporting_max_error,
+                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_max_error),
                             Toast.LENGTH_LONG).show();
                     resetStartTime();
                     startTimeChange = true;
@@ -123,14 +123,14 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    Toast.makeText(getApplicationContext(), R.string.time_reporting_checked_out
+                                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_out)
                                                     + " " + (String.format(Locale.US, "%.5f",hours)) + " " + user.toString(),
                                             Toast.LENGTH_LONG).show();
                                     addAccumulatedHours(hours,authenticatedUser);
                                     break;
 
                                 case DialogInterface.BUTTON_NEGATIVE:
-                                    Toast.makeText(getApplicationContext(), R.string.time_reporting_notify_admin_error,
+                                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_notify_admin_error),
                                             Toast.LENGTH_LONG).show();
                                     addAccumulatedHours(0,authenticatedUser);
                                     break;
@@ -139,12 +139,12 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(R.string.time_reporting_exceeds_likely)
-                            .setPositiveButton(R.string.yes,
+                    builder.setMessage(getString(R.string.time_reporting_exceeds_likely))
+                            .setPositiveButton(getString(R.string.yes),
                             dialogClickListener)
-                            .setNegativeButton(R.string.no, dialogClickListener).show();
+                            .setNegativeButton(getString(R.string.no), dialogClickListener).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.time_reporting_checked_out
+                    Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_out)
                             + " " + (String.format(Locale.US, "%.2f",hours)) + " " + user.toString(),
                             Toast.LENGTH_LONG).show();
                     addAccumulatedHours(hours, authenticatedUser);

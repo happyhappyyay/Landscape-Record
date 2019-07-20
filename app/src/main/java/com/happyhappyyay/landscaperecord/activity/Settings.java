@@ -88,7 +88,7 @@ public class Settings extends AppCompatActivity implements SharedPreferences.OnS
     }
 
     private void invalidToast() {
-        Toast.makeText(this, R.string.settings_invalid_connection, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.settings_invalid_connection), Toast.LENGTH_LONG).show();
     }
 
     @Override

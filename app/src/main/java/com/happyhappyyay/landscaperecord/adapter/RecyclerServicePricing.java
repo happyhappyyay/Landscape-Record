@@ -131,7 +131,6 @@ public class RecyclerServicePricing extends Adapter implements DatabaseAccess<Cu
                     String price = Double.toString(amount);
                     priceText.setText(price);
                     service.setPrice(amount);
-                    service.setPaid(true);
                     pricedServices.add(service);
                     try {
                         total += Double.parseDouble(priceText.getText().toString());
@@ -147,7 +146,6 @@ public class RecyclerServicePricing extends Adapter implements DatabaseAccess<Cu
                                 total += amount;
                                 notifyItemChanged(getItemCount() - 1);
                                 service.setPrice(amount);
-                                service.setPaid(true);
                                 pricedServices.set(position, service);
                             }
                             catch (Exception e){

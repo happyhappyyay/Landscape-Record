@@ -156,7 +156,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                     }
                     else {
                         dateText.setText("");
-                        Toast.makeText(ViewServices.this, R.string.incorrect_date_format, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ViewServices.this, getString(R.string.incorrect_date_format), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -170,7 +170,7 @@ public class ViewServices extends AppCompatActivity implements AdapterView.OnIte
                     if (!Util.checkDateFormat(dateString)) {
                         dateText.setText(Util.retrieveStringCurrentDate());
                         Toast.makeText(ViewServices.this,
-                                R.string.incorrect_date_format,
+                                getString(R.string.incorrect_date_format),
                                 Toast.LENGTH_SHORT).show();
                         searchByDate = false;
                     } else {

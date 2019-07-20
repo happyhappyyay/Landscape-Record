@@ -117,7 +117,11 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
                                         CreateDocument createDocument = new CreateDocument();
                                         try {
                                             createDocument.createADocument(mContext, customer, services);
-                                            customer.updateServices(adapter.getPricedServices());
+                                            List<Service> services = adapter.getPricedServices();
+                                            for(Service s: services) {
+                                                s.setPriced(true);
+                                            }
+                                            customer.updateServices(services);
                                             customers.remove(position);
                                             updateCustomer(customer);
                                         }
@@ -148,7 +152,11 @@ public class BillingViewPager extends PagerAdapter implements DatabaseAccess<Cus
                                         CreateDocument createDocument = new CreateDocument();
                                         try {
                                             createDocument.createADocument(mContext, customer, services);
-                                            customer.updateServices(adapter.getPricedServices());
+                                            List<Service> services = adapter.getPricedServices();
+                                            for(Service s: services) {
+                                                s.setPriced(true);
+                                            }
+                                            customer.updateServices(services);
                                             customers.remove(position);
                                             updateCustomer(customer);
                                         }

@@ -77,7 +77,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
                     else {
                         dateText.setText("");
                         Toast.makeText(HourOperations.this,
-                                R.string.incorrect_date_format,
+                                getString(R.string.incorrect_date_format),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
