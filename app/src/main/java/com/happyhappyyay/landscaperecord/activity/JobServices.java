@@ -335,14 +335,19 @@ public class JobServices extends AppCompatActivity implements AdapterView.OnItem
     @Override
     public void createCustomLog() {
         Authentication authentication = Authentication.getAuthentication();
-        LogActivity log = new LogActivity(authentication.getUser().getName(), customer.getName(),
-                LogActivityAction.UPDATE.ordinal(), LogActivityType.CUSTOMER.ordinal());
-        log.setObjId(customer.getId());
+        LogActivity log;
+        if(service.getEndTime() <= 0){
+            log = new LogActivity(authentication.getUser().getName(), customer.getName(),
+                    LogActivityAction.ADD.ordinal(), LogActivityType.SERVICES.ordinal());
+            log.setObjId(customer.getId());
+        }else{
+            log = new LogActivity(authentication.getUser().getName(), customer.getName(),
+                    LogActivityAction.COMPLETED.ordinal(), LogActivityType.SERVICES.ordinal());
+        }
         if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
                 Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
-                finish();
             } catch (Exception e) {
                 e.printStackTrace();
             }

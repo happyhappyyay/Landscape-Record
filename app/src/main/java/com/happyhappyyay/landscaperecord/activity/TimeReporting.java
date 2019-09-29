@@ -40,7 +40,6 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
     private User user;
     private int currentHours;
     private ProgressBar progressBar;
-    private boolean add;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -124,7 +123,7 @@ public class TimeReporting extends AppCompatActivity implements MultiDatabaseAcc
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     Toast.makeText(getApplicationContext(), getString(R.string.time_reporting_checked_out)
-                                                    + " " + (String.format(Locale.US, "%.5f",hours)) + " " + user.toString(),
+                                                    + " " + (String.format(Locale.US, "%.2f",hours)) + " " + user.toString(),
                                             Toast.LENGTH_LONG).show();
                                     addAccumulatedHours(hours,authenticatedUser);
                                     break;

@@ -6,5 +6,6 @@ public enum LogActivityAction {
     UPDATE,
     PAY,
     CHECKED_IN,
-    CHECKED_OUT
+    CHECKED_OUT,
+    COMPLETED,
 }

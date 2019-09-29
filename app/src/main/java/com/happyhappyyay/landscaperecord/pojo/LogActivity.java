@@ -12,6 +12,7 @@ import com.happyhappyyay.landscaperecord.interfaces.DatabaseOperator;
 import com.happyhappyyay.landscaperecord.utility.AppDatabase;
 import com.happyhappyyay.landscaperecord.utility.OnlineDatabase;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 
 import org.bson.Document;
 
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -65,7 +67,7 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
         List<String> logActivityList = Arrays.asList(LogActivityAction.ADD.toString(),
                 LogActivityAction.DELETE.toString(), LogActivityAction.UPDATE.toString(),
                 LogActivityAction.PAY.toString(),LogActivityAction.CHECKED_IN.toString(),
-                LogActivityAction.CHECKED_OUT.toString());
+                LogActivityAction.CHECKED_OUT.toString(), LogActivityAction.COMPLETED.toString());
         List<String> logTypeList = Arrays.asList(LogActivityType.USER.toString(),
                 LogActivityType.CUSTOMER.toString(), LogActivityType.PAYMENT.toString(),
                 LogActivityType.HOURS.toString(), LogActivityType.JOB.toString(),
@@ -247,6 +249,22 @@ public class LogActivity implements DatabaseObjects<LogActivity> {
                 username)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
     }
+
+    public List<LogActivity> retrieveClassInstancesFromActedUser(DatabaseOperator db, String username) {
+        if(db instanceof AppDatabase) {
+            AppDatabase ad = (AppDatabase) db;
+            return ad.logDao().getLogsByActedUser(username);
+        }
+        OnlineDatabase ad = (OnlineDatabase) db;
+        MongoDatabase od = ad.getMongoDb();
+        Pattern regex = Pattern.compile(username, Pattern.CASE_INSENSITIVE);
+        List<Document> documents = od.getCollection(OnlineDatabase.LOG).find(
+                Filters.or(Filters.regex("info",regex), eq("username", username)))
+                .projection(excludeId()).into(new ArrayList<Document>());
+
+        return OnlineDatabase.convertDocumentsToObjects(documents, LogActivity.class);
+    }
+
 
     public void setId(@NonNull String id) {
         this.id = id;

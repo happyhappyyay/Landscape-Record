@@ -238,7 +238,7 @@
     <string name="billing_item_company_name">Company Name</string>
     <string name="billing_item_signature">Thank you.</string>
     <string name="dashboard_payments">Payments</string>
-    <string name="user_settings_title">User Settings</string>
+    <string name="user_settings_title">User</string>
     <string name="view_users_users_title">Users</string>
     <string name="add_user_nickname">Nickname</string>
     <string name="add_user_hour_input_error">Hours must be entered as whole (e.g., 5) or real
@@ -363,6 +363,14 @@
     <string name="add_expense_show_add">Show Add Type</string>
     <string name="Expenses_title">Expenses</string>
     <string name="progress_bar_importing">Importing Contacts&#8230;</string>
+    <string name="user_settings_days_worked">Days worked</string>
+    <string name="user_settings_customers_added">Customers added</string>
+    <string name="user_settings_completion_rate">Job completion rate</string>
+    <string name="user_settings_total_hours">Total hours</string>
+    <string name="user_settings_expenses">Expenses added</string>
+    <string name="user_settings_jobs_completed">Jobs completed</string>
+    <string name="user_settings_jobs_started">Jobs started</string>
+    <string name="zero">0</string>
 
 
 </resources>

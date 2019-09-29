@@ -126,6 +126,62 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         return strings;
     }
 
+    public int hoursForUser(String username){
+        int hours = 0;
+        Set< Map.Entry<String, Integer>> mapSet = userHours.entrySet();
+
+        for (Map.Entry< String, Integer> mapEntry:mapSet)
+        {
+            if(mapEntry.getKey().contains(username)){
+                hours += mapEntry.getValue();
+                break;
+            }
+        }
+        return hours;
+    }
+
+    public double expensesForUser(String username){
+        int expense = 0;
+        Set< Map.Entry<String, Double>> mapSet = expenses.entrySet();
+
+        for (Map.Entry< String, Double> mapEntry:mapSet)
+        {
+            if(mapEntry.getKey().contains(username)){
+                expense += mapEntry.getValue();
+                break;
+            }
+        }
+        return expense;
+    }
+
+    public double paymentsForUser(String username){
+        int payment = 0;
+        Set< Map.Entry<String, Double>> mapSet = payments.entrySet();
+
+        for (Map.Entry< String, Double> mapEntry:mapSet)
+        {
+            if(mapEntry.getKey().contains(username)){
+                payment += mapEntry.getValue();
+                break;
+            }
+        }
+        return payment;
+    }
+
+    public double numPaymentsForUser(String username){
+        int payment = 0;
+        Set< Map.Entry<String, Double>> mapSet = payments.entrySet();
+
+        for (Map.Entry< String, Double> mapEntry:mapSet)
+        {
+            if(mapEntry.getKey().contains(username)){
+                payment++;
+                break;
+            }
+        }
+        return payment;
+    }
+
     public void addServices(Service service) {
         String key = service.getCustomerName() + Util.DELIMITER + service.getId();
         services.put(key, service.getServices());
@@ -382,4 +438,20 @@ public class WorkDay implements DatabaseObjects<WorkDay> {
         List<Document> documents = od.getCollection(OnlineDatabase.WORK_DAY).find(eq("month", monthInMilli)).projection(excludeId()).into(new ArrayList<Document>());
         return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
     }
+
+//    public List<WorkDay> retrieveClassInstancesFromDatabaseByUser(DatabaseOperator db, String username) {
+//        if(db instanceof AppDatabase) {
+//            AppDatabase ad = (AppDatabase) db;
+//            return ad.workDayDao().findWorkDayByUser(username);
+//        }
+//        OnlineDatabase ad = (OnlineDatabase) db;
+//        MongoDatabase od = ad.getMongoDb();
+//        Pattern regex = Pattern.compile(username, Pattern.CASE_INSENSITIVE);
+//        List<Document> documents = od.getCollection(OnlineDatabase.LOG).find(
+//                Filters.or(Filters.regex("userHours",regex), Filters.regex("payments",regex),
+//                        Filters.regex("expenses",regex)))
+//                .projection(excludeId()).into(new ArrayList<Document>());
+//
+//        return OnlineDatabase.convertDocumentsToObjects(documents, WorkDay.class);
+//    }
 }

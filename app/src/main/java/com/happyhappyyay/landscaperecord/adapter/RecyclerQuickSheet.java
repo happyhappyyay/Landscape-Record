@@ -158,6 +158,12 @@ public class RecyclerQuickSheet extends RecyclerView.Adapter implements MultiDat
         WorkDay workDay;
         Util.CUSTOMER_REFERENCE.updateClassInstanceFromDatabase(db, customer);
         if (service != null) {
+            if(service.getEndTime() > 0){
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(),
+                        customer.getName(), LogActivityAction.COMPLETED.ordinal(), LogActivityType.SERVICES.ordinal());
+                log.setObjId(customer.getId());
+                Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
+            }
             WorkDay tempWorkDay = Util.WORK_DAY_REFERENCE.retrieveClassInstanceFromDatabaseString(db, endDateString);
             if (tempWorkDay != null) {
                 workDay = tempWorkDay;

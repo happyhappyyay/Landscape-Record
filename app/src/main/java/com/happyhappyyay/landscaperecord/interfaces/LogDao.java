@@ -33,6 +33,9 @@ public interface LogDao {
     @Query("SELECT * FROM LogActivity WHERE username == :username")
     List<LogActivity> getLogsByName(String username);
 
+    @Query("SELECT * FROM LogActivity WHERE info LIKE :username OR username == :username")
+    List<LogActivity> getLogsByActedUser(String username);
+
     @Delete
     void deleteLog(LogActivity log);
 }

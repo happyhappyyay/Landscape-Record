@@ -246,7 +246,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
         if(Util.hasOnlineDatabaseEnabledAndValid(this)) {
             try {
                 OnlineDatabase db = OnlineDatabase.getOnlineDatabase(this);
-                LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
+                LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), user.getName() + " " +
                         hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
                 log.setObjId(user.getId());
                 Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
@@ -255,7 +255,7 @@ public class HourOperations extends AppCompatActivity implements MultiDatabaseAc
             }
         }
             AppDatabase db = AppDatabase.getAppDatabase(this);
-            LogActivity log = new LogActivity(user.getName(), user.getName() + " " +
+            LogActivity log = new LogActivity(Authentication.getAuthentication().getUser().getName(), user.getName() + " " +
                     hours.getText().toString(), logActivityReference, LogActivityType.HOURS.ordinal());
             log.setObjId(user.getId());
             Util.LOG_REFERENCE.insertClassInstanceFromDatabase(db, log);
