@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.constraint.Constraints.TAG;
-
 public abstract class OnlineDatabase implements DatabaseOperator {
     public final static String CUSTOMER = "Customer";
     public final static String USER = "User";
@@ -69,7 +67,7 @@ public abstract class OnlineDatabase implements DatabaseOperator {
     public static <T extends DatabaseObjects> List<T> convertDocumentsToObjects(List<Document> docs, Class<T> objClass) {
         Gson gson=new Gson();
         List<T> objects = new ArrayList<>();
-        Log.d(TAG, "convertDocumentsToObjects: here");
+        Log.d("TAG", "convertDocumentsToObjects: here");
 
         for(Document d: docs) {
             String s = d.toJson();

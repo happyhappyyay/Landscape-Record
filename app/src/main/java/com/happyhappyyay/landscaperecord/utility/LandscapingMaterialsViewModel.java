@@ -1,6 +1,6 @@
 package com.happyhappyyay.landscaperecord.utility;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import com.happyhappyyay.landscaperecord.pojo.Material;
 

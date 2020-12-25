@@ -1,6 +1,6 @@
 package com.happyhappyyay.landscaperecord.database.workday
 
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.PrimaryKey
 import java.util.*
 
 class WorkDay(
