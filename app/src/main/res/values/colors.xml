@@ -4,7 +4,4 @@
     <color name="colorPrimaryDark">#2e843d</color>
     <color name="colorAccent">#57cfd7</color>
     <color name="primary_dark_device_default_dark">#025b28</color>
-    <color name="primary_device_default_dark">#4caf50</color>
-    <color name="accent_device_default_dark">#76ff03</color>
-    <color name="colorBackgroundFloating">#759167</color>
 </resources>

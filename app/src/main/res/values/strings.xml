@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Landscape Record</string>
     <string name="add">Add</string>
-    <string name="remove">Remove</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="incorrect_date_format">Date format incorrect. Please reenter the date using
@@ -11,14 +10,11 @@
     <string name="hrs">hrs</string>
     <string name="mi">mi</string>
     <string name="money">$</string>
-    <string name="accountNameText">Account:</string>
     <string name="payment_check">Check</string>
     <string name="payment_cash">Cash</string>
     <string name="payment_cash_amount">Amount</string>
     <string name="payment_check_number">Check #</string>
     <string name="submit_button">Submit</string>
-    <string name="payment_amount_hint">The amount of money received</string>
-    <string name="payment_check_number_hint">If payment is a check, include the check number</string>
     <string name="contact_first_name">First:</string>
     <string name="contact_last_name">Last:</string>
     <string name="contact_phone_number">Phone:</string>
@@ -47,32 +43,21 @@
     <string name="job_services_no_customer">No customer selected. Please select or create a customer.</string>
     <string name="user_options">Manage Users</string>
     <string name="add_user">Add User</string>
-    <string name="delete_user">Delete User</string>
-    <string name="view_users">View Users</string>
-    <string name="update_user">Update User Information</string>
     <string name="add_user_first">First</string>
     <string name="add_user_last">Last</string>
     <string name="add_user_hours">Start Hours (opt.)</string>
-    <string name="user_options_payment_queue">Payment Queue</string>
     <string name="user_options_hour_operations">Hour Operations</string>
     <string name="password">Password</string>
-    <string name="view_user_search">Search</string>
     <string name="login_page_username">Username</string>
     <string name="login_page_logged">You are now logged in as</string>
     <string name="login_page_main_menu">Main Menu</string>
     <string name="login_page_settings">Settings</string>
     <string name="login_page_failed">Could not log in with the provided credentials</string>
     <string name="menu_logout">Logout</string>
-    <string name="menu_settings">Settings</string>
     <string name="menu_dashboard">Dashboard</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="menu_add_contact">Contacts</string>
-    <string name="menu_add_grass">+G</string>
     <string name="menu_add_service">Add Service</string>
-    <string name="menu_add_landscaping">+L</string>
     <string name="job_creation">Create New Job</string>
-    <string name="job_completion">Finish Pending Job</string>
     <string name="lawn_services_cut">Cut</string>
     <string name="lawn_services_man_hours">Man Hours:</string>
     <string name="lawn_services_prune">Prune</string>
@@ -85,25 +70,15 @@
     <string name="lawn_services_clean_up">Clean Up</string>
     <string name="lawn_services_rake">Rake</string>
     <string name="lawn_services_other">Other:</string>
-    <string name="lawn_services_employees">Number of Employees:</string>
-    <string name="lawn_services_optional">Leave blank to autogenerate</string>
     <string name="snow_services_shovel">Shovel</string>
     <string name="snow_services_plow">Plow</string>
     <string name="snow_services_snow_blow">Snow Blow</string>
     <string name="snow_services_salt">Salt</string>
     <string name="snow_services_salt_bags">(Optional) bags of salt</string>
-    <string name="land_services_mulch">Mulch</string>
-    <string name="land_services_dirt">Dirt</string>
-    <string name="land_services_stone">Stone</string>
-    <string name="remove_items">Remove:</string>
-    <string name="land_services_brick">Bricks</string>
     <string name="land_services_drainage">Drainage</string>
     <string name="land_services_edging">Edging</string>
     <string name="land_services_dump">Dump</string>
-    <string name="land_services_sod">Sod</string>
-    <string name="land_services_seed">Seed</string>
     <string name="land_services_till">Till</string>
-    <string name="land_services_plants">Plants</string>
     <string name="material_type">Type</string>
     <string name="material_price">Price</string>
     <string name="land_services_materials">List of Materials Added/Removed:</string>
@@ -118,9 +93,7 @@
     <string name="date_time_hint">(Opt.)mm/dd/yyyy</string>
     <string name="man_hours_hint">(Opt.)hrs</string>
     <string name="delete_button">Delete</string>
-    <string name="material_item_add_remove">Add/Remove</string>
     <string name="add_user_admin">Admin</string>
-    <string name="land_services_delete_material">Delete Material</string>
     <string name="hours_operations_hours">Hours</string>
     <string name="hours_operations_pay">Pay</string>
     <string name="hours_operations_add">Add</string>
@@ -131,9 +104,7 @@
     <string name="hour_operations_added_for"> hours added for </string>
     <string name="hour_operations_removed_for"> hours removed for </string>
     <string name="hour_operations_paid_for"> hours paid for </string>
-    <string name="admin_tools_view_logs">View Logged Activity</string>
     <string name="log_item_text">Log</string>
-    <string name="job_activity_fragment_other">Enter non-standard activity or notes</string>
     <string name="contact_day_of_the_week">Work Day:</string>
     <string name="quick_sheet_item_start">Start</string>
     <string name="quick_sheet_item_finish">Finish</string>
@@ -148,7 +119,6 @@
     <string name="receive_payment_enter_amount">Please enter in an amount for the payment.</string>
     <string name="receive_payment_post_apply">If this is the correct amount, have admin apply paid
         status to service.</string>
-    <string name="receive_payment_incorrect_service">Please apply payment to the correct service.</string>
     <string name="receive_payment_amount_mismatch">The payment amount does not match the selected
         service. Amount will be applied to the service anyway. Proceed with payment?</string>
     <string name="receive_payment_complete_service_error">Complete service and then apply payment to
@@ -159,7 +129,6 @@
     <string name="receive_payment_paid"> PAID </string>
     <string name="settings_fragment_select_file">Select a file</string>
     <string name="settings_fragment_contacts_add">contacts added</string>
-    <string name="settings_fragment_import">IMPORT</string>
     <string name="settings_invalid_connection">Database connection is not valid. Check connectivity
         and database uri/database name.</string>
     <string name="view_services_text">Services</string>
@@ -188,18 +157,13 @@
     <string name="pref_settings_database_uri_title">Database URI</string>
     <string name="pref_settings_database_uri_summary">The URI for the database.
         Example: mongodb://databaseUser:databaseUserPassword@host:port/databaseName</string>
-    <string name="pref_settings_database_connections_title">Database Connections</string>
-    <string name="pref_settings_database_connections_summary">The number of devices reading and writing to the database.</string>
     <string name="pref_settings_database_name_title">Database Name</string>
     <string name="pref_settings_database_name_summary">The name of the database.</string>
     <string name="pref_settings_quick_sheet_items_selection_title1">Check Box 1</string>
     <string name="pref_settings_quick_sheet_items_selection_title2">Check Box 2</string>
     <string name="pref_settings_quick_sheet_items_selection_title3">Check Box 3</string>
-    <string name="pref_settings_company_name_summary">Name of company: %s</string>
     <string name="pref_settings_personal_message_title">Personal Message</string>
     <string name="pref_settings_personal_message_summary">A personal message to attach to the bottom of each bill.</string>
-    <string name="pref_settings_first_day_of_week">Start of Work Week</string>
-    <string name="pref_settings_first_day_of_week_summary">Set the day that starts the week. The current day selected is %s.</string>
     <string name="pref_settings_import_contacts_summary">Upload a Comma-separated Values(.csv) file to import contacts. Headers needed:
         First Name, Last Name, Address, City, State, Phone Number, Email, Business, Day of Week, Mileage. Values for the first five headers are necessary."</string>
     <string name="pref_settings_import_contacts">Import Contacts</string>
@@ -229,15 +193,11 @@
     <!--                                   -->
 
     <string name="view_work_day_title">View Work Activity</string>
-    <string name="activity_view_work_day_user_hour_title">User : Hours</string>
-    <string name="activity_view_work_day_customer_services_title">Customer : Service</string>
     <string name="view_work_day_no_information">No information available for this date</string>
     <string name="view_work_day_day_button">Day</string>
     <string name="view_work_day_week_button">Week</string>
     <string name="view_work_day_month_button">Month</string>
     <string name="billing_item_company_name">Company Name</string>
-    <string name="billing_item_signature">Thank you.</string>
-    <string name="dashboard_payments">Payments</string>
     <string name="user_settings_title">User</string>
     <string name="view_users_users_title">Users</string>
     <string name="add_user_nickname">Nickname</string>
@@ -246,10 +206,7 @@
     <string name="add_user_password_input_error">Password must be at least 6 characters.</string>
     <string name="edit_user_title">Edit User</string>
     <string name="edit_customer_title">Edit Customer</string>
-    <string name="dashboard_notification_users_in">Users Logged In</string>
-    <string name="payment_queue_title">Services &amp; Payments</string>
     <string name="service_pricing_recycler_item_set">Set as Default Price</string>
-    <string name="services_pricing_title">Services Pricing</string>
 
     <string name="fragment_landscaping_material_title"> Materials </string>
     <string name="fragment_landscaping_materials">MATERIALS</string>
@@ -277,7 +234,6 @@
     <string name="first_glance_no_users">No users found in this database.</string>
 
     <string name="billing_service_item_edit_text">Edit</string>
-    <string name="billing_preview_title">Bill Preview</string>
     <string name="bill_creation_title">Create Invoice</string>
     <string name="billing_view_pager_attention">ATTN: </string>
     <string name="billing_view_pager_in_progress">There are still jobs in-progress for this month. Proceed with
@@ -305,7 +261,6 @@
     <string name="csv_service">Service</string>
     <string name="csv_man_hours">Man Hours</string>
     <string name="csv_mileage">Mileage</string>
-    <string name="csv_id">Service ID</string>
     <string name="csv_not_billed">Not Billed</string>
     <string name="csv_employee">Employee</string>
     <string name="csv_information">Information</string>
@@ -316,11 +271,8 @@
     <string name="customer_view_pager_delete">Deleting a customer also involves deleting all the associated
         Services and Payments. This CANNOT be undone. Are you sure you want to delete </string>
     <string name="preference_settings_import_title">Import/Export</string>
-    <string name="user_view_pager_delete">Deleting an employee also involves deleting all the associated
-        Expenses. This CANNOT be undone. Are you sure you want to delete </string>
     <string name="view_contacts_payment">Receive Payment</string>
     <string name="view_users_pay">Adjust/Pay User Hours</string>
-    <string name="dynamic_text">TextView</string>
     <string name="view_user_activity">Activity</string>
     <string name="view_customers_title">Customers</string>
     <string name="view_customers_create_invoice">Create Invoices</string>
@@ -355,7 +307,6 @@
     <string name="activity_add_expense">Add Expense</string>
     <string name="activity_add_expense_price">100.00</string>
     <string name="activity_add_expense_name">Gas Station</string>
-    <string name="activity_add_expense_optional">Optional</string>
     <string name="activity_add_expense_credit">Credit Card</string>
     <string name="activity_add_expense_debit">Debit Card</string>
     <string name="activity_add_expense_number">Last 4 digits</string>
@@ -371,6 +322,7 @@
     <string name="user_settings_jobs_completed">Jobs completed</string>
     <string name="user_settings_jobs_started">Jobs started</string>
     <string name="zero">0</string>
+    <string name="title_activity_main">MainActivity</string>
 
 
 </resources>
