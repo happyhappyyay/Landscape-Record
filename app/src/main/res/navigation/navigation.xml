@@ -2,4 +2,49 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation" />
+    android:id="@+id/main"
+    app:startDestination="@id/loginFrag">
+    <fragment
+        android:id="@+id/dashboardFrag"
+        android:name="com.happyhappyyay.landscaperecord.dashboard.DashboardFrag"
+        android:label="fragment_dashboard"
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboardFrag_to_userFrag"
+            app:destination="@id/userFrag" />
+        <action
+            android:id="@+id/action_dashboardFrag_to_customerFrag"
+            app:destination="@id/customerFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFrag"
+        android:name="com.happyhappyyay.landscaperecord.login.LoginFrag"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFrag_to_setupFrag"
+            app:destination="@id/setupFrag" />
+        <action
+            android:id="@+id/action_loginFrag_to_dashboardFrag"
+            app:destination="@id/dashboardFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/setupFrag"
+        android:name="com.happyhappyyay.landscaperecord.setup.SetupFrag"
+        android:label="fragment_setup"
+        tools:layout="@layout/fragment_setup" >
+        <action
+            android:id="@+id/action_setupFrag_to_loginFrag"
+            app:destination="@id/loginFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerFrag"
+        android:name="com.happyhappyyay.landscaperecord.customer.CustomerFrag"
+        android:label="fragment_customer"
+        tools:layout="@layout/fragment_customer" />
+    <fragment
+        android:id="@+id/userFrag"
+        android:name="com.happyhappyyay.landscaperecord.user.UserFrag"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" />
+</navigation>
