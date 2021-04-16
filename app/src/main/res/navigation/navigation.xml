@@ -7,19 +7,12 @@
     <fragment
         android:id="@+id/dashboardFrag"
         android:name="com.happyhappyyay.landscaperecord.dashboard.DashboardFrag"
-        android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
-        <action
-            android:id="@+id/action_dashboardFrag_to_userFrag"
-            app:destination="@id/userFrag" />
-        <action
-            android:id="@+id/action_dashboardFrag_to_customerFrag"
-            app:destination="@id/customerFrag" />
-    </fragment>
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/loginFrag"
         android:name="com.happyhappyyay.landscaperecord.login.LoginFrag"
-        android:label="fragment_login"
+        android:label=""
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFrag_to_setupFrag"
@@ -40,11 +33,39 @@
     <fragment
         android:id="@+id/customerFrag"
         android:name="com.happyhappyyay.landscaperecord.customer.CustomerFrag"
-        android:label="fragment_customer"
+        android:label="Customers"
         tools:layout="@layout/fragment_customer" />
     <fragment
         android:id="@+id/userFrag"
         android:name="com.happyhappyyay.landscaperecord.user.UserFrag"
-        android:label="fragment_user"
+        android:label="Users"
         tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/accountsFrag"
+        android:name="com.happyhappyyay.landscaperecord.accounts.AccountsFrag"
+        android:label="Accounts"
+        tools:layout="@layout/fragment_accounts"
+        app:startDestination="@id/action_accountsFrag_to_customerFrag">
+        <action
+            android:id="@+id/action_accountsFrag_to_userFrag"
+            app:destination="@id/userFrag" />
+        <action
+            android:id="@+id/action_accountsFrag_to_customerFrag"
+            app:destination="@id/customerFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/servicesFrag"
+        android:name="com.happyhappyyay.landscaperecord.services.ServicesFrag"
+        android:label="Services"
+        tools:layout="@layout/fragment_services" />
+    <fragment
+        android:id="@+id/calendarFrag"
+        android:name="com.happyhappyyay.landscaperecord.calendar.CalendarFrag"
+        android:label="Calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/checkInFrag"
+        android:name="com.happyhappyyay.landscaperecord.checkin.CheckInFrag"
+        android:label="Check In"
+        tools:layout="@layout/fragment_check_in" />
 </navigation>

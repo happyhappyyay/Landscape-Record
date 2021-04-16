@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3FB553</color>
-    <color name="colorPrimaryDark">#2e843d</color>
+    <color name="colorPrimary">#663FB553</color>
+    <color name="colorPrimaryDark">#1A2e843d</color>
     <color name="colorAccent">#57cfd7</color>
     <color name="primary_dark_device_default_dark">#025b28</color>
+    <color name="primaryText">#FFFFFF</color>
+    <color name="secondaryText">#000</color>
+
+    <!-- General Use Colors -->
+<!--    <color name="color_primary">#212121</color>-->
+<!--    <color name="color_primary_dark">@android:color/black</color>-->
+<!--    <color name="color_accent">#4285F4</color>-->
+    <color name="semi_transparent">#66000000</color>
 </resources>

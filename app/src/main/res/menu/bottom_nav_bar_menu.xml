@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@id/dashboardFrag"
+        android:enabled="true"
+        android:icon="@drawable/ic_twotone_home_24px"
+        android:title="@string/bottom_nav_home" />
+    <item
+        android:id="@id/checkInFrag"
+        android:icon="@drawable/ic_twotone_hourglass_empty_64px"
+        android:title="@string/bottom_nav_check_in" />
+    <item
+        android:id="@id/servicesFrag"
+        android:icon="@drawable/ic_twotone_assignment_24px"
+        android:title="@string/bottom_nav_services" />
+    <item
+        android:id="@id/accountsFrag"
+        android:icon="@drawable/ic_twotone_account_box_24px"
+        android:title="@string/bottom_nav_accounts" />
+    <item
+        android:id="@id/calendarFrag"
+        android:icon="@drawable/ic_twotone_calendar_today_64px"
+        android:title="@string/bottom_nav_calendar" />
 </menu>

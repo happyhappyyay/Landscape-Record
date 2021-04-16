@@ -1,14 +1,57 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--                            &lt;!&ndash;For Navigation Toolbar&ndash;&gt;-->
+<!--        <item name="windowActionBar">true</item>-->
+<!--        <item name="windowNoTitle">false</item>-->
+<!--    </style>-->
+
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+<!--        <item name="android:statusBarColor">@color/design_default_color_error</item>-->
+<!--&lt;!&ndash;        <item name="android:navigationBarColor">@color/design_default_color_error</item>&ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>&ndash;&gt;-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="background">@color/design_default_color_error</item>-->
+<!--        <item name="actionBarStyle">@style/ThemeActionBar</item>-->
+<!--        <item name="android:textColor">@color/mr_cast_meta_black_scrim</item>-->
+<!--    </style>-->
+
+<!--    <style name="ThemeActionBar"-->
+<!--        parent="Widget.AppCompat.Light.ActionBar.Solid">-->
+<!--        <item name="background">@android:color/transparent</item>-->
+<!--        <item name="android:textColor">@color/mr_dynamic_dialog_header_text_color_light</item>-->
+<!--    </style>-->
+
+    <!-- Main App Theme-->
+
+    <style name="AppTheme" parent="Theme.MaterialComponents">
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-                            <!--For Navigation Toolbar-->
-<!--        <item name="windowActionBar">true</item>-->
-<!--        <item name="windowNoTitle">false</item>-->
+        <item name="actionBarStyle">@style/TransGreenActionBar</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="TransGreenActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="background">@color/colorPrimary</item>
+    </style>
+
+    <!-- Opening Theme -->
+
+    <style name="OpeningTheme" parent="AppTheme">
+        <item name="actionBarStyle">@style/ClearActionBar</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="ClearActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>
