@@ -4,16 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.happyhappyyay.landscaperecord.MainActivity
 import com.happyhappyyay.landscaperecord.R
 import com.happyhappyyay.landscaperecord.databinding.FragmentServicesBinding
+import com.happyhappyyay.landscaperecord.pojo.Service
 
 
 class ServicesFrag : Fragment() {
+    private lateinit var viewModel: ServicesViewModel
     private var _binding: FragmentServicesBinding? = null
     private val binding get() = _binding!!
 
@@ -28,6 +31,12 @@ class ServicesFrag : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         _binding = FragmentServicesBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(ServicesViewModel::class.java)
+        binding.floatingActionButton4.setOnClickListener{
+            findNavController().navigate(ServicesFragDirections.actionServicesFragToAddService())
+        }
+        val adapter = ServicesAdapter(viewModel.services)
+        binding.recyclerViewServices.adapter = adapter
         return binding.root
     }
 
@@ -68,6 +77,7 @@ class ServicesFrag : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 Toast.makeText(activity,query,Toast.LENGTH_LONG).show()
+                viewModel.search(query)
                 return false
             }
 

@@ -12,4 +12,6 @@
 <!--    <color name="color_primary_dark">@android:color/black</color>-->
 <!--    <color name="color_accent">#4285F4</color>-->
     <color name="semi_transparent">#66000000</color>
+    <color name="checked_in_status">#32CD32</color>
+    <color name="checked_out_status">#8B837E</color>
 </resources>

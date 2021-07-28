@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.happyhappyyay.landscaperecord.MainActivity
-import com.happyhappyyay.landscaperecord.accounts.AccountsFragDirections
 import com.happyhappyyay.landscaperecord.databinding.FragmentAddServiceBinding
 
-class AddService : Fragment() {
+class AddServiceFrag : Fragment() {
     private lateinit var viewModel: AddServiceViewModel
     private var _binding: FragmentAddServiceBinding? = null
     private val binding get() = _binding!!
@@ -34,6 +33,9 @@ class AddService : Fragment() {
     ): View {
         _binding = FragmentAddServiceBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(AddServiceViewModel::class.java)
+        val adapter = AddServiceAdapter()
+        binding.recyclerViewAddService.adapter = adapter
+        PagerSnapHelper().attachToRecyclerView(binding.recyclerViewAddService)
         return binding.root
     }
 

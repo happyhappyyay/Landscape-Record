@@ -1,4 +1,8 @@
 package com.happyhappyyay.landscaperecord.addservice
 
-class AddServiceViewModel {
+import androidx.lifecycle.ViewModel
+
+class AddServiceViewModel: ViewModel() {
+
+
 }

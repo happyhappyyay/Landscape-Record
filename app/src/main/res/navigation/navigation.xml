@@ -57,7 +57,11 @@
         android:id="@+id/servicesFrag"
         android:name="com.happyhappyyay.landscaperecord.services.ServicesFrag"
         android:label="Services"
-        tools:layout="@layout/fragment_services" />
+        tools:layout="@layout/fragment_services" >
+        <action
+            android:id="@+id/action_servicesFrag_to_addService"
+            app:destination="@id/addService" />
+    </fragment>
     <fragment
         android:id="@+id/calendarFrag"
         android:name="com.happyhappyyay.landscaperecord.calendar.CalendarFrag"
@@ -68,4 +72,9 @@
         android:name="com.happyhappyyay.landscaperecord.checkin.CheckInFrag"
         android:label="Check In"
         tools:layout="@layout/fragment_check_in" />
+    <fragment
+        android:id="@+id/addService"
+        android:name="com.happyhappyyay.landscaperecord.addservice.AddServiceFrag"
+        android:label="Add Service"
+        tools:layout="@layout/fragment_add_service" />
 </navigation>
